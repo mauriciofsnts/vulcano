@@ -1,0 +1,24 @@
+# language metadata
+Lang:
+  Name: Português
+  ShortName: pt-BR
+  Author: vulcano
+
+# errors
+Errors:
+  Title: Erro
+  Generic: Ocorreu um erro desconhecido
+  ToSave: Ocorreu um erro ao salvar os dados
+  NotATextChannel: O canal ${0} não é um canal de texto
+  AlreadyRegistered: Você já está cadastrado
+
+Commands:
+  Ping:
+    Title: 🏓  Ping!
+    Response: Pong 🏓
+  Setup:
+    Title: Configuração concluída
+    Response: Agora você irá receber os desafios no canal ${0} às ${1} horas
+  Join:
+    Title: Tudo certo!
+    Response: Agora você faz parte do desafio
