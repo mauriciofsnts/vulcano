@@ -14,12 +14,10 @@ func init() {
 				Description: "Ping the bot",
 			},
 			Handler: func(ctx *slash.DiscordContext, t *i18n.Language) {
-
 				ctx.Ok(&discordgo.MessageEmbed{
 					Title:       t.Commands.Ping.Title.Str(),
 					Description: t.Commands.Ping.Response.Str(),
 				})
-
 			},
 		})
 }

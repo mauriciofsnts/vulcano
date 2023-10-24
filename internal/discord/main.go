@@ -23,8 +23,6 @@ func Start() error {
 		return err
 	}
 
-	dg.Identify.Intents = discordgo.IntentsGuildMessages
-
 	err = dg.Open()
 
 	if err != nil {

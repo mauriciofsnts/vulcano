@@ -25,6 +25,7 @@ func RegisterSlashCommand(cmds ...*SlashCommand) {
 }
 
 func Start(s *discordgo.Session) error {
+
 	applicationCommands := make([]*discordgo.ApplicationCommand, len(commands))
 
 	i := 0
@@ -34,6 +35,23 @@ func Start(s *discordgo.Session) error {
 		applicationCommands[i] = c.ApplicationCommand
 		i++
 	}
+
+	s.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		var lang i18n.EnumLanguage
+
+		commandName := i.ApplicationCommandData().Name
+
+		if command, ok := commands[commandName]; ok {
+			command.Handler(
+				&DiscordContext{
+					S: s,
+					I: i,
+				},
+				i18n.GetLanguage(lang),
+			)
+		}
+
+	})
 
 	_, err := s.ApplicationCommandBulkOverwrite(s.State.User.ID, "", applicationCommands)
 
