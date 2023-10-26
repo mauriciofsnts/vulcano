@@ -54,8 +54,7 @@ func (ch CommandHandler) Process(session *discordgo.Session, message *discordgo.
 			CommandHandler: &ch,
 			Session:        session,
 			Guild:          guild,
-			Message:        message,
-			Args:           arguments,
+			Message:        &M{Message: message, Args: arguments},
 			Interaction:    nil,
 		}
 

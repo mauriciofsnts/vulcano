@@ -6,11 +6,11 @@ import (
 
 func (cmnd CommandMessage) Reply(embed *discordgo.MessageEmbed) {
 
-	isInteraction := cmnd.Interaction != nil
+	isInteraction := cmnd.Interaction.Interaction != nil
 
 	if isInteraction {
 		cmnd.Session.InteractionRespond(
-			cmnd.Interaction.Interaction,
+			cmnd.Interaction.Interaction.Interaction,
 			&discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
@@ -19,7 +19,7 @@ func (cmnd CommandMessage) Reply(embed *discordgo.MessageEmbed) {
 			},
 		)
 	} else {
-		cmnd.Session.ChannelMessageSendEmbed(cmnd.Message.ChannelID, embed)
+		cmnd.Session.ChannelMessageSendEmbed(cmnd.Message.Message.ChannelID, embed)
 	}
 
 }

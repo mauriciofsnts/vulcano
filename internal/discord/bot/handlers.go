@@ -33,15 +33,12 @@ func (bot Bot) onInteractionCreate(session *discordgo.Session, info *discordgo.I
 		return
 	}
 
-	// arguments := info.Interaction.ApplicationCommandData().Options
-
 	commandInteraction := events.CommandMessage{
 		CommandHandler: bot.commandHandler,
 		Session:        session,
 		Guild:          guild,
 		Message:        nil,
-		Args:           []string{},
-		Interaction:    info,
+		Interaction:    &events.I{Interaction: info, Args: info.ApplicationCommandData().Options},
 	}
 
 	cmd.Function(commandInteraction)

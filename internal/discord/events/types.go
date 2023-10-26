@@ -2,13 +2,22 @@ package events
 
 import "github.com/bwmarrin/discordgo"
 
+type I struct {
+	Interaction *discordgo.InteractionCreate
+	Args        []*discordgo.ApplicationCommandInteractionDataOption
+}
+
+type M struct {
+	Message *discordgo.MessageCreate
+	Args    []string
+}
+
 type CommandMessage struct {
 	CommandHandler *CommandHandler
 	Session        *discordgo.Session
 	Guild          *discordgo.Guild
-	Message        *discordgo.MessageCreate
-	Interaction    *discordgo.InteractionCreate
-	Args           []string
+	Message        *M
+	Interaction    *I
 }
 
 type CommandInfo struct {
