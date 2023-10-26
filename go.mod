@@ -15,6 +15,7 @@ require (
 
 require (
 	github.com/bwmarrin/discordgo v0.27.1
+	github.com/google/uuid v1.3.1
 	github.com/pauloo27/logger v0.0.0-20230613054337-e866488ae2f4
 	github.com/stretchr/testify v1.8.4
 	gopkg.in/yaml.v2 v2.4.0 // indirect

@@ -21,14 +21,14 @@ type Errors struct {
 }
 
 type Command struct {
-	Title    LanguageEntry
-	Response LanguageEntry
+	Title       LanguageEntry
+	Response    LanguageEntry
+	Description LanguageEntry
 }
 
 type Commands struct {
 	Ping  Command
-	Setup Command
-	Join  Command
+	Tools Command
 }
 
 type Language struct {

@@ -15,10 +15,8 @@ Errors:
 Commands:
   Ping:
     Title: 🏓  Ping!
+    Description: "Verifica se o bot está online."
     Response: Pong 🏓
-  Setup:
-    Title: Configuração concluída
-    Response: Agora você irá receber os desafios no canal ${0} às ${1} horas
-  Join:
-    Title: Tudo certo!
-    Response: Agora você faz parte do desafio
+  Tools:
+    Title: 🛠️  Ferramentas
+    Description: Gera informações aleatórias para desenvolvimento, como CPF, CNPJ, RG, UUID e pessoa.
