@@ -7,11 +7,7 @@ import (
 )
 
 func handler(cmd events.CommandMessage) {
-	// commandMessage.Session.ChannelMessageSend(commandMessage.Message.ChannelID, "Pong!")
-
 	cmd.Ok(&discordgo.MessageEmbed{Description: "Pong!"})
-
-	// cmd.Session.ChannelMessageSend(cmd.Message.ChannelID, "Pong!")
 }
 
 func init() {

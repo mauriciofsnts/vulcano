@@ -4,15 +4,11 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/pauloo27/logger"
 )
 
 var cmd = make(map[string]CommandInfo)
 
 func New(config Config) (ch *CommandHandler) {
-	// list of commands
-	logger.Info("Registering commands...", cmd)
-
 	ch = &CommandHandler{
 		commands: cmd,
 		config:   config,
@@ -41,10 +37,8 @@ func (ch CommandHandler) Process(session *discordgo.Session, message *discordgo.
 		arguments := strings.Fields(strings.TrimPrefix(message.Content, ch.config.Prefix))
 		cmdName := arguments[0]
 
-		// Removing the command from the arguments slice
 		arguments = arguments[1:]
 
-		// Get the guild in which the message was sent
 		channel, err := session.Channel(message.ChannelID)
 		if err != nil {
 			return
