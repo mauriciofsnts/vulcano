@@ -22,7 +22,7 @@ func New() (bot *Bot, err error) {
 
 	config := Configuration{
 		Token:  config.Vulcano.Token,
-		Prefix: "!",
+		Prefix: ",",
 	}
 
 	bot = &Bot{
