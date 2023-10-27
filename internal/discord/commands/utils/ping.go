@@ -3,18 +3,13 @@ package utils
 import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/mauriciofsnts/vulcano/internal/discord/events"
-	"github.com/pauloo27/logger"
 )
 
-func handler(cmd events.CommandMessage) {
-	cmd.Ok(&discordgo.MessageEmbed{Description: "Pong!"})
-}
-
 func init() {
-	logger.Info("Registering ping command...")
-
 	events.Register("ping", events.CommandInfo{
-		Function: handler,
+		Function: func(cm events.CommandMessage) {
+			cm.Ok(&discordgo.MessageEmbed{Description: "Pong!"})
+		},
 		ApplicationCommand: &discordgo.ApplicationCommand{
 			Name:        "ping",
 			Description: "Pong!",

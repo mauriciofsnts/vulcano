@@ -2,14 +2,15 @@ package events
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"github.com/pauloo27/logger"
 )
 
 func (cmnd CommandMessage) Reply(embed *discordgo.MessageEmbed) {
 
-	isInteraction := cmnd.Interaction.Interaction != nil
+	isInteraction := cmnd.Interaction != nil
 
 	if isInteraction {
-		cmnd.Session.InteractionRespond(
+		err := cmnd.Session.InteractionRespond(
 			cmnd.Interaction.Interaction.Interaction,
 			&discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -18,6 +19,12 @@ func (cmnd CommandMessage) Reply(embed *discordgo.MessageEmbed) {
 				},
 			},
 		)
+
+		if err != nil {
+			logger.Error(err)
+			return
+		}
+
 	} else {
 		cmnd.Session.ChannelMessageSendEmbed(cmnd.Message.Message.ChannelID, embed)
 	}
