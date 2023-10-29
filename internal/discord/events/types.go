@@ -34,7 +34,7 @@ type Command func(CommandMessage)
 type CommandMap map[string]CommandInfo
 
 type CommandHandler struct {
-	commands CommandMap
+	Commands CommandMap
 	config   Config
 }
 

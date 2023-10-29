@@ -1,10 +1,12 @@
 package events
 
-var cmd = make(map[string]CommandInfo)
+import "github.com/pauloo27/logger"
+
+var Cmd = make(map[string]CommandInfo)
 
 func New(config Config) (ch *CommandHandler) {
 	ch = &CommandHandler{
-		commands: cmd,
+		Commands: Cmd,
 		config:   config,
 	}
 
@@ -13,11 +15,12 @@ func New(config Config) (ch *CommandHandler) {
 
 // Register registers a command to be handled by the command handler.
 func Register(name string, commandInfo CommandInfo) {
-	cmd[name] = commandInfo
+	logger.Debug("Registering command: " + name)
+	Cmd[name] = commandInfo
 }
 
 // Get retrieves the Command (Data type) from the CommandMap map.
 func (ch CommandHandler) Get(name string) (*CommandInfo, bool) {
-	commandInfo, found := ch.commands[name]
+	commandInfo, found := ch.Commands[name]
 	return &commandInfo, found
 }

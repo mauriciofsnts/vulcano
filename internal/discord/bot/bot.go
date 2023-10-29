@@ -33,6 +33,7 @@ func New() (bot *Bot, err error) {
 	}
 
 	bot.session, err = discordgo.New("Bot " + config.Token)
+	bot.session.Identify.Intents = discordgo.IntentsAllWithoutPrivileged | discordgo.IntentsGuildMembers
 
 	if err != nil {
 		return nil, err
@@ -51,6 +52,20 @@ func New() (bot *Bot, err error) {
 	})
 
 	bot.InitHandler()
+
+	applicationCommands := make([]*discordgo.ApplicationCommand, len(bot.commandHandler.Commands))
+
+	i := 0
+	for _, command := range bot.commandHandler.Commands {
+		applicationCommands[i] = command.ApplicationCommand
+		i++
+	}
+
+	_, err = bot.session.ApplicationCommandBulkOverwrite(bot.session.State.User.ID, "", applicationCommands)
+
+	if err != nil {
+		return nil, err
+	}
 
 	return
 }
