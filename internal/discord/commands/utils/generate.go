@@ -4,6 +4,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
 	"github.com/mauriciofsnts/vulcano/internal/discord/events"
+	"github.com/mauriciofsnts/vulcano/internal/helpers"
 )
 
 func init() {
@@ -24,6 +25,11 @@ func init() {
 					return
 				}
 				cm.Ok(&discordgo.MessageEmbed{Description: uuid.String()})
+			case "cpf":
+				cpf, _ := helpers.GenerateCPF()
+
+				cm.Ok(&discordgo.MessageEmbed{Description: cpf})
+
 			default:
 				cm.Error(&discordgo.MessageEmbed{Description: "Opção inválida."})
 			}
