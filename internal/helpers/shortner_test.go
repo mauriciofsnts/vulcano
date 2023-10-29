@@ -1,11 +1,11 @@
-package utils_test
+package helpers_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/mauriciofsnts/vulcano/internal/utils"
+	"github.com/mauriciofsnts/vulcano/internal/helpers"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +17,7 @@ func TestShortner(t *testing.T) {
 	defer testServer.Close()
 
 	// Call the Shortner function with the test server URL
-	shortLink, err := utils.Shortner(testServer.URL)
+	shortLink, err := helpers.Shortner(testServer.URL)
 	assert.NoError(t, err)
 	assert.Contains(t, shortLink, "https://st.mrzt.dev/")
 }

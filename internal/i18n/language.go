@@ -27,8 +27,9 @@ type Command struct {
 }
 
 type Commands struct {
-	Ping  Command
-	Tools Command
+	Ping    Command
+	Tools   Command
+	Tabnews Command
 }
 
 type Language struct {

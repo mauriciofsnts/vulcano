@@ -20,3 +20,6 @@ Commands:
   Tools:
     Title: 🛠️  Ferramentas
     Description: Gera informações aleatórias para desenvolvimento, como CPF, CNPJ, RG, UUID e pessoa.
+  Tabnews:
+    Title: 📰  Tabnews
+    Description: "Mostra as últimas notícias do site TabNews."
