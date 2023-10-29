@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/mauriciofsnts/vulcano/internal/discord/events"
@@ -43,14 +44,16 @@ func getTabNews() ([]*discordgo.MessageEmbedField, error) {
 	}
 
 	fields := make([]*discordgo.MessageEmbedField, len(articles))
-	fieldChan := make(chan *discordgo.MessageEmbedField)
 
 	var wg sync.WaitGroup
 
+	start := time.Now()
 	for i, article := range articles {
 		wg.Add(1)
 		go func(idx int, article Article) {
 			defer wg.Done()
+
+			shortenedUrl := ""
 
 			shortenedUrl, err := helpers.Shortner(
 				fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug),
@@ -58,38 +61,22 @@ func getTabNews() ([]*discordgo.MessageEmbedField, error) {
 
 			if err != nil {
 				logger.Debugf("Error shortening url: %v", err)
-				fieldChan <- &discordgo.MessageEmbedField{}
-				return
 			}
-
-			logger.Debugf("Shortened url: %s", shortenedUrl)
 
 			value := fmt.Sprintf("⭐ %d · %s · %s", article.Tabcoins, article.Owner_username, shortenedUrl)
 
-			fieldChan <- &discordgo.MessageEmbedField{
+			fields[idx] = &discordgo.MessageEmbedField{
 				Name:   article.Title,
 				Value:  value,
 				Inline: false,
 			}
+
 		}(i, article)
 	}
 
-	go func() {
-		wg.Wait()
-		close(fieldChan)
-	}()
+	wg.Wait()
 
-	var i int
-	for field := range fieldChan {
-		if field.Name != "" {
-			fields[i] = field
-			i++
-		}
-
-		if i >= len(articles) {
-			break
-		}
-	}
+	logger.Debug("took:", time.Since(start))
 
 	return fields, nil
 }
@@ -100,7 +87,7 @@ func init() {
 
 			fields, err := getTabNews()
 			if err != nil {
-				logger.Debug("Error getting tabnews: %s", err)
+				logger.Debugf("Error getting tabnews: %s", err)
 				return
 			}
 

@@ -5,21 +5,29 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"time"
 )
 
 const endpoint = "https://st.mrzt.dev/api/v2/links"
 
 type Response struct {
-	Address     string
-	Banned      bool
-	Created_at  string
-	Id          string
-	Link        string
-	Password    bool
-	Target      string
-	Description string
-	Updated_at  string
-	Visit_count int
+	Address     string `json:"address"`
+	Banned      bool   `json:"banned"`
+	CreatedAt   string `json:"created_at"`
+	Id          string `json:"id"`
+	Link        string `json:"link"`
+	Password    bool   `json:"password"`
+	Target      string `json:"target"`
+	Description string `json:"description"`
+	UpdatedAt   string `json:"updated_at"`
+	VisitCount  int    `json:"visit_count"`
+}
+
+var client = &http.Client{
+	Transport: &http.Transport{
+		MaxIdleConns:    20,
+		IdleConnTimeout: 60 * time.Second,
+	},
 }
 
 func Shortner(url string) (string, error) {
@@ -33,7 +41,7 @@ func Shortner(url string) (string, error) {
 		return "", err
 	}
 
-	res, err := http.Post(endpoint, "application/json", bytes.NewBuffer(requestBody))
+	res, err := client.Post(endpoint, "application/json", bytes.NewBuffer(requestBody))
 
 	if err != nil {
 		return "", err
