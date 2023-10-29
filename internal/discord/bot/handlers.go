@@ -31,6 +31,7 @@ func (bot Bot) onMessageCreate(session *discordgo.Session, message *discordgo.Me
 
 		commandMessage := events.CommandMessage{
 			CommandHandler: bot.commandHandler,
+			T:              bot.t,
 			Session:        session,
 			Guild:          guild,
 			Message:        &events.M{Message: message, Args: arguments},
@@ -72,6 +73,7 @@ func (bot Bot) onInteractionCreate(session *discordgo.Session, interaction *disc
 
 	commandInteraction := events.CommandMessage{
 		CommandHandler: bot.commandHandler,
+		T:              bot.t,
 		Session:        session,
 		Guild:          guild,
 		Message:        nil,

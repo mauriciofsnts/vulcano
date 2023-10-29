@@ -4,6 +4,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/mauriciofsnts/vulcano/internal/config"
 	"github.com/mauriciofsnts/vulcano/internal/discord/events"
+	"github.com/mauriciofsnts/vulcano/internal/i18n"
 	"github.com/pauloo27/logger"
 )
 
@@ -11,6 +12,7 @@ type Bot struct {
 	config         Configuration
 	session        *discordgo.Session
 	commandHandler *events.CommandHandler
+	t              *i18n.Language
 }
 
 type Configuration struct {
@@ -27,6 +29,7 @@ func New() (bot *Bot, err error) {
 
 	bot = &Bot{
 		config: config,
+		t:      i18n.GetLanguage("pt_BR"),
 	}
 
 	bot.session, err = discordgo.New("Bot " + config.Token)

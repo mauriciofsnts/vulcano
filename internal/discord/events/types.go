@@ -1,6 +1,9 @@
 package events
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"github.com/bwmarrin/discordgo"
+	"github.com/mauriciofsnts/vulcano/internal/i18n"
+)
 
 type I struct {
 	Interaction *discordgo.InteractionCreate
@@ -14,6 +17,7 @@ type M struct {
 
 type CommandMessage struct {
 	CommandHandler *CommandHandler
+	T              *i18n.Language
 	Session        *discordgo.Session
 	Guild          *discordgo.Guild
 	Message        *M
