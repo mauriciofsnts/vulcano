@@ -40,28 +40,20 @@ func init() {
 			Description: "Gerar várias informações uteis para desenvolvedores.",
 			Options: []*discordgo.ApplicationCommandOption{
 				{
+					Name:        "option",
+					Description: "Tipo de informação que deseja gerar",
+					Required:    true,
 					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "cpf",
-					Description: "Gerar um CPF válido.",
-					Required:    false,
-				},
-				{
-					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "cnpj",
-					Description: "Gerar um CNPJ válido.",
-					Required:    false,
-				},
-				{
-					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "rg",
-					Description: "Gerar um RG válido.",
-					Required:    false,
-				},
-				{
-					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "uuid",
-					Description: "Gerar um UUID válido.",
-					Required:    false,
+					Choices: []*discordgo.ApplicationCommandOptionChoice{
+						{
+							Name:  "uuid",
+							Value: "uuid",
+						},
+						{
+							Name:  "cpf",
+							Value: "cpf",
+						},
+					},
 				},
 			},
 		},
