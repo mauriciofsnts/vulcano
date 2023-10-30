@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/mauriciofsnts/vulcano/internal/discord/events"
@@ -47,7 +46,6 @@ func getTabNews() ([]*discordgo.MessageEmbedField, error) {
 
 	var wg sync.WaitGroup
 
-	start := time.Now()
 	for i, article := range articles {
 		wg.Add(1)
 		go func(idx int, article Article) {
@@ -76,8 +74,6 @@ func getTabNews() ([]*discordgo.MessageEmbedField, error) {
 	}
 
 	wg.Wait()
-
-	logger.Debug("took:", time.Since(start))
 
 	return fields, nil
 }
