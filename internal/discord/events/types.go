@@ -5,12 +5,12 @@ import (
 	"github.com/mauriciofsnts/vulcano/internal/i18n"
 )
 
-type I struct {
+type Interaction struct {
 	Interaction *discordgo.InteractionCreate
 	Args        []*discordgo.ApplicationCommandInteractionDataOption
 }
 
-type M struct {
+type Message struct {
 	Message *discordgo.MessageCreate
 	Args    []string
 }
@@ -20,8 +20,8 @@ type CommandMessage struct {
 	T              *i18n.Language
 	Session        *discordgo.Session
 	Guild          *discordgo.Guild
-	Message        *M
-	Interaction    *I
+	Message        *Message
+	Interaction    *Interaction
 }
 
 type CommandInfo struct {

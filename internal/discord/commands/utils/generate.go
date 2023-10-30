@@ -10,13 +10,7 @@ import (
 func init() {
 	events.Register("generate", events.CommandInfo{
 		Function: func(cm events.CommandMessage) {
-			var args string
-
-			if cm.Interaction != nil {
-				args = cm.Interaction.Args[0].StringValue()
-			} else {
-				args = cm.Message.Args[0]
-			}
+			var args = cm.GetArgString(0)
 
 			switch args {
 			case "uuid":

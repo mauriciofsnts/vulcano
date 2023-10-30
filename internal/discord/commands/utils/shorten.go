@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"strconv"
-
 	"github.com/bwmarrin/discordgo"
 	"github.com/mauriciofsnts/vulcano/internal/discord/events"
 	"github.com/mauriciofsnts/vulcano/internal/helpers"
@@ -12,23 +10,17 @@ import (
 func init() {
 	events.Register("shorten", events.CommandInfo{
 		Function: func(cm events.CommandMessage) {
-			var argsURL string
-			var argsDuration *int64
+			var argsDuration *int
 
-			if cm.Interaction != nil {
-				argsURL = cm.Interaction.Args[0].StringValue()
+			argsURL := cm.GetArgString(0)
 
-				if len(cm.Interaction.Args) > 1 {
-					duration := cm.Interaction.Args[1].IntValue()
+			if cm.HasArg(1) {
+				duration, err := cm.GetArgInt(1)
+
+				if err == nil {
 					argsDuration = &duration
 				}
-			} else {
-				argsURL = cm.Message.Args[0]
 
-				if len(cm.Message.Args) > 1 {
-					duration, _ := strconv.ParseInt(cm.Message.Args[1], 10, 64)
-					argsDuration = &duration
-				}
 			}
 
 			shortenedURL, err := helpers.Shortner(argsURL, argsDuration)

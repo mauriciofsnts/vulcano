@@ -7,7 +7,8 @@ var Cmd = make(map[string]CommandInfo)
 func New(config Config) (ch *CommandHandler) {
 	ch = &CommandHandler{
 		Commands: Cmd,
-		config:   config,
+
+		config: config,
 	}
 
 	return

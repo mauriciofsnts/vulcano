@@ -34,7 +34,7 @@ func (bot Bot) onMessageCreate(session *discordgo.Session, message *discordgo.Me
 			T:              bot.t,
 			Session:        session,
 			Guild:          guild,
-			Message:        &events.M{Message: message, Args: arguments},
+			Message:        &events.Message{Message: message, Args: arguments},
 			Interaction:    nil,
 		}
 
@@ -77,7 +77,7 @@ func (bot Bot) onInteractionCreate(session *discordgo.Session, interaction *disc
 		Session:        session,
 		Guild:          guild,
 		Message:        nil,
-		Interaction:    &events.I{Interaction: interaction, Args: interaction.ApplicationCommandData().Options},
+		Interaction:    &events.Interaction{Interaction: interaction, Args: interaction.ApplicationCommandData().Options},
 	}
 
 	cmd.Function(commandInteraction)
