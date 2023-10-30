@@ -17,12 +17,18 @@ func init() {
 
 			if cm.Interaction != nil {
 				argsURL = cm.Interaction.Args[0].StringValue()
-				duration := cm.Interaction.Args[1].IntValue()
-				argsDuration = &duration
+
+				if len(cm.Interaction.Args) > 1 {
+					duration := cm.Interaction.Args[1].IntValue()
+					argsDuration = &duration
+				}
 			} else {
 				argsURL = cm.Message.Args[0]
-				duration, _ := strconv.ParseInt(cm.Message.Args[1], 10, 64)
-				argsDuration = &duration
+
+				if len(cm.Message.Args) > 1 {
+					duration, _ := strconv.ParseInt(cm.Message.Args[1], 10, 64)
+					argsDuration = &duration
+				}
 			}
 
 			shortenedURL, err := helpers.Shortner(argsURL, argsDuration)
