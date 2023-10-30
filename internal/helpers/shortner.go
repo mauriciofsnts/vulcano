@@ -30,7 +30,10 @@ var client = &http.Client{
 	},
 }
 
-func Shortner(url string) (string, error) {
+// Shortner takes a URL string and an optional keepAliveFor duration in seconds,
+// sends a POST request to the endpoint with the URL as the target,
+// and returns the shortened URL string and any error encountered.
+func Shortner(url string, keepAliveFor *int64) (string, error) {
 
 	requestBody, err := json.Marshal(map[string]string{
 		"target":       url,

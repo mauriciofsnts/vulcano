@@ -37,11 +37,11 @@ func init() {
 		},
 		ApplicationCommand: &discordgo.ApplicationCommand{
 			Name:        "generate",
-			Description: "Gerar várias informações uteis para desenvolvedores.",
+			Description: "Generate various useful information for developers",
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Name:        "option",
-					Description: "Tipo de informação que deseja gerar",
+					Description: "Type of information you want to generate",
 					Required:    true,
 					Type:        discordgo.ApplicationCommandOptionString,
 					Choices: []*discordgo.ApplicationCommandOptionChoice{

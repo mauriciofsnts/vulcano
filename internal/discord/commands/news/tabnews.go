@@ -57,6 +57,7 @@ func getTabNews() ([]*discordgo.MessageEmbedField, error) {
 
 			shortenedUrl, err := helpers.Shortner(
 				fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug),
+				nil,
 			)
 
 			if err != nil {

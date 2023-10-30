@@ -78,7 +78,7 @@ func init() {
 		},
 		ApplicationCommand: &discordgo.ApplicationCommand{
 			Name:        "holiday",
-			Description: "Retorna o próximo feriado.",
+			Description: "Returns the next brazillian holiday",
 		},
 	})
 }
