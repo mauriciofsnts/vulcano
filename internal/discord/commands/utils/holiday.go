@@ -25,7 +25,7 @@ func init() {
 			jsonFile, err := os.Open("./internal/providers/holiday/dates.json")
 
 			if err != nil {
-				logger.Debug("error", err.Error())
+				logger.Debug("Cannot find dates.json file", err.Error())
 			}
 
 			defer jsonFile.Close()
@@ -33,7 +33,7 @@ func init() {
 			byteValue, err := io.ReadAll(jsonFile)
 
 			if err != nil {
-				logger.Debug("error", err.Error())
+				logger.Debug("Error on read json file", err.Error())
 			}
 
 			var holidays []Holiday
@@ -43,14 +43,14 @@ func init() {
 			logger.Debug("holidays", holidays)
 
 			if err != nil {
-				logger.Debug("error on unmarshal", err.Error())
+				logger.Debug("Error on unmarshal", err.Error())
 			}
 
 			for _, holiday := range holidays {
 				holidayDate, err := time.Parse("02/01", holiday.Date)
 
 				if err != nil {
-					logger.Debug("error on parse", err.Error())
+					logger.Debug("Error on parse date", err.Error())
 				}
 
 				holidayDate = holidayDate.AddDate(today.Year(), 0, 0)
