@@ -31,8 +31,8 @@ func init() {
 			}
 
 			cm.Ok(&discordgo.MessageEmbed{
-				Title:       "Shortened URL",
-				Description: shortenedURL,
+				Title:       cm.T.Commands.Shorten.Title.Str(),
+				Description: cm.T.Commands.Shorten.Response.Str(shortenedURL),
 			})
 
 		},

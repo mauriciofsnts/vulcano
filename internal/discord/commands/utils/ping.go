@@ -14,7 +14,7 @@ func init() {
 			ms := formatAPILatency(latency)
 
 			cm.Ok(&discordgo.MessageEmbed{
-				Title: "Pong!",
+				Title: cm.T.Commands.Ping.Response.Str(),
 				Fields: []*discordgo.MessageEmbedField{
 					{
 						Name:   "API Latency",

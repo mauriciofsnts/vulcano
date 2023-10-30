@@ -30,6 +30,8 @@ type Commands struct {
 	Ping    Command
 	Tools   Command
 	Tabnews Command
+	Shorten Command
+	Holiday Command
 }
 
 type Language struct {

@@ -40,8 +40,6 @@ func init() {
 
 			err = json.Unmarshal(byteValue, &holidays)
 
-			logger.Debug("holidays", holidays)
-
 			if err != nil {
 				logger.Debug("Error on unmarshal", err.Error())
 			}
@@ -56,19 +54,16 @@ func init() {
 				holidayDate = holidayDate.AddDate(today.Year(), 0, 0)
 
 				if holidayDate.After(today) || holidayDate.Equal(today) {
-					var title string
 					var description string
 
 					if holidayDate.Equal(today) {
-						title = "Hoje é feriado!"
 						description = "O feriado de hoje é " + holiday.Name + "." + "\n" + "Data: " + holiday.Date + "." + "\n" + "Tipo: " + holiday.Type + "."
 					} else {
-						title = "Próximo feriado"
 						description = "O próximo feriado é " + holiday.Name + "." + "\n" + "Data: " + holiday.Date + "." + "\n" + "Tipo: " + holiday.Type + "."
 					}
 
 					cm.Ok(&discordgo.MessageEmbed{
-						Title:       title,
+						Title:       cm.T.Commands.Holiday.Title.Str(),
 						Description: description,
 					})
 					break

@@ -23,3 +23,10 @@ Commands:
   Tabnews:
     Title: 📰  Tabnews
     Description: "Mostra as últimas notícias do site TabNews."
+  Shorten:
+    Title: 🔗  Shorten
+    Description: "Encurta uma URL."
+    Response: "URL encurtada: ${0}"
+  Holiday:
+    Title: 📅  Feriado
+    Description: "Mostra os feriados do ano."
