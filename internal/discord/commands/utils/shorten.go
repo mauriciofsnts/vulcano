@@ -12,6 +12,13 @@ func init() {
 		bot.Command{
 			Name:    "shorten",
 			Aliases: []string{"shorten"},
+			Parameters: []discord.CommandOption{
+				&discord.StringOption{
+					OptionName:  "url",
+					Description: "URL to shorten",
+					Required:    true,
+				},
+			},
 			Handler: func(ctx *bot.Context) discord.Embed {
 				args := ctx.RawArgs
 

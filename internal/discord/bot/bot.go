@@ -62,17 +62,12 @@ func New() (bot *Bot, err error) {
 	var discCommands []api.CreateCommandData
 
 	for _, command := range cmnd {
-		options := getParsedOptions(&command)
 
 		discCommands = append(discCommands, api.CreateCommandData{
 			Name:    command.Name,
-			Options: options,
+			Options: command.Parameters,
 		})
 	}
-
-	// List a size of commands
-	logger.Info("Registered", len(cmnd), "commands")
-	logger.Info("Registered", len(discCommands), "commands")
 
 	bot.State.BulkOverwriteCommands(bot.State.Ready().Application.ID, discCommands)
 

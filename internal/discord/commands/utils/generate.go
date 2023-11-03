@@ -11,7 +11,16 @@ func init() {
 	bot.RegisterCommand(
 		"generate",
 		bot.Command{
-			Name:    "generate",
+			Name:        "generate",
+			Description: "Generate various useful information for developers",
+			Parameters: []discord.CommandOption{
+				&discord.StringOption{
+					OptionName:  "type",
+					Description: "Type of information to generate. Available types: `cpf`, `uuid`",
+					Choices:     []discord.StringChoice{{Name: "cpf", Value: "cpf"}, {Name: "uuid", Value: "uuid"}},
+					Required:    true,
+				},
+			},
 			Aliases: []string{"generate"},
 			Handler: func(ctx *bot.Context) discord.Embed {
 				var args = ctx.RawArgs
