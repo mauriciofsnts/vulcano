@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/diamondburned/arikawa/v3/discord"
+	"github.com/mauriciofsnts/vulcano/internal/i18n"
 )
 
 type TriggerType string
@@ -34,6 +35,7 @@ type Context struct {
 	MessageID         discord.MessageID
 	Command           *Command
 	TriggerType       TriggerType
+	T                 i18n.Language
 }
 
 func (ctx *Context) SuccessEmbed(embed discord.Embed) discord.Embed {

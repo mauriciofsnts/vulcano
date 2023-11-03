@@ -24,13 +24,14 @@ func init() {
 			Name:    "holiday",
 			Aliases: []string{"feriado"},
 			Handler: func(ctx *bot.Context) discord.Embed {
+				commandTitle := ctx.T.Commands.Holiday.Title.Str()
 				jsonFile, err := os.Open("./internal/providers/holiday/dates.json")
 
 				if err != nil {
 					logger.Debug("Cannot find dates.json file", err.Error())
 					return ctx.ErrorEmbed(discord.Embed{
-						Title:       "Feriados",
-						Description: "Não foi possível encontrar o arquivo de feriados.",
+						Title:       commandTitle,
+						Description: "It was not possible to find the holiday file",
 					})
 				}
 
@@ -41,8 +42,8 @@ func init() {
 				if err != nil {
 					logger.Debug("Cannot read dates.json file", err.Error())
 					return ctx.ErrorEmbed(discord.Embed{
-						Title:       "Feriados",
-						Description: "Não foi possível ler o arquivo de feriados.",
+						Title:       commandTitle,
+						Description: "Unable to read the holidays file",
 					})
 				}
 
@@ -53,8 +54,8 @@ func init() {
 				if err != nil {
 					logger.Debug("Cannot unmarshal dates.json file", err.Error())
 					return ctx.ErrorEmbed(discord.Embed{
-						Title:       "Feriados",
-						Description: "Não foi possível ler o arquivo de feriados.",
+						Title:       commandTitle,
+						Description: "Unable to read the holidays file",
 					})
 				}
 
@@ -67,8 +68,8 @@ func init() {
 					if err != nil {
 						logger.Debug("Cannot parse holiday date", err.Error())
 						return ctx.ErrorEmbed(discord.Embed{
-							Title:       "Feriados",
-							Description: "Não foi possível ler o arquivo de feriados.",
+							Title:       commandTitle,
+							Description: "Unable to read the holidays file",
 						})
 					}
 
@@ -84,7 +85,7 @@ func init() {
 				}
 
 				embed := discord.Embed{
-					Title:       "TabNews",
+					Title:       commandTitle,
 					Description: description,
 				}
 

@@ -7,6 +7,7 @@ import (
 	"github.com/diamondburned/arikawa/v3/api"
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
+	"github.com/mauriciofsnts/vulcano/internal/i18n"
 	"github.com/pauloo27/logger"
 )
 
@@ -103,6 +104,7 @@ func handleEvent(
 		RawArgs:   args,
 		GuildID:   trigger.GuildID,
 		AuthorID:  trigger.AuthorID,
+		T:         *i18n.GetLanguage("pt_BR"),
 	}
 
 	var embeds []discord.Embed
