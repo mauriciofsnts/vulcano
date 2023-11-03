@@ -11,7 +11,7 @@ func init() {
 		"shorten",
 		bot.Command{
 			Name:    "shorten",
-			Aliases: []string{"shorten"},
+			Aliases: []string{"st"},
 			Parameters: []discord.CommandOption{
 				&discord.StringOption{
 					OptionName:  "url",

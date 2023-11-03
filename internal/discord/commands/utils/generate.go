@@ -13,6 +13,7 @@ func init() {
 		bot.Command{
 			Name:        "generate",
 			Description: "Generate various useful information for developers",
+			Aliases:     []string{"gen", "g"},
 			Parameters: []discord.CommandOption{
 				&discord.StringOption{
 					OptionName:  "type",
@@ -21,7 +22,6 @@ func init() {
 					Required:    true,
 				},
 			},
-			Aliases: []string{"generate"},
 			Handler: func(ctx *bot.Context) discord.Embed {
 				var args = ctx.RawArgs
 

@@ -59,7 +59,7 @@ func (bot Bot) onMessageCreateEvent(event *gateway.MessageCreateEvent) {
 
 	commandName := strings.TrimPrefix(message[0], bot.config.Prefix)
 
-	cmd, found := GetCommand(commandName)
+	cmd, found := GetCommandByNameAndAliases(commandName)
 
 	if !found {
 		logger.Debug("Command not found")
