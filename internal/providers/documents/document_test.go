@@ -1,13 +1,13 @@
-package helpers_test
+package documents_test
 
 import (
 	"testing"
 
-	"github.com/mauriciofsnts/vulcano/internal/helpers"
+	"github.com/mauriciofsnts/vulcano/internal/providers/documents"
 )
 
 func TestGenerateCPF(t *testing.T) {
-	cpfWithMask, cpfWithoutMask := helpers.GenerateCPF()
+	cpfWithMask, cpfWithoutMask := documents.GenerateCPF()
 
 	if len(cpfWithMask) != 14 {
 		t.Errorf("Expected CPF mask to have length 14, but got %d", len(cpfWithMask))

@@ -8,7 +8,7 @@ import (
 
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
-	"github.com/mauriciofsnts/vulcano/internal/helpers"
+	"github.com/mauriciofsnts/vulcano/internal/providers/shorten"
 	"github.com/pauloo27/logger"
 )
 
@@ -53,7 +53,7 @@ func getTabNews() ([]discord.EmbedField, error) {
 
 			shortenedUrl := ""
 
-			shortenedUrl, err := helpers.Shortner(
+			shortenedUrl, err := shorten.Shortner(
 				fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug),
 				nil,
 			)

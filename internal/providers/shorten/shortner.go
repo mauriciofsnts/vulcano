@@ -1,4 +1,4 @@
-package helpers
+package shorten
 
 import (
 	"bytes"

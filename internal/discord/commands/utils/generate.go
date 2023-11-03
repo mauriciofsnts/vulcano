@@ -4,7 +4,7 @@ import (
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/google/uuid"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
-	"github.com/mauriciofsnts/vulcano/internal/helpers"
+	"github.com/mauriciofsnts/vulcano/internal/providers/documents"
 )
 
 func init() {
@@ -36,7 +36,7 @@ func init() {
 
 				switch args[0] {
 				case "cpf":
-					cpf, _ := helpers.GenerateCPF()
+					cpf, _ := documents.GenerateCPF()
 
 					embed = discord.Embed{
 						Title:       "Generate",

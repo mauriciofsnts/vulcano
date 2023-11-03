@@ -3,7 +3,7 @@ package utils
 import (
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
-	"github.com/mauriciofsnts/vulcano/internal/helpers"
+	"github.com/mauriciofsnts/vulcano/internal/providers/shorten"
 )
 
 func init() {
@@ -29,7 +29,7 @@ func init() {
 					})
 				}
 
-				shortened, err := helpers.Shortner(args[0], nil)
+				shortened, err := shorten.Shortner(args[0], nil)
 
 				if err != nil {
 					return ctx.ErrorEmbed(discord.Embed{
