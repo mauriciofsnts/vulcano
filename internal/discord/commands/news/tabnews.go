@@ -82,14 +82,15 @@ func init() {
 	bot.RegisterCommand("tabnews", bot.Command{
 		Name:    "tabnews",
 		Aliases: []string{"tn", "tab"},
-		Handler: func(ctx *bot.Context) discord.Embed {
+		Handler: func(ctx *bot.Context) {
 			logger.Debug("TabNews command called")
 
 			fields, err := getTabNews()
 
 			if err != nil {
 				logger.Debugf("Error getting tabnews: %s", err)
-				return ctx.SuccessEmbed(discord.Embed{
+
+				ctx.Reply(discord.Embed{
 					Title:       "TabNews",
 					Description: "Erro ao buscar notícias do TabNews",
 				})
@@ -101,7 +102,7 @@ func init() {
 				Fields:      fields,
 			}
 
-			return ctx.SuccessEmbed(embed)
+			ctx.Reply(embed)
 		},
 	})
 }

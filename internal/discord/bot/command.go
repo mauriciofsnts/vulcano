@@ -4,14 +4,12 @@ import (
 	"github.com/diamondburned/arikawa/v3/discord"
 )
 
-type Handler func(*Context) discord.Embed
-
 type Command struct {
 	Name        string
 	Description string
 	Aliases     []string
 	Parameters  []discord.CommandOption
-	Handler     Handler
+	Handler     func(*Context)
 }
 
 var cmnd = make(map[string]Command)

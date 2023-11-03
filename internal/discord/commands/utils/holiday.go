@@ -23,16 +23,17 @@ func init() {
 		bot.Command{
 			Name:    "holiday",
 			Aliases: []string{"feriado"},
-			Handler: func(ctx *bot.Context) discord.Embed {
+			Handler: func(ctx *bot.Context) {
 				commandTitle := ctx.T.Commands.Holiday.Title.Str()
 				jsonFile, err := os.Open("./internal/providers/holiday/dates.json")
 
 				if err != nil {
 					logger.Debug("Cannot find dates.json file", err.Error())
-					return ctx.ErrorEmbed(discord.Embed{
+					ctx.ReplyError(discord.Embed{
 						Title:       commandTitle,
 						Description: "It was not possible to find the holiday file",
 					})
+					return
 				}
 
 				defer jsonFile.Close()
@@ -41,10 +42,11 @@ func init() {
 
 				if err != nil {
 					logger.Debug("Cannot read dates.json file", err.Error())
-					return ctx.ErrorEmbed(discord.Embed{
+					ctx.ReplyError(discord.Embed{
 						Title:       commandTitle,
 						Description: "Unable to read the holidays file",
 					})
+					return
 				}
 
 				var holidays []Holiday
@@ -53,10 +55,11 @@ func init() {
 
 				if err != nil {
 					logger.Debug("Cannot unmarshal dates.json file", err.Error())
-					return ctx.ErrorEmbed(discord.Embed{
+					ctx.ReplyError(discord.Embed{
 						Title:       commandTitle,
 						Description: "Unable to read the holidays file",
 					})
+					return
 				}
 
 				today := time.Now()
@@ -67,10 +70,11 @@ func init() {
 
 					if err != nil {
 						logger.Debug("Cannot parse holiday date", err.Error())
-						return ctx.ErrorEmbed(discord.Embed{
+						ctx.ReplyError(discord.Embed{
 							Title:       commandTitle,
 							Description: "Unable to read the holidays file",
 						})
+						return
 					}
 
 					holidayDate = holidayDate.AddDate(today.Year(), 0, 0)
@@ -89,7 +93,7 @@ func init() {
 					Description: description,
 				}
 
-				return ctx.SuccessEmbed(embed)
+				ctx.Reply(embed)
 			},
 		},
 	)

@@ -22,14 +22,15 @@ func init() {
 					Required:    true,
 				},
 			},
-			Handler: func(ctx *bot.Context) discord.Embed {
+			Handler: func(ctx *bot.Context) {
 				var args = ctx.RawArgs
 
 				if len(args) == 0 {
-					return ctx.ErrorEmbed(discord.Embed{
+					ctx.ReplyError(discord.Embed{
 						Title:       "Generate",
 						Description: "Você precisa informar o que deseja gerar.",
 					})
+					return
 				}
 
 				var embed discord.Embed
@@ -46,10 +47,7 @@ func init() {
 					uuid, err := uuid.NewUUID()
 
 					if err != nil {
-						return ctx.ErrorEmbed(discord.Embed{
-							Title:       "Generate",
-							Description: "Ocorreu um erro ao gerar o UUID.",
-						})
+						return
 					}
 
 					embed = discord.Embed{
@@ -57,12 +55,13 @@ func init() {
 						Description: uuid.String(),
 					}
 				default:
-					return ctx.ErrorEmbed(discord.Embed{
+					ctx.ReplyError(discord.Embed{
 						Title:       "Generate",
 						Description: "Tipo de informação inválido.",
 					})
+					return
 				}
 
-				return ctx.SuccessEmbed(embed)
+				ctx.Reply(embed)
 			}})
 }

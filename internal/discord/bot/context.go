@@ -3,6 +3,7 @@ package bot
 import (
 	"time"
 
+	"github.com/diamondburned/arikawa/v3/api"
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/mauriciofsnts/vulcano/internal/i18n"
 )
@@ -35,15 +36,33 @@ type Context struct {
 	MessageID         discord.MessageID
 	Command           *Command
 	TriggerType       TriggerType
+	triggerEvent      TriggerEvent
 	T                 i18n.Language
 }
 
-func (ctx *Context) SuccessEmbed(embed discord.Embed) discord.Embed {
+func (ctx *Context) Reply(embed discord.Embed) {
 	embed.Color = SuccessColor
-	return embed
+	ctx.handler([]discord.Embed{embed})
 }
 
-func (ctx *Context) ErrorEmbed(embed discord.Embed) discord.Embed {
+func (ctx *Context) ReplyError(embed discord.Embed) {
 	embed.Color = ErrorColor
-	return embed
+	ctx.handler([]discord.Embed{embed})
+}
+
+func (ctx *Context) handler(embeds []discord.Embed) {
+
+	if ctx.TriggerType == CommandTriggerSlash {
+		ctx.Bot.State.RespondInteraction(*ctx.triggerEvent.InteractionID, ctx.triggerEvent.Token, api.InteractionResponse{
+			Type: api.MessageInteractionWithSource,
+			Data: &api.InteractionResponseData{
+				Embeds: &embeds,
+			},
+		})
+	}
+
+	if ctx.TriggerType == CommandTriggerMessage {
+		ctx.Bot.State.SendEmbedReply(ctx.triggerEvent.ChannelID, *ctx.triggerEvent.MessageID, embeds[0])
+	}
+
 }

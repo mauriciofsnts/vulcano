@@ -4,7 +4,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/diamondburned/arikawa/v3/api"
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/mauriciofsnts/vulcano/internal/i18n"
@@ -99,27 +98,15 @@ func handleEvent(
 ) {
 
 	ctx := &Context{
-		startTime: trigger.EventTime,
-		Bot:       *bot,
-		RawArgs:   args,
-		GuildID:   trigger.GuildID,
-		AuthorID:  trigger.AuthorID,
-		T:         *i18n.GetLanguage("pt_BR"),
+		startTime:    trigger.EventTime,
+		Bot:          *bot,
+		RawArgs:      args,
+		GuildID:      trigger.GuildID,
+		AuthorID:     trigger.AuthorID,
+		T:            *i18n.GetLanguage("pt_BR"),
+		TriggerType:  trigger.Type,
+		triggerEvent: trigger,
 	}
 
-	var embeds []discord.Embed
-
-	embeds = append(embeds, command.Handler(ctx))
-
-	if trigger.Type == CommandTriggerSlash {
-		bot.State.RespondInteraction(*trigger.InteractionID, trigger.Token, api.InteractionResponse{
-			Type: api.MessageInteractionWithSource,
-			Data: &api.InteractionResponseData{
-				Embeds: &embeds,
-			},
-		})
-	} else {
-		bot.State.SendEmbedReply(trigger.ChannelID, *trigger.MessageID, embeds[0])
-	}
-
+	command.Handler(ctx)
 }

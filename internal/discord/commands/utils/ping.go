@@ -13,7 +13,7 @@ func init() {
 		bot.Command{
 			Name:    "ping",
 			Aliases: []string{"ping"},
-			Handler: func(ctx *bot.Context) discord.Embed {
+			Handler: func(ctx *bot.Context) {
 
 				fields := []discord.EmbedField{
 					{
@@ -23,7 +23,7 @@ func init() {
 					},
 				}
 
-				return ctx.SuccessEmbed(discord.Embed{
+				ctx.Reply(discord.Embed{
 					Title:  "Pong!",
 					Fields: fields,
 				})
