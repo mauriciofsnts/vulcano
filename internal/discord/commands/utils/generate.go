@@ -1,55 +1,59 @@
 package utils
 
 import (
-	"github.com/bwmarrin/discordgo"
+	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/google/uuid"
-	"github.com/mauriciofsnts/vulcano/internal/discord/events"
+	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
 	"github.com/mauriciofsnts/vulcano/internal/helpers"
 )
 
 func init() {
-	events.Register("generate", events.CommandInfo{
-		Function: func(cm events.CommandMessage) {
-			var args = cm.GetArgString(0)
+	bot.RegisterCommand(
+		"generate",
+		bot.Command{
+			Name:    "generate",
+			Aliases: []string{"generate"},
+			Handler: func(ctx *bot.Context) discord.Embed {
+				var args = ctx.RawArgs
 
-			switch args {
-			case "uuid":
-				uuid, err := uuid.NewUUID()
-				if err != nil {
-					return
+				if len(args) == 0 {
+					return ctx.SuccessEmbed(discord.Embed{
+						Title:       "Generate",
+						Description: "Você precisa informar o que deseja gerar.",
+					})
 				}
-				cm.Ok(&discordgo.MessageEmbed{Description: uuid.String()})
-			case "cpf":
-				cpf, _ := helpers.GenerateCPF()
 
-				cm.Ok(&discordgo.MessageEmbed{Description: cpf})
+				var embed discord.Embed
 
-			default:
-				cm.Error(&discordgo.MessageEmbed{Description: "Opção inválida."})
-			}
+				switch args[0] {
+				case "cpf":
+					cpf, _ := helpers.GenerateCPF()
 
-		},
-		ApplicationCommand: &discordgo.ApplicationCommand{
-			Name:        "generate",
-			Description: "Generate various useful information for developers",
-			Options: []*discordgo.ApplicationCommandOption{
-				{
-					Name:        "option",
-					Description: "Type of information you want to generate",
-					Required:    true,
-					Type:        discordgo.ApplicationCommandOptionString,
-					Choices: []*discordgo.ApplicationCommandOptionChoice{
-						{
-							Name:  "uuid",
-							Value: "uuid",
-						},
-						{
-							Name:  "cpf",
-							Value: "cpf",
-						},
-					},
-				},
-			},
-		},
-	})
+					embed = discord.Embed{
+						Title:       "Generate",
+						Description: cpf,
+					}
+				case "uuid":
+					uuid, err := uuid.NewUUID()
+
+					if err != nil {
+						return ctx.SuccessEmbed(discord.Embed{
+							Title:       "Generate",
+							Description: "Ocorreu um erro ao gerar o UUID.",
+						})
+					}
+
+					embed = discord.Embed{
+						Title:       "Generate",
+						Description: uuid.String(),
+					}
+				default:
+					embed = discord.Embed{
+						Title:       "Generate",
+						Description: "Não foi possível gerar o que você solicitou.",
+					}
+				}
+
+				return ctx.SuccessEmbed(embed)
+			}})
 }

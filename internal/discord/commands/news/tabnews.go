@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/bwmarrin/discordgo"
-	"github.com/mauriciofsnts/vulcano/internal/discord/events"
+	"github.com/diamondburned/arikawa/v3/discord"
+	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
 	"github.com/mauriciofsnts/vulcano/internal/helpers"
 	"github.com/pauloo27/logger"
 )
@@ -29,7 +29,7 @@ type Article struct {
 	Children_deep_count int16  `json:"children_deep_count"`
 }
 
-func getTabNews() ([]*discordgo.MessageEmbedField, error) {
+func getTabNews() ([]discord.EmbedField, error) {
 	res, err := http.Get("https://www.tabnews.com.br/api/v1/contents?page=1&per_page=15&strategy=relevant")
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func getTabNews() ([]*discordgo.MessageEmbedField, error) {
 		return nil, err
 	}
 
-	fields := make([]*discordgo.MessageEmbedField, len(articles))
+	fields := make([]discord.EmbedField, len(articles))
 
 	var wg sync.WaitGroup
 
@@ -64,7 +64,7 @@ func getTabNews() ([]*discordgo.MessageEmbedField, error) {
 
 			value := fmt.Sprintf("⭐ %d · %s · %s", article.Tabcoins, article.Owner_username, shortenedUrl)
 
-			fields[idx] = &discordgo.MessageEmbedField{
+			fields[idx] = discord.EmbedField{
 				Name:   article.Title,
 				Value:  value,
 				Inline: false,
@@ -79,26 +79,29 @@ func getTabNews() ([]*discordgo.MessageEmbedField, error) {
 }
 
 func init() {
-	events.Register("tabnews", events.CommandInfo{
-		Function: func(cm events.CommandMessage) {
+	bot.RegisterCommand("tabnews", bot.Command{
+		Name:    "tabnews",
+		Aliases: []string{"tn", "tab"},
+		Handler: func(ctx *bot.Context) discord.Embed {
+			logger.Debug("TabNews command called")
 
 			fields, err := getTabNews()
+
 			if err != nil {
 				logger.Debugf("Error getting tabnews: %s", err)
-				return
+				return ctx.SuccessEmbed(discord.Embed{
+					Title:       "TabNews",
+					Description: "Erro ao buscar notícias do TabNews",
+				})
 			}
 
-			embed := &discordgo.MessageEmbed{
-				Title:       cm.T.Commands.Tabnews.Title.Str(),
-				Description: cm.T.Commands.Tabnews.Description.Str(),
+			embed := discord.Embed{
+				Title:       "TabNews",
+				Description: "Notícias do TabNews",
 				Fields:      fields,
 			}
 
-			cm.Ok(embed)
-		},
-		ApplicationCommand: &discordgo.ApplicationCommand{
-			Name:        "tabnews",
-			Description: "Confira as últimas notícias do site TabNews.",
+			return ctx.SuccessEmbed(embed)
 		},
 	})
 }

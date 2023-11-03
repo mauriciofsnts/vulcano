@@ -3,33 +3,31 @@ package utils
 import (
 	"fmt"
 
-	"github.com/bwmarrin/discordgo"
-	"github.com/mauriciofsnts/vulcano/internal/discord/events"
+	"github.com/diamondburned/arikawa/v3/discord"
+	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
 )
 
 func init() {
-	events.Register("ping", events.CommandInfo{
-		Function: func(cm events.CommandMessage) {
-			latency := cm.Session.HeartbeatLatency().Milliseconds()
-			ms := formatAPILatency(latency)
+	bot.RegisterCommand(
+		"ping",
+		bot.Command{
+			Name:    "ping",
+			Aliases: []string{"ping"},
+			Handler: func(ctx *bot.Context) discord.Embed {
 
-			cm.Ok(&discordgo.MessageEmbed{
-				Title: cm.T.Commands.Ping.Response.Str(),
-				Fields: []*discordgo.MessageEmbedField{
+				fields := []discord.EmbedField{
 					{
 						Name:   "API Latency",
-						Value:  ms,
+						Value:  formatAPILatency(ctx.Bot.State.Gateway().Latency().Milliseconds()),
 						Inline: true,
 					},
-				},
-			})
+				}
 
-		},
-		ApplicationCommand: &discordgo.ApplicationCommand{
-			Name:        "ping",
-			Description: "Pong!",
-		},
-	})
+				return ctx.SuccessEmbed(discord.Embed{
+					Title:  "Pong!",
+					Fields: fields,
+				})
+			}})
 }
 
 func formatAPILatency(latency int64) string {

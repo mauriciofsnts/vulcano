@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/bwmarrin/discordgo"
-	"github.com/mauriciofsnts/vulcano/internal/discord/events"
+	"github.com/diamondburned/arikawa/v3/discord"
+	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
 	"github.com/pauloo27/logger"
 )
 
@@ -18,62 +18,78 @@ type Holiday struct {
 }
 
 func init() {
-	events.Register("holiday", events.CommandInfo{
-		Function: func(cm events.CommandMessage) {
-			today := time.Now()
-
-			jsonFile, err := os.Open("./internal/providers/holiday/dates.json")
-
-			if err != nil {
-				logger.Debug("Cannot find dates.json file", err.Error())
-			}
-
-			defer jsonFile.Close()
-
-			byteValue, err := io.ReadAll(jsonFile)
-
-			if err != nil {
-				logger.Debug("Error on read json file", err.Error())
-			}
-
-			var holidays []Holiday
-
-			err = json.Unmarshal(byteValue, &holidays)
-
-			if err != nil {
-				logger.Debug("Error on unmarshal", err.Error())
-			}
-
-			for _, holiday := range holidays {
-				holidayDate, err := time.Parse("02/01", holiday.Date)
+	bot.RegisterCommand(
+		"holiday",
+		bot.Command{
+			Name:    "holiday",
+			Aliases: []string{"feriado"},
+			Handler: func(ctx *bot.Context) discord.Embed {
+				jsonFile, err := os.Open("./internal/providers/holiday/dates.json")
 
 				if err != nil {
-					logger.Debug("Error on parse date", err.Error())
+					logger.Debug("Cannot find dates.json file", err.Error())
+					return ctx.SuccessEmbed(discord.Embed{
+						Title:       "Feriados",
+						Description: "Não foi possível encontrar o arquivo de feriados.",
+					})
 				}
 
-				holidayDate = holidayDate.AddDate(today.Year(), 0, 0)
+				defer jsonFile.Close()
 
-				if holidayDate.After(today) || holidayDate.Equal(today) {
-					var description string
+				byteValue, err := io.ReadAll(jsonFile)
 
-					if holidayDate.Equal(today) {
-						description = "O feriado de hoje é " + holiday.Name + "." + "\n" + "Data: " + holiday.Date + "." + "\n" + "Tipo: " + holiday.Type + "."
-					} else {
-						description = "O próximo feriado é " + holiday.Name + "." + "\n" + "Data: " + holiday.Date + "." + "\n" + "Tipo: " + holiday.Type + "."
+				if err != nil {
+					logger.Debug("Cannot read dates.json file", err.Error())
+					return ctx.SuccessEmbed(discord.Embed{
+						Title:       "Feriados",
+						Description: "Não foi possível ler o arquivo de feriados.",
+					})
+				}
+
+				var holidays []Holiday
+
+				err = json.Unmarshal(byteValue, &holidays)
+
+				if err != nil {
+					logger.Debug("Cannot unmarshal dates.json file", err.Error())
+					return ctx.SuccessEmbed(discord.Embed{
+						Title:       "Feriados",
+						Description: "Não foi possível ler o arquivo de feriados.",
+					})
+				}
+
+				today := time.Now()
+				var description string
+
+				for _, holiday := range holidays {
+					holidayDate, err := time.Parse("02/01", holiday.Date)
+
+					if err != nil {
+						logger.Debug("Cannot parse holiday date", err.Error())
+						return ctx.SuccessEmbed(discord.Embed{
+							Title:       "Feriados",
+							Description: "Não foi possível ler o arquivo de feriados.",
+						})
 					}
 
-					cm.Ok(&discordgo.MessageEmbed{
-						Title:       cm.T.Commands.Holiday.Title.Str(),
-						Description: description,
-					})
-					break
-				}
-			}
+					holidayDate = holidayDate.AddDate(today.Year(), 0, 0)
 
+					if holidayDate.After(today) || holidayDate.Equal(today) {
+						if holidayDate.Equal(today) {
+							description = "O feriado de hoje é " + holiday.Name + "." + "\n" + "Data: " + holiday.Date + "." + "\n" + "Tipo: " + holiday.Type + "."
+						} else {
+							description = "O próximo feriado é " + holiday.Name + "." + "\n" + "Data: " + holiday.Date + "." + "\n" + "Tipo: " + holiday.Type + "."
+						}
+					}
+				}
+
+				embed := discord.Embed{
+					Title:       "TabNews",
+					Description: description,
+				}
+
+				return ctx.SuccessEmbed(embed)
+			},
 		},
-		ApplicationCommand: &discordgo.ApplicationCommand{
-			Name:        "holiday",
-			Description: "Returns the next brazillian holiday",
-		},
-	})
+	)
 }

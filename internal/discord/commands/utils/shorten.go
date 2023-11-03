@@ -1,58 +1,42 @@
 package utils
 
 import (
-	"github.com/bwmarrin/discordgo"
-	"github.com/mauriciofsnts/vulcano/internal/discord/events"
+	"github.com/diamondburned/arikawa/v3/discord"
+	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
 	"github.com/mauriciofsnts/vulcano/internal/helpers"
-	"github.com/pauloo27/logger"
 )
 
 func init() {
-	events.Register("shorten", events.CommandInfo{
-		Function: func(cm events.CommandMessage) {
-			var argsDuration *int
+	bot.RegisterCommand(
+		"shorten",
+		bot.Command{
+			Name:    "shorten",
+			Aliases: []string{"shorten"},
+			Handler: func(ctx *bot.Context) discord.Embed {
+				args := ctx.RawArgs
 
-			argsURL := cm.GetArgString(0)
-
-			if cm.HasArg(1) {
-				duration, err := cm.GetArgInt(1)
-
-				if err == nil {
-					argsDuration = &duration
+				if len(args) == 0 {
+					return ctx.SuccessEmbed(discord.Embed{
+						Title:       "Shorten",
+						Description: "You need to provide a URL to shorten. Example: `!shorten https://google.com`",
+					})
 				}
 
-			}
+				shortened, err := helpers.Shortner(args[0], nil)
 
-			shortenedURL, err := helpers.Shortner(argsURL, argsDuration)
+				if err != nil {
+					return ctx.SuccessEmbed(discord.Embed{
+						Title:       "Shorten",
+						Description: "Failed to shorten URL.",
+					})
+				}
 
-			if err != nil {
-				logger.Error("Error shortening url:", err)
-				return
-			}
+				return ctx.SuccessEmbed(discord.Embed{
+					Title:       "Shorten",
+					Description: shortened,
+				})
 
-			cm.Ok(&discordgo.MessageEmbed{
-				Title:       cm.T.Commands.Shorten.Title.Str(),
-				Description: cm.T.Commands.Shorten.Response.Str(shortenedURL),
-			})
-
-		},
-		ApplicationCommand: &discordgo.ApplicationCommand{
-			Name:        "shorten",
-			Description: "Shorten a URL",
-			Options: []*discordgo.ApplicationCommandOption{
-				{
-					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "url",
-					Description: "URL to shorten",
-					Required:    true,
-				},
-				{
-					Type:        discordgo.ApplicationCommandOptionInteger,
-					Name:        "duration",
-					Description: "Duration of the shortened URL",
-					Required:    false,
-				},
 			},
 		},
-	})
+	)
 }
