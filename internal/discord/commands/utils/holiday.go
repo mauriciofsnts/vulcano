@@ -28,7 +28,7 @@ func init() {
 
 				if err != nil {
 					logger.Debug("Cannot find dates.json file", err.Error())
-					return ctx.SuccessEmbed(discord.Embed{
+					return ctx.ErrorEmbed(discord.Embed{
 						Title:       "Feriados",
 						Description: "Não foi possível encontrar o arquivo de feriados.",
 					})
@@ -40,7 +40,7 @@ func init() {
 
 				if err != nil {
 					logger.Debug("Cannot read dates.json file", err.Error())
-					return ctx.SuccessEmbed(discord.Embed{
+					return ctx.ErrorEmbed(discord.Embed{
 						Title:       "Feriados",
 						Description: "Não foi possível ler o arquivo de feriados.",
 					})
@@ -52,7 +52,7 @@ func init() {
 
 				if err != nil {
 					logger.Debug("Cannot unmarshal dates.json file", err.Error())
-					return ctx.SuccessEmbed(discord.Embed{
+					return ctx.ErrorEmbed(discord.Embed{
 						Title:       "Feriados",
 						Description: "Não foi possível ler o arquivo de feriados.",
 					})
@@ -66,7 +66,7 @@ func init() {
 
 					if err != nil {
 						logger.Debug("Cannot parse holiday date", err.Error())
-						return ctx.SuccessEmbed(discord.Embed{
+						return ctx.ErrorEmbed(discord.Embed{
 							Title:       "Feriados",
 							Description: "Não foi possível ler o arquivo de feriados.",
 						})

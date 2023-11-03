@@ -23,7 +23,7 @@ func init() {
 				args := ctx.RawArgs
 
 				if len(args) == 0 {
-					return ctx.SuccessEmbed(discord.Embed{
+					return ctx.ErrorEmbed(discord.Embed{
 						Title:       "Shorten",
 						Description: "You need to provide a URL to shorten. Example: `!shorten https://google.com`",
 					})
@@ -32,7 +32,7 @@ func init() {
 				shortened, err := helpers.Shortner(args[0], nil)
 
 				if err != nil {
-					return ctx.SuccessEmbed(discord.Embed{
+					return ctx.ErrorEmbed(discord.Embed{
 						Title:       "Shorten",
 						Description: "Failed to shorten URL.",
 					})

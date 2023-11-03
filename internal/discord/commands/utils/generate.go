@@ -26,7 +26,7 @@ func init() {
 				var args = ctx.RawArgs
 
 				if len(args) == 0 {
-					return ctx.SuccessEmbed(discord.Embed{
+					return ctx.ErrorEmbed(discord.Embed{
 						Title:       "Generate",
 						Description: "Você precisa informar o que deseja gerar.",
 					})
@@ -46,7 +46,7 @@ func init() {
 					uuid, err := uuid.NewUUID()
 
 					if err != nil {
-						return ctx.SuccessEmbed(discord.Embed{
+						return ctx.ErrorEmbed(discord.Embed{
 							Title:       "Generate",
 							Description: "Ocorreu um erro ao gerar o UUID.",
 						})
@@ -57,10 +57,10 @@ func init() {
 						Description: uuid.String(),
 					}
 				default:
-					embed = discord.Embed{
+					return ctx.ErrorEmbed(discord.Embed{
 						Title:       "Generate",
-						Description: "Não foi possível gerar o que você solicitou.",
-					}
+						Description: "Tipo de informação inválido.",
+					})
 				}
 
 				return ctx.SuccessEmbed(embed)

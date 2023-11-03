@@ -40,3 +40,8 @@ func (ctx *Context) SuccessEmbed(embed discord.Embed) discord.Embed {
 	embed.Color = SuccessColor
 	return embed
 }
+
+func (ctx *Context) ErrorEmbed(embed discord.Embed) discord.Embed {
+	embed.Color = ErrorColor
+	return embed
+}
