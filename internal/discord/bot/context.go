@@ -39,30 +39,52 @@ type Context struct {
 	triggerEvent TriggerEvent
 }
 
-func (ctx *Context) Reply(embed discord.Embed) {
-	embed.Color = SuccessColor
-	embed = ctx.appendExecutionInfoToEmbed(embed)
-	ctx.handleReply([]discord.Embed{embed})
+type ComplexMessageData struct {
+	Embed      discord.Embed
+	Components *discord.ContainerComponents
 }
 
-func (ctx *Context) ReplyError(embed discord.Embed) {
-	embed.Color = ErrorColor
-	embed = ctx.appendExecutionInfoToEmbed(embed)
-	ctx.handleReply([]discord.Embed{embed})
+func (ctx *Context) Reply(data ComplexMessageData) {
+	data.Embed.Color = SuccessColor
+	data.Embed = ctx.appendExecutionInfoToEmbed(data.Embed)
+	ctx.handleReply(data)
+
 }
 
-func (ctx *Context) handleReply(embeds []discord.Embed) {
+func (ctx *Context) ReplyError(data ComplexMessageData) {
+	data.Embed.Color = ErrorColor
+	data.Embed = ctx.appendExecutionInfoToEmbed(data.Embed)
+	ctx.handleReply(data)
+}
+
+func (ctx *Context) handleReply(data ComplexMessageData) {
 	if ctx.TriggerType == CommandTriggerSlash {
+
+		response := &api.InteractionResponseData{
+			Embeds: &[]discord.Embed{data.Embed},
+		}
+
+		if data.Components != nil {
+			response.Components = data.Components
+		}
+
 		ctx.Bot.State.RespondInteraction(*ctx.triggerEvent.InteractionID, ctx.triggerEvent.Token, api.InteractionResponse{
 			Type: api.MessageInteractionWithSource,
-			Data: &api.InteractionResponseData{
-				Embeds: &embeds,
-			},
+			Data: response,
 		})
 	}
 
 	if ctx.TriggerType == CommandTriggerMessage {
-		ctx.Bot.State.SendEmbedReply(ctx.triggerEvent.ChannelID, *ctx.triggerEvent.MessageID, embeds[0])
+
+		response := api.SendMessageData{
+			Embeds: []discord.Embed{data.Embed},
+		}
+
+		if data.Components != nil {
+			response.Components = *data.Components
+		}
+
+		ctx.Bot.State.SendMessageComplex(ctx.triggerEvent.ChannelID, response)
 	}
 }
 

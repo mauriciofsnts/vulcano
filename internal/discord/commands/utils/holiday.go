@@ -29,9 +29,11 @@ func init() {
 
 				if err != nil {
 					logger.Debug("Cannot find dates.json file", err.Error())
-					ctx.ReplyError(discord.Embed{
-						Title:       commandTitle,
-						Description: "It was not possible to find the holiday file",
+					ctx.ReplyError(bot.ComplexMessageData{
+						Embed: discord.Embed{
+							Title:       commandTitle,
+							Description: "It was not possible to find the holiday file",
+						},
 					})
 					return
 				}
@@ -42,9 +44,11 @@ func init() {
 
 				if err != nil {
 					logger.Debug("Cannot read dates.json file", err.Error())
-					ctx.ReplyError(discord.Embed{
-						Title:       commandTitle,
-						Description: "Unable to read the holidays file",
+					ctx.ReplyError(bot.ComplexMessageData{
+						Embed: discord.Embed{
+							Title:       commandTitle,
+							Description: "Unable to read the holidays file",
+						},
 					})
 					return
 				}
@@ -55,9 +59,11 @@ func init() {
 
 				if err != nil {
 					logger.Debug("Cannot unmarshal dates.json file", err.Error())
-					ctx.ReplyError(discord.Embed{
-						Title:       commandTitle,
-						Description: "Unable to read the holidays file",
+					ctx.ReplyError(bot.ComplexMessageData{
+						Embed: discord.Embed{
+							Title:       commandTitle,
+							Description: "Unable to read the holidays file",
+						},
 					})
 					return
 				}
@@ -70,9 +76,11 @@ func init() {
 
 					if err != nil {
 						logger.Debug("Cannot parse holiday date", err.Error())
-						ctx.ReplyError(discord.Embed{
-							Title:       commandTitle,
-							Description: "Unable to read the holidays file",
+						ctx.ReplyError(bot.ComplexMessageData{
+							Embed: discord.Embed{
+								Title:       commandTitle,
+								Description: "Unable to read the holidays file",
+							},
 						})
 						return
 					}
@@ -88,12 +96,12 @@ func init() {
 					}
 				}
 
-				embed := discord.Embed{
-					Title:       commandTitle,
-					Description: description,
-				}
-
-				ctx.Reply(embed)
+				ctx.Reply(bot.ComplexMessageData{
+					Embed: discord.Embed{
+						Title:       commandTitle,
+						Description: description,
+					},
+				})
 			},
 		},
 	)

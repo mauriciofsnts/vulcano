@@ -90,19 +90,22 @@ func init() {
 			if err != nil {
 				logger.Debugf("Error getting tabnews: %s", err)
 
-				ctx.Reply(discord.Embed{
-					Title:       "TabNews",
-					Description: "Erro ao buscar notícias do TabNews",
+				ctx.Reply(bot.ComplexMessageData{
+					Embed: discord.Embed{
+						Title:       "TabNews",
+						Description: "Erro ao buscar notícias do TabNews",
+					},
 				})
 			}
 
-			embed := discord.Embed{
-				Title:       "TabNews",
-				Description: "Notícias do TabNews",
-				Fields:      fields,
-			}
+			ctx.Reply(bot.ComplexMessageData{
+				Embed: discord.Embed{
+					Title:       "TabNews",
+					Description: "Notícias do TabNews",
+					Fields:      fields,
+				},
+			})
 
-			ctx.Reply(embed)
 		},
 	})
 }

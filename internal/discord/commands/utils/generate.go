@@ -26,9 +26,11 @@ func init() {
 				var args = ctx.RawArgs
 
 				if len(args) == 0 {
-					ctx.ReplyError(discord.Embed{
-						Title:       "Generate",
-						Description: "Você precisa informar o que deseja gerar.",
+					ctx.ReplyError(bot.ComplexMessageData{
+						Embed: discord.Embed{
+							Title:       "Generate",
+							Description: "Você precisa informar o que deseja gerar.",
+						},
 					})
 					return
 				}
@@ -55,13 +57,17 @@ func init() {
 						Description: uuid.String(),
 					}
 				default:
-					ctx.ReplyError(discord.Embed{
-						Title:       "Generate",
-						Description: "Tipo de informação inválido.",
+					ctx.ReplyError(bot.ComplexMessageData{
+						Embed: discord.Embed{
+							Title:       "Generate",
+							Description: "Tipo de informação inválido.",
+						},
 					})
 					return
 				}
 
-				ctx.Reply(embed)
+				ctx.Reply(bot.ComplexMessageData{
+					Embed: embed,
+				})
 			}})
 }

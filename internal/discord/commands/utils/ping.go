@@ -14,7 +14,6 @@ func init() {
 			Name:    "ping",
 			Aliases: []string{"ping"},
 			Handler: func(ctx *bot.Context) {
-
 				fields := []discord.EmbedField{
 					{
 						Name:   "API Latency",
@@ -23,9 +22,8 @@ func init() {
 					},
 				}
 
-				ctx.Reply(discord.Embed{
-					Title:  "Pong!",
-					Fields: fields,
+				ctx.Reply(bot.ComplexMessageData{
+					Embed: discord.Embed{Title: "Pong!", Fields: fields},
 				})
 			}})
 }

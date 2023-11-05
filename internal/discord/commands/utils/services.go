@@ -14,29 +14,30 @@ func init() {
 			Description: "List of open services",
 			Handler: func(ctx *bot.Context) {
 
-				embed := discord.Embed{
-					Title: "Open Services",
-					URL:   "https://github.com/mauriciofsnts",
-					Fields: []discord.EmbedField{
-						{
-							Name:   "Encurtador de URL",
-							Value:  "https://st.mrzt.dev/",
-							Inline: false,
-						},
-						{
-							Name:   "Uptime",
-							Value:  "https://uptime.mrzt.dev/",
-							Inline: false,
-						},
-						{
-							Name:   "Web Development",
-							Value:  "https://speedify.dev/",
-							Inline: false,
+				ctx.Reply(bot.ComplexMessageData{
+					Embed: discord.Embed{
+						Title: "Open Services",
+						URL:   "https://github.com/mauriciofsnts",
+						Fields: []discord.EmbedField{
+							{
+								Name:   "Encurtador de URL",
+								Value:  "https://st.mrzt.dev/",
+								Inline: false,
+							},
+							{
+								Name:   "Uptime",
+								Value:  "https://uptime.mrzt.dev/",
+								Inline: false,
+							},
+							{
+								Name:   "Web Development",
+								Value:  "https://speedify.dev/",
+								Inline: false,
+							},
 						},
 					},
-				}
+				})
 
-				ctx.Reply(embed)
 			},
 		},
 	)
