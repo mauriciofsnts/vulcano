@@ -1,4 +1,3 @@
-
 BINARY_NAME = vulcano
 TEST_COMMAND = gotest
 
