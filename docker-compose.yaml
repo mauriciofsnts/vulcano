@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  vulcano:
+    build:
+      context: .
+      dockerfile: Dockerfile    
+    volumes:
+      - .:/go/src/app
+    
