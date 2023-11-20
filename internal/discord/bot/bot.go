@@ -20,7 +20,7 @@ type Configuration struct {
 func NewConfiguration() *Configuration {
 	return &Configuration{
 		Token:  config.Vulcano.Token,
-		Prefix: ",",
+		Prefix: config.Vulcano.Prefix,
 	}
 }
 
