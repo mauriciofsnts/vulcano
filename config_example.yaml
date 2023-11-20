@@ -1,10 +1,2 @@
-# discord token
-token: ANGRY WITH GO
-
-# db setup
-pg: 
-  port: 5432
-  host: localhost
-  username: postgres
-  password: password :)
-  dbName: vulcano
+token: AN_EXAMPLE_TOKEN
+prefix: ","
