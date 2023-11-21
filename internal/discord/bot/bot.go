@@ -2,6 +2,7 @@ package bot
 
 import (
 	"context"
+	"strings"
 
 	"github.com/diamondburned/arikawa/v3/api"
 	"github.com/diamondburned/arikawa/v3/api/cmdroute"
@@ -93,9 +94,19 @@ func (bot *Bot) SyncSlashCommands() error {
 	}
 
 	for _, cmd := range botCommands {
-		if _, found := GetCommandByNameAndAliases(cmd.Name); !found {
-			bot.State.DeleteCommand(bot.State.Ready().Application.ID, cmd.ID)
+		name := cmd.Name
+
+		_, found := GetCommand(strings.ToLower(name))
+
+		if !found {
+			logger.Info("Deleting command", cmd.Name)
+			err := bot.State.DeleteCommand(bot.State.Ready().Application.ID, cmd.ID)
+
+			if err != nil {
+				logger.Error("Failed to delete command", cmd.Name, err)
+			}
 		}
+
 	}
 
 	return nil
