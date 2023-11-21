@@ -71,9 +71,32 @@ func New() (bot *Bot, err error) {
 
 	bot.State.BulkOverwriteCommands(bot.State.Ready().Application.ID, discCommands)
 
+	err = bot.SyncSlashCommands()
+
+	if err != nil {
+		logger.Error("Failed to sync slash commands:", err)
+	}
+
 	return bot, nil
 }
 
 func (bot *Bot) Close() {
 	bot.State.Close()
+}
+
+func (bot *Bot) SyncSlashCommands() error {
+	logger.Info("Syncing slash commands")
+	botCommands, err := bot.State.Commands(bot.State.Ready().Application.ID)
+
+	if err != nil {
+		return err
+	}
+
+	for _, cmd := range botCommands {
+		if _, found := GetCommandByNameAndAliases(cmd.Name); !found {
+			bot.State.DeleteCommand(bot.State.Ready().Application.ID, cmd.ID)
+		}
+	}
+
+	return nil
 }
