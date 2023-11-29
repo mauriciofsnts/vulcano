@@ -2,7 +2,7 @@ package bot
 
 import (
 	"context"
-	"strings"
+	"time"
 
 	"github.com/diamondburned/arikawa/v3/api"
 	"github.com/diamondburned/arikawa/v3/api/cmdroute"
@@ -26,9 +26,10 @@ func NewConfiguration() *Configuration {
 }
 
 type Bot struct {
-	config Configuration
-	t      i18n.Language
-	State  *state.State
+	config    Configuration
+	t         i18n.Language
+	State     *state.State
+	StartedAt time.Time
 	*cmdroute.Router
 }
 
@@ -49,34 +50,34 @@ func New() (bot *Bot, err error) {
 	bot.State.AddIntents(gateway.IntentGuildMessages)
 	bot.State.AddIntents(gateway.IntentDirectMessages)
 
+	// Register events
+	bot.InitHandler()
+
 	if err := bot.State.Open(context.Background()); err != nil {
 		logger.Debug("Failed to open state:", err)
 	}
-
-	// Automatically defer handles if they're slow.
-	bot.Use(cmdroute.Deferrable(bot.State, cmdroute.DeferOpts{}))
-
-	// Register events
-	bot.InitHandler()
 
 	// Register commands
 	var discCommands []api.CreateCommandData
 
 	for _, command := range cmnd {
-
 		discCommands = append(discCommands, api.CreateCommandData{
 			Name:    command.Name,
 			Options: command.Parameters,
 		})
+
+		logger.Info("Registering command", command.Name)
 	}
 
 	bot.State.BulkOverwriteCommands(bot.State.Ready().Application.ID, discCommands)
-
 	err = bot.SyncSlashCommands()
 
 	if err != nil {
 		logger.Error("Failed to sync slash commands:", err)
 	}
+
+	// Automatically defer handles if they're slow.
+	bot.Use(cmdroute.Deferrable(bot.State, cmdroute.DeferOpts{}))
 
 	return bot, nil
 }
@@ -96,7 +97,7 @@ func (bot *Bot) SyncSlashCommands() error {
 	for _, cmd := range botCommands {
 		name := cmd.Name
 
-		_, found := GetCommand(strings.ToLower(name))
+		_, found := GetCommand(name)
 
 		if !found {
 			logger.Info("Deleting command", cmd.Name)

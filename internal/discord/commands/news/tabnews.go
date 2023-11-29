@@ -93,7 +93,7 @@ func init() {
 				ctx.Reply(bot.ComplexMessageData{
 					Embed: discord.Embed{
 						Title:       "TabNews",
-						Description: "Erro ao buscar notícias do TabNews",
+						Description: "An error occurred while getting tabnews.",
 					},
 				})
 			}
@@ -101,7 +101,7 @@ func init() {
 			ctx.Reply(bot.ComplexMessageData{
 				Embed: discord.Embed{
 					Title:       "TabNews",
-					Description: "Notícias do TabNews",
+					Description: "Latest news from TabNews",
 					Fields:      fields,
 				},
 			})

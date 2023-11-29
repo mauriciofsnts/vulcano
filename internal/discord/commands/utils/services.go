@@ -20,7 +20,7 @@ func init() {
 						URL:   "https://github.com/mauriciofsnts",
 						Fields: []discord.EmbedField{
 							{
-								Name:   "Encurtador de URL",
+								Name:   "URL Shortener",
 								Value:  "https://st.mrzt.dev/",
 								Inline: false,
 							},

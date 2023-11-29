@@ -8,7 +8,6 @@ import (
 
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
-	"github.com/pauloo27/logger"
 )
 
 type Holiday struct {
@@ -28,7 +27,6 @@ func init() {
 				jsonFile, err := os.Open("./internal/providers/holiday/dates.json")
 
 				if err != nil {
-					logger.Debug("Cannot find dates.json file", err.Error())
 					ctx.ReplyError(bot.ComplexMessageData{
 						Embed: discord.Embed{
 							Title:       commandTitle,
@@ -43,7 +41,6 @@ func init() {
 				byteValue, err := io.ReadAll(jsonFile)
 
 				if err != nil {
-					logger.Debug("Cannot read dates.json file", err.Error())
 					ctx.ReplyError(bot.ComplexMessageData{
 						Embed: discord.Embed{
 							Title:       commandTitle,
@@ -58,7 +55,6 @@ func init() {
 				err = json.Unmarshal(byteValue, &holidays)
 
 				if err != nil {
-					logger.Debug("Cannot unmarshal dates.json file", err.Error())
 					ctx.ReplyError(bot.ComplexMessageData{
 						Embed: discord.Embed{
 							Title:       commandTitle,
@@ -75,7 +71,6 @@ func init() {
 					holidayDate, err := time.Parse("02/01", holiday.Date)
 
 					if err != nil {
-						logger.Debug("Cannot parse holiday date", err.Error())
 						ctx.ReplyError(bot.ComplexMessageData{
 							Embed: discord.Embed{
 								Title:       commandTitle,
@@ -89,9 +84,9 @@ func init() {
 
 					if holidayDate.After(today) || holidayDate.Equal(today) {
 						if holidayDate.Equal(today) {
-							description = "O feriado de hoje é " + holiday.Name + "." + "\n" + "Data: " + holiday.Date + "." + "\n" + "Tipo: " + holiday.Type + "."
+							description = "Today is " + holiday.Name + "." + "\n" + "Date: " + holiday.Date + "." + "\n" + "Type: " + holiday.Type + "."
 						} else {
-							description = "O próximo feriado é " + holiday.Name + "." + "\n" + "Data: " + holiday.Date + "." + "\n" + "Tipo: " + holiday.Type + "."
+							description = "The next holiday is " + holiday.Name + "." + "\n" + "Date: " + holiday.Date + "." + "\n" + "Type: " + holiday.Type + "."
 						}
 					}
 				}
