@@ -29,7 +29,7 @@ func init() {
 					ctx.ReplyError(bot.ComplexMessageData{
 						Embed: discord.Embed{
 							Title:       "Generate",
-							Description: "Você precisa informar o que deseja gerar.",
+							Description: "You need to inform the type of information to generate.",
 						},
 					})
 					return
@@ -60,7 +60,7 @@ func init() {
 					ctx.ReplyError(bot.ComplexMessageData{
 						Embed: discord.Embed{
 							Title:       "Generate",
-							Description: "Tipo de informação inválido.",
+							Description: "Invalid type of information to generate.",
 						},
 					})
 					return
