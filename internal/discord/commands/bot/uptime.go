@@ -11,8 +11,9 @@ import (
 
 func init() {
 	bot.RegisterCommand("uptime", bot.Command{
-		Name:    "uptime",
-		Aliases: []string{"uptime"},
+		Name:     "uptime",
+		Aliases:  []string{"uptime"},
+		Category: "🤖 Bot",
 		Handler: func(ctx *bot.Context) {
 
 			uptime := time.Since(ctx.Bot.StartedAt)

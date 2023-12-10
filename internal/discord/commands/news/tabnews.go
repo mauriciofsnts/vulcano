@@ -80,8 +80,9 @@ func getTabNews() ([]discord.EmbedField, error) {
 
 func init() {
 	bot.RegisterCommand("tabnews", bot.Command{
-		Name:    "tabnews",
-		Aliases: []string{"tn", "tab"},
+		Name:     "tabnews",
+		Aliases:  []string{"tn", "tab"},
+		Category: "📰 News",
 		Handler: func(ctx *bot.Context) {
 			logger.Debug("TabNews command called")
 

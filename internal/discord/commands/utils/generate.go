@@ -14,6 +14,7 @@ func init() {
 			Name:        "generate",
 			Description: "Generate various useful information for developers",
 			Aliases:     []string{"gen", "g"},
+			Category:    "🔧 Utils",
 			Parameters: []discord.CommandOption{
 				&discord.StringOption{
 					OptionName:  "type",

@@ -10,6 +10,7 @@ func init() {
 		Name:        "mock",
 		Aliases:     []string{"mock"},
 		Description: "Mock",
+		Category:    "🤖 Bot",
 		Handler: func(ctx *bot.Context) {
 			ctx.Reply(bot.ComplexMessageData{
 				Embed: discord.Embed{

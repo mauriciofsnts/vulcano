@@ -45,19 +45,6 @@ func New() (bot *Bot, err error) {
 		Router: router,
 	}
 
-	bot.State.AddInteractionHandler(bot.Router)
-
-	bot.State.AddIntents(gateway.IntentGuildMessages)
-	bot.State.AddIntents(gateway.IntentDirectMessages)
-
-	// Register events
-	bot.InitHandler()
-
-	if err := bot.State.Open(context.Background()); err != nil {
-		logger.Debug("Failed to open state:", err)
-	}
-
-	// Register commands
 	var discCommands []api.CreateCommandData
 
 	for _, command := range cmnd {
@@ -65,50 +52,24 @@ func New() (bot *Bot, err error) {
 			Name:    command.Name,
 			Options: command.Parameters,
 		})
-
-		logger.Info("Registering command", command.Name)
 	}
 
 	bot.State.BulkOverwriteCommands(bot.State.Ready().Application.ID, discCommands)
-	err = bot.SyncSlashCommands()
 
-	if err != nil {
-		logger.Error("Failed to sync slash commands:", err)
-	}
-
-	// Automatically defer handles if they're slow.
 	bot.Use(cmdroute.Deferrable(bot.State, cmdroute.DeferOpts{}))
+	bot.State.AddInteractionHandler(bot.Router)
+	bot.State.AddIntents(gateway.IntentGuildMessages)
+	bot.State.AddIntents(gateway.IntentDirectMessages)
+
+	bot.InitHandler()
+
+	if err := bot.State.Open(context.Background()); err != nil {
+		logger.Debug("Failed to open state:", err)
+	}
 
 	return bot, nil
 }
 
 func (bot *Bot) Close() {
 	bot.State.Close()
-}
-
-func (bot *Bot) SyncSlashCommands() error {
-	logger.Info("Syncing slash commands")
-	botCommands, err := bot.State.Commands(bot.State.Ready().Application.ID)
-
-	if err != nil {
-		return err
-	}
-
-	for _, cmd := range botCommands {
-		name := cmd.Name
-
-		_, found := GetCommand(name)
-
-		if !found {
-			logger.Info("Deleting command", cmd.Name)
-			err := bot.State.DeleteCommand(bot.State.Ready().Application.ID, cmd.ID)
-
-			if err != nil {
-				logger.Error("Failed to delete command", cmd.Name, err)
-			}
-		}
-
-	}
-
-	return nil
 }

@@ -82,9 +82,8 @@ func (bot Bot) onMessageCreateEvent(event *gateway.MessageCreateEvent) {
 
 func (bot Bot) InitHandler() {
 	bot.State.AddHandler(func(event *gateway.ReadyEvent) {
-		logger.Debug("Bot is ready!")
-
 		bot.StartedAt = time.Now()
+		logger.Debug("Bot is ready!")
 	})
 
 	bot.State.AddHandler(func(event *gateway.InteractionCreateEvent) {

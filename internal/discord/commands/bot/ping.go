@@ -11,8 +11,9 @@ func init() {
 	bot.RegisterCommand(
 		"ping",
 		bot.Command{
-			Name:    "ping",
-			Aliases: []string{"ping"},
+			Name:     "ping",
+			Aliases:  []string{"ping"},
+			Category: "🤖 Bot",
 			Handler: func(ctx *bot.Context) {
 				fields := []discord.EmbedField{
 					{

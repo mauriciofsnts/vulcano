@@ -20,8 +20,9 @@ func init() {
 	bot.RegisterCommand(
 		"holiday",
 		bot.Command{
-			Name:    "holiday",
-			Aliases: []string{"feriado"},
+			Name:     "holiday",
+			Aliases:  []string{"feriado"},
+			Category: "🔧 Utils",
 			Handler: func(ctx *bot.Context) {
 				commandTitle := ctx.T.Commands.Holiday.Title.Str()
 				jsonFile, err := os.Open("./internal/providers/holiday/dates.json")
