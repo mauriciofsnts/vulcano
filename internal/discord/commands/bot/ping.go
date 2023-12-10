@@ -40,9 +40,5 @@ func formatAPILatency(latency int64) string {
 	} else {
 		icon = "🔴"
 	}
-	return fmt.Sprintf(
-		"%s %d ms",
-		icon,
-		ms,
-	)
+	return fmt.Sprintf("%s %d ms", icon, ms)
 }

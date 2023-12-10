@@ -9,7 +9,7 @@ func init() {
 	bot.RegisterCommand("mock", bot.Command{
 		Name:        "mock",
 		Aliases:     []string{"mock"},
-		Description: "Mock",
+		Description: "Just a mock command to test buttons, should be removed later",
 		Category:    "🤖 Bot",
 		Handler: func(ctx *bot.Context) {
 			ctx.Reply(bot.ComplexMessageData{

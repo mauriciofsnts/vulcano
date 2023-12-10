@@ -10,7 +10,7 @@ func init() {
 	bot.RegisterCommand("help", bot.Command{
 		Name:        "help",
 		Aliases:     []string{"help"},
-		Description: "help",
+		Description: "Shows all commands",
 		Category:    "🤖 Bot",
 		Handler: func(ctx *bot.Context) {
 			categories := bot.GetCategories()

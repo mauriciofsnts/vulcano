@@ -10,9 +10,10 @@ func init() {
 	bot.RegisterCommand(
 		"shorten",
 		bot.Command{
-			Name:     "shorten",
-			Aliases:  []string{"st"},
-			Category: "🔧 Utils",
+			Name:        "shorten",
+			Aliases:     []string{"st"},
+			Category:    "🔧 Utils",
+			Description: "Shorten a URL",
 			Parameters: []discord.CommandOption{
 				&discord.StringOption{
 					OptionName:  "url",
