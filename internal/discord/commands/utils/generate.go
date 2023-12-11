@@ -21,8 +21,8 @@ func init() {
 			Parameters: []discord.CommandOption{
 				&discord.StringOption{
 					OptionName:  "type",
-					Description: "Type of information to generate. Available types: `cpf`, `uuid`",
-					Choices:     []discord.StringChoice{{Name: "cpf", Value: "cpf"}, {Name: "uuid", Value: "uuid"}},
+					Description: "Type of information to generate. Available types: `cpf`, `uuid`, `cnpj`",
+					Choices:     []discord.StringChoice{{Name: "cpf", Value: "cpf"}, {Name: "uuid", Value: "uuid"}, {Name: "cnpj", Value: "cnpj"}},
 					Required:    true,
 				},
 			},
