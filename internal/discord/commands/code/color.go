@@ -35,7 +35,16 @@ func init() {
 				return
 			}
 
-			color := hexToColor(args[0])
+			color, err := hexToColor(args[0])
+
+			if err != nil {
+				ctx.ReplyError(bot.ComplexMessageData{
+					Embed: discord.Embed{
+						Title:       "Color",
+						Description: fmt.Sprintf("Invalid color provided. Example: `%scolor #ffffff`", config.Vulcano.Prefix),
+					},
+				})
+			}
 
 			r, g, b := color.RGB255()
 			Hhsl, Shsl, Lhsl := color.Hsl()
@@ -69,10 +78,10 @@ func init() {
 	})
 }
 
-func hexToColor(hex string) colorful.Color {
+func hexToColor(hex string) (*colorful.Color, error) {
 	c, err := colorful.Hex(hex)
 	if err != nil {
-		fmt.Println("Erro ao converter o código de cor hexadecimal:", err)
+		return nil, err
 	}
-	return c
+	return &c, nil
 }
