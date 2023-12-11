@@ -9,4 +9,5 @@ const (
 	CategoryBot   = "🤖 Bot"
 	CategoryNews  = "📰 News"
 	CategoryUtils = "🔧 Utils"
+	CategoryCode  = "📝 Code"
 )

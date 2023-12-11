@@ -2,7 +2,10 @@ module github.com/mauriciofsnts/vulcano
 
 go 1.19
 
-require github.com/ghodss/yaml v1.0.0
+require (
+	github.com/ghodss/yaml v1.0.0
+	github.com/lucasb-eyer/go-colorful v1.2.0
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
