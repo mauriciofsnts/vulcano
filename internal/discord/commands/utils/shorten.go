@@ -12,7 +12,7 @@ func init() {
 		bot.Command{
 			Name:        "shorten",
 			Aliases:     []string{"st"},
-			Category:    "🔧 Utils",
+			Category:    bot.CategoryUtils,
 			Description: "Shorten a URL",
 			Parameters: []discord.CommandOption{
 				&discord.StringOption{

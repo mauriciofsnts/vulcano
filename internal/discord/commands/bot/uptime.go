@@ -14,7 +14,7 @@ func init() {
 		Name:        "uptime",
 		Aliases:     []string{"uptime"},
 		Description: "Shows how long the bot has been online",
-		Category:    "🤖 Bot",
+		Category:    bot.CategoryBot,
 		Handler: func(ctx *bot.Context) {
 
 			uptime := time.Since(ctx.Bot.StartedAt)

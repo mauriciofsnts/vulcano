@@ -22,8 +22,8 @@ type TriggerEvent struct {
 }
 
 const (
-	SuccessColor = 0xffffff
-	ErrorColor   = 0xff5555
+	successColor = 0xffffff
+	errorColor   = 0xff5555
 )
 
 type Context struct {
@@ -45,14 +45,14 @@ type ComplexMessageData struct {
 }
 
 func (ctx *Context) Reply(data ComplexMessageData) {
-	data.Embed.Color = SuccessColor
+	data.Embed.Color = successColor
 	data.Embed = ctx.appendExecutionInfoToEmbed(data.Embed)
 	ctx.handleReply(data)
 
 }
 
 func (ctx *Context) ReplyError(data ComplexMessageData) {
-	data.Embed.Color = ErrorColor
+	data.Embed.Color = errorColor
 	data.Embed = ctx.appendExecutionInfoToEmbed(data.Embed)
 	ctx.handleReply(data)
 }

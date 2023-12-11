@@ -83,7 +83,7 @@ func init() {
 		Name:        "tabnews",
 		Aliases:     []string{"tn", "tab"},
 		Description: "Get latest news from TabNews",
-		Category:    "📰 News",
+		Category:    bot.CategoryNews,
 		Handler: func(ctx *bot.Context) {
 			logger.Debug("TabNews command called")
 

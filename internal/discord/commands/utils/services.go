@@ -12,7 +12,7 @@ func init() {
 			Name:        "services",
 			Aliases:     []string{"services"},
 			Description: "List of open services",
-			Category:    "🔧 Utils",
+			Category:    bot.CategoryUtils,
 			Handler: func(ctx *bot.Context) {
 
 				ctx.Reply(bot.ComplexMessageData{

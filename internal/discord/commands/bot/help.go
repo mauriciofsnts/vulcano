@@ -11,7 +11,7 @@ func init() {
 		Name:        "help",
 		Aliases:     []string{"help"},
 		Description: "Shows all commands",
-		Category:    "🤖 Bot",
+		Category:    bot.CategoryBot,
 		Handler: func(ctx *bot.Context) {
 			categories := bot.GetCategories()
 

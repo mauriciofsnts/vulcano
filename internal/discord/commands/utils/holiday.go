@@ -23,7 +23,7 @@ func init() {
 			Name:        "holiday",
 			Aliases:     []string{"feriado"},
 			Description: "Shows the next holiday",
-			Category:    "🔧 Utils",
+			Category:    bot.CategoryUtils,
 			Handler: func(ctx *bot.Context) {
 				commandTitle := ctx.T.Commands.Holiday.Title.Str()
 				jsonFile, err := os.Open("./internal/providers/holiday/dates.json")

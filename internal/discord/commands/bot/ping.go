@@ -11,9 +11,10 @@ func init() {
 	bot.RegisterCommand(
 		"ping",
 		bot.Command{
-			Name:     "ping",
-			Aliases:  []string{"ping"},
-			Category: "🤖 Bot",
+			Name:        "ping",
+			Aliases:     []string{"ping"},
+			Category:    bot.CategoryBot,
+			Description: "Check the bot's latency to the Discord API.",
 			Handler: func(ctx *bot.Context) {
 				fields := []discord.EmbedField{
 					{
