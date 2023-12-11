@@ -1,6 +1,9 @@
 package utils
 
 import (
+	"fmt"
+	"regexp"
+
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/google/uuid"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
@@ -39,12 +42,40 @@ func init() {
 				var embed discord.Embed
 
 				switch args[0] {
-				case "cpf":
-					cpf, _ := documents.GenerateCPF()
+				case "cnpj":
+					cnpj := documents.GenerateCNPJ()
+
+					var cnpjMaskRe = regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
+					components := cnpjMaskRe.FindStringSubmatch(cnpj)
+
+					maskedCNPJ := fmt.Sprintf(
+						"%s.%s.%s/%s-%s",
+						components[1], components[2], components[3], components[4], components[5],
+					)
+
+					description := "With mask: " + cnpj + "\nWithout mask: " + maskedCNPJ
 
 					embed = discord.Embed{
 						Title:       "Generate",
-						Description: cpf,
+						Description: description,
+					}
+				case "cpf":
+					cpf := documents.GenerateCPF()
+
+					var cpfMaskRe = regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)
+
+					components := cpfMaskRe.FindStringSubmatch(cpf)
+
+					maskedCPF := fmt.Sprintf(
+						"%s.%s.%s-%s",
+						components[1], components[2], components[3], components[4],
+					)
+
+					description := "With mask: " + cpf + "\nWithout mask: " + maskedCPF
+
+					embed = discord.Embed{
+						Title:       "Generate",
+						Description: description,
 					}
 				case "uuid":
 					uuid, err := uuid.NewUUID()

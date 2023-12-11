@@ -3,38 +3,41 @@ package documents
 import (
 	"fmt"
 	"math/rand"
-	"time"
+	"strconv"
 )
 
-func GenerateCPF() (string, string) {
-	rand.Seed(time.Now().UnixNano())
+func GenerateCPF() string {
+	/* #nosec G404 */
+	doc := fmt.Sprintf("%v", rand.Float64())[2:11]
+	doc += calculateDigit(doc, 10)
+	doc += calculateDigit(doc, 11)
+	return doc
+}
 
-	var digits [9]int
-	for i := 0; i < 9; i++ {
-		digits[i] = rand.Intn(9)
+func GenerateCNPJ() string {
+	/* #nosec G404 */
+	doc := fmt.Sprintf("%v", rand.Float64())[2:10] + "0001"
+	doc += calculateDigit(doc, 5)
+	doc += calculateDigit(doc, 6)
+	return doc
+}
+
+func calculateDigit(doc string, position int) string {
+	var sum int
+	for _, r := range doc {
+
+		sum += int(r-'0') * position
+		position--
+
+		if position < 2 {
+			position = 9
+		}
 	}
 
-	sum := 0
-	for i := 0; i < 9; i++ {
-		sum += digits[i] * (10 - i)
-	}
-	digit1 := 11 - (sum % 11)
-	if digit1 >= 10 {
-		digit1 = 0
+	sum %= 11
+	if sum < 2 {
+		return "0"
 	}
 
-	sum = 0
-	for i := 0; i < 9; i++ {
-		sum += digits[i] * (11 - i)
-	}
-	sum += digit1 * 2
-	digit2 := 11 - (sum % 11)
-	if digit2 >= 10 {
-		digit2 = 0
-	}
-
-	withMask := fmt.Sprintf("%d%d%d.%d%d%d.%d%d%d-%d%d", digits[0], digits[1], digits[2], digits[3], digits[4], digits[5], digits[6], digits[7], digits[8], digit1, digit2)
-	withoutMask := fmt.Sprintf("%d%d%d%d%d%d%d%d%d%d%d", digits[0], digits[1], digits[2], digits[3], digits[4], digits[5], digits[6], digits[7], digits[8], digit1, digit2)
-
-	return withMask, withoutMask
+	return strconv.Itoa(11 - sum)
 }

@@ -7,13 +7,9 @@ import (
 )
 
 func TestGenerateCPF(t *testing.T) {
-	cpfWithMask, cpfWithoutMask := documents.GenerateCPF()
+	cpf := documents.GenerateCPF()
 
-	if len(cpfWithMask) != 14 {
-		t.Errorf("Expected CPF mask to have length 14, but got %d", len(cpfWithMask))
-	}
-
-	if len(cpfWithoutMask) != 11 {
-		t.Errorf("Expected CPF without mask to have length 11, but got %d", len(cpfWithoutMask))
+	if len(cpf) != 11 {
+		t.Errorf("CPF should have 11 characters, got %d", len(cpf))
 	}
 }
