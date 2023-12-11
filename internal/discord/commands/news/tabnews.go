@@ -85,8 +85,6 @@ func init() {
 		Description: "Get latest news from TabNews",
 		Category:    bot.CategoryNews,
 		Handler: func(ctx *bot.Context) {
-			logger.Debug("TabNews command called")
-
 			fields, err := getTabNews()
 
 			if err != nil {

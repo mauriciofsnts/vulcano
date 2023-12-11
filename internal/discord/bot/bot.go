@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/diamondburned/arikawa/v3/api"
 	"github.com/diamondburned/arikawa/v3/api/cmdroute"
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/diamondburned/arikawa/v3/state"
@@ -44,17 +43,6 @@ func New() (bot *Bot, err error) {
 		State:  instance,
 		Router: router,
 	}
-
-	var discCommands []api.CreateCommandData
-
-	for _, command := range cmnd {
-		discCommands = append(discCommands, api.CreateCommandData{
-			Name:    command.Name,
-			Options: command.Parameters,
-		})
-	}
-
-	bot.State.BulkOverwriteCommands(bot.State.Ready().Application.ID, discCommands)
 
 	bot.Use(cmdroute.Deferrable(bot.State, cmdroute.DeferOpts{}))
 	bot.State.AddInteractionHandler(bot.Router)

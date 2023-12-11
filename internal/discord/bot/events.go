@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/diamondburned/arikawa/v3/api"
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/mauriciofsnts/vulcano/internal/i18n"
@@ -84,6 +85,31 @@ func (bot Bot) InitHandler() {
 	bot.State.AddHandler(func(event *gateway.ReadyEvent) {
 		bot.StartedAt = time.Now()
 		logger.Debug("Bot is ready!")
+
+		var discCommands []api.CreateCommandData
+
+		for _, command := range cmnd {
+			logger.Debug("Command registered:", command.Name)
+
+			discCommands = append(discCommands, api.CreateCommandData{
+				Name:        command.Name,
+				Description: command.Description,
+				Options:     command.Parameters,
+			})
+
+		}
+
+		applicationId := bot.State.Ready().Application.ID
+		logger.Debug("Application ID:", applicationId)
+
+		cmds, err := bot.State.BulkOverwriteCommands(applicationId, discCommands)
+
+		if err != nil {
+			logger.Debug("Failed to register commands:", err)
+		}
+
+		logger.Debug("Commands registered:", len(cmds))
+
 	})
 
 	bot.State.AddHandler(func(event *gateway.InteractionCreateEvent) {
