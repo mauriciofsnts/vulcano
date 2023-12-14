@@ -32,10 +32,39 @@ type Commands struct {
 	Tabnews Command
 	Shorten Command
 	Holiday Command
+	Uptime  Command
+	Help    Command
 }
 
 type Language struct {
 	Lang     LanguageMetadata
 	Errors   Errors
 	Commands Commands
+	Utils    Utils
+}
+
+type Uptime struct {
+	Title       LanguageEntry
+	Description LanguageEntry
+	Response    LanguageEntry
+}
+
+type Utils struct {
+	LessThanAMinute LanguageEntry
+	Minutes         LanguageEntry
+	Minute          LanguageEntry
+	Hours           LanguageEntry
+	Hour            LanguageEntry
+	Days            LanguageEntry
+	Day             LanguageEntry
+	Months          LanguageEntry
+	Month           LanguageEntry
+	Years           LanguageEntry
+	Year            LanguageEntry
+}
+
+type Help struct {
+	Description LanguageEntry
+	Title       LanguageEntry
+	Response    LanguageEntry
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/diamondburned/arikawa/v3/state"
 	"github.com/mauriciofsnts/vulcano/internal/config"
-	"github.com/mauriciofsnts/vulcano/internal/i18n"
 	"github.com/pauloo27/logger"
 )
 
@@ -24,22 +23,19 @@ func NewConfiguration() *Configuration {
 	}
 }
 
-type Bot struct {
+type Discord struct {
 	config    Configuration
-	t         i18n.Language
 	State     *state.State
 	StartedAt time.Time
 	*cmdroute.Router
 }
 
-func New() (bot *Bot, err error) {
-
+func New() (bot *Discord, err error) {
 	instance := state.New("Bot " + config.Vulcano.Token)
 	router := cmdroute.NewRouter()
 
-	bot = &Bot{
+	bot = &Discord{
 		config: *NewConfiguration(),
-		t:      *i18n.GetLanguage("pt_BR"),
 		State:  instance,
 		Router: router,
 	}
@@ -58,6 +54,6 @@ func New() (bot *Bot, err error) {
 	return bot, nil
 }
 
-func (bot *Bot) Close() {
+func (bot *Discord) Close() {
 	bot.State.Close()
 }

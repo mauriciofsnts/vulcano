@@ -4,7 +4,6 @@ Lang:
   ShortName: pt-BR
   Author: vulcano
 
-# errors
 Errors:
   Title: Erro
   Generic: Ocorreu um erro desconhecido
@@ -12,21 +11,42 @@ Errors:
   NotATextChannel: O canal ${0} não é um canal de texto
   AlreadyRegistered: Você já está cadastrado
 
+Utils:
+  LessThanAMinute: Menos de um minuto
+  Minutes: Minutos
+  Minute: Minuto
+  Hours: Horas
+  Hour: Hora
+  Days: Dias
+  Day: Dia
+  Months: Meses
+  Month: Mês
+  Years: Anos
+  Year: Ano
+
 Commands:
   Ping:
     Title: 🏓  Ping!
-    Description: "Verifica se o bot está online."
+    Description: 'Verifica se o bot está online.'
     Response: Pong 🏓
+  Help:
+    Description: 'Listar todos os comandos ou informações sobre um comando específico.'
+    Title: 🌟 Vulcano comandos
+    Response: 'Use ${0}help <comando> para obter mais informações sobre um comando específico.'
   Tools:
     Title: 🛠️  Ferramentas
     Description: Gera informações aleatórias para desenvolvimento, como CPF, CNPJ, RG, UUID e pessoa.
   Tabnews:
     Title: 📰  Tabnews
-    Description: "Mostra as últimas notícias do site TabNews."
+    Description: 'Mostra as últimas notícias do site TabNews.'
   Shorten:
     Title: 🔗  Shorten
-    Description: "Encurta uma URL."
-    Response: "URL encurtada: ${0}"
+    Description: 'Encurta uma URL.'
+    Response: 'URL encurtada: ${0}'
   Holiday:
     Title: 📅  Feriado
-    Description: "Mostra os feriados do ano."
+    Description: 'Mostra os feriados do ano.'
+  Uptime:
+    Title: 🕒  Uptime
+    Description: 'Mostra o tempo de atividade do bot.'
+    Response: 'Tempo de atividade: ${0}'

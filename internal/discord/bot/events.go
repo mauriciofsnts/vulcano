@@ -11,7 +11,7 @@ import (
 	"github.com/pauloo27/logger"
 )
 
-func (bot Bot) onInteractionCreateEvent(event *gateway.InteractionCreateEvent) {
+func (bot Discord) onInteractionCreateEvent(event *gateway.InteractionCreateEvent) {
 	if event.Member.User.Bot {
 		return
 	}
@@ -47,7 +47,7 @@ func (bot Bot) onInteractionCreateEvent(event *gateway.InteractionCreateEvent) {
 
 }
 
-func (bot Bot) onMessageCreateEvent(event *gateway.MessageCreateEvent) {
+func (bot Discord) onMessageCreateEvent(event *gateway.MessageCreateEvent) {
 	if event.Author.Bot {
 		return
 	}
@@ -81,7 +81,7 @@ func (bot Bot) onMessageCreateEvent(event *gateway.MessageCreateEvent) {
 	handleEvent(args, cmd, &bot, trigger)
 }
 
-func (bot Bot) InitHandler() {
+func (bot Discord) InitHandler() {
 	bot.State.AddHandler(func(event *gateway.ReadyEvent) {
 		bot.StartedAt = time.Now()
 		logger.Debug("Bot is ready!")
@@ -100,7 +100,6 @@ func (bot Bot) InitHandler() {
 		}
 
 		applicationId := bot.State.Ready().Application.ID
-		logger.Debug("Application ID:", applicationId)
 
 		cmds, err := bot.State.BulkOverwriteCommands(applicationId, discCommands)
 
@@ -124,7 +123,7 @@ func (bot Bot) InitHandler() {
 func handleEvent(
 	args []string,
 	command *Command,
-	bot *Bot,
+	bot *Discord,
 	trigger TriggerEvent,
 ) {
 

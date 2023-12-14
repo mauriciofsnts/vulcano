@@ -4,13 +4,15 @@ import (
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/mauriciofsnts/vulcano/internal/config"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
+	"github.com/mauriciofsnts/vulcano/internal/discord/t"
+	"github.com/mauriciofsnts/vulcano/internal/i18n"
 )
 
 func init() {
 	bot.RegisterCommand("help", bot.Command{
 		Name:        "help",
 		Aliases:     []string{"help"},
-		Description: "Shows all commands",
+		Description: t.Translate().Commands.Help.Description.Str(),
 		Category:    bot.CategoryBot,
 		Handler: func(ctx *bot.Context) {
 			categories := bot.GetCategories()
@@ -32,10 +34,9 @@ func init() {
 
 			ctx.Reply(bot.ComplexMessageData{
 				Embed: discord.Embed{
-					Title: "🌟 Vulcano Commands",
-					Description: "Vulcano is a bot that helps you to manage your server.\n" +
-						"Use `" + config.Vulcano.Prefix + "help <command>` to get more information about a command.",
-					Fields: fields,
+					Title:       t.Translate().Commands.Help.Title.Str(),
+					Description: i18n.Replace(t.Translate().Commands.Help.Response.Str(), config.Vulcano.Prefix),
+					Fields:      fields,
 				},
 			})
 

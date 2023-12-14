@@ -27,7 +27,7 @@ const (
 )
 
 type Context struct {
-	Bot          Bot
+	Bot          Discord
 	T            i18n.Language
 	startTime    time.Time
 	Command      *Command

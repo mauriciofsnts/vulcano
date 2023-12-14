@@ -5,6 +5,7 @@ import (
 
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
+	"github.com/mauriciofsnts/vulcano/internal/discord/t"
 )
 
 func init() {
@@ -14,7 +15,7 @@ func init() {
 			Name:        "ping",
 			Aliases:     []string{"ping"},
 			Category:    bot.CategoryBot,
-			Description: "Check the bot's latency to the Discord API.",
+			Description: t.Translate().Commands.Ping.Description.Str(),
 			Handler: func(ctx *bot.Context) {
 				fields := []discord.EmbedField{
 					{
@@ -25,7 +26,7 @@ func init() {
 				}
 
 				ctx.Reply(bot.ComplexMessageData{
-					Embed: discord.Embed{Title: "Pong!", Fields: fields},
+					Embed: discord.Embed{Title: t.Translate().Commands.Ping.Response.Str(), Fields: fields},
 				})
 			}})
 }
