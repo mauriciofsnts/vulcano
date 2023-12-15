@@ -7,6 +7,8 @@ import (
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/google/uuid"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
+	"github.com/mauriciofsnts/vulcano/internal/discord/t"
+	"github.com/mauriciofsnts/vulcano/internal/i18n"
 	"github.com/mauriciofsnts/vulcano/internal/providers/documents"
 )
 
@@ -15,7 +17,7 @@ func init() {
 		"generate",
 		bot.Command{
 			Name:        "generate",
-			Description: "Generate various useful information for developers",
+			Description: t.Translate().Commands.Generate.Description.Str(),
 			Aliases:     []string{"gen", "g"},
 			Category:    bot.CategoryUtils,
 			Parameters: []discord.CommandOption{
@@ -32,8 +34,8 @@ func init() {
 				if len(args) == 0 {
 					ctx.ReplyError(bot.ComplexMessageData{
 						Embed: discord.Embed{
-							Title:       "Generate",
-							Description: "You need to inform the type of information to generate.",
+							Title:       t.Translate().Commands.Generate.Title.Str(),
+							Description: i18n.Replace(t.Translate().Errors.MissingParamter.Str(), "tipo"),
 						},
 					})
 					return
@@ -56,7 +58,7 @@ func init() {
 					description := "With mask: " + cnpj + "\nWithout mask: " + maskedCNPJ
 
 					embed = discord.Embed{
-						Title:       "Generate",
+						Title:       t.Translate().Commands.Generate.Title.Str(),
 						Description: description,
 					}
 				case "cpf":
@@ -74,7 +76,7 @@ func init() {
 					description := "With mask: " + cpf + "\nWithout mask: " + maskedCPF
 
 					embed = discord.Embed{
-						Title:       "Generate",
+						Title:       t.Translate().Commands.Generate.Title.Str(),
 						Description: description,
 					}
 				case "uuid":
@@ -85,14 +87,14 @@ func init() {
 					}
 
 					embed = discord.Embed{
-						Title:       "Generate",
+						Title:       t.Translate().Commands.Generate.Title.Str(),
 						Description: uuid.String(),
 					}
 				default:
 					ctx.ReplyError(bot.ComplexMessageData{
 						Embed: discord.Embed{
-							Title:       "Generate",
-							Description: "Invalid type of information to generate.",
+							Title:       t.Translate().Commands.Generate.Title.Str(),
+							Description: i18n.Replace(t.Translate().Errors.InvalidParameter.Str(), "tipo"),
 						},
 					})
 					return

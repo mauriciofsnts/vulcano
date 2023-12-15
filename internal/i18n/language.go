@@ -18,6 +18,8 @@ type Errors struct {
 	ToSave            LanguageEntry
 	NotATextChannel   LanguageEntry
 	AlreadyRegistered LanguageEntry
+	MissingParamter   LanguageEntry
+	InvalidParameter  LanguageEntry
 }
 
 type Command struct {
@@ -27,13 +29,15 @@ type Command struct {
 }
 
 type Commands struct {
-	Ping    Command
-	Tools   Command
-	Tabnews Command
-	Shorten Command
-	Holiday Command
-	Uptime  Command
-	Help    Command
+	Ping                Command
+	Tools               Command
+	Tabnews             Command
+	Shorten             Command
+	Holiday             Command
+	Uptime              Command
+	Help                Command
+	Generate            Command
+	OpenSourcesProjects Command
 }
 
 type Language struct {

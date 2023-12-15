@@ -8,6 +8,7 @@ import (
 
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
+	"github.com/mauriciofsnts/vulcano/internal/discord/t"
 	"github.com/mauriciofsnts/vulcano/internal/providers/shorten"
 	"github.com/pauloo27/logger"
 )
@@ -82,7 +83,7 @@ func init() {
 	bot.RegisterCommand("tabnews", bot.Command{
 		Name:        "tabnews",
 		Aliases:     []string{"tn", "tab"},
-		Description: "Get latest news from TabNews",
+		Description: t.Translate().Commands.Tabnews.Description.Str(),
 		Category:    bot.CategoryNews,
 		Handler: func(ctx *bot.Context) {
 			fields, err := getTabNews()
@@ -92,7 +93,7 @@ func init() {
 
 				ctx.Reply(bot.ComplexMessageData{
 					Embed: discord.Embed{
-						Title:       "TabNews",
+						Title:       t.Translate().Commands.Tabnews.Title.Str(),
 						Description: "An error occurred while getting tabnews.",
 					},
 				})
@@ -100,8 +101,8 @@ func init() {
 
 			ctx.Reply(bot.ComplexMessageData{
 				Embed: discord.Embed{
-					Title:       "TabNews",
-					Description: "Latest news from TabNews",
+					Title:       t.Translate().Commands.Tabnews.Title.Str(),
+					Description: t.Translate().Commands.Tabnews.Description.Str(),
 					Fields:      fields,
 				},
 			})

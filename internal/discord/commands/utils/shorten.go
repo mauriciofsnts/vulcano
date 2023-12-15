@@ -3,6 +3,8 @@ package utils
 import (
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
+	"github.com/mauriciofsnts/vulcano/internal/discord/t"
+	"github.com/mauriciofsnts/vulcano/internal/i18n"
 	"github.com/mauriciofsnts/vulcano/internal/providers/shorten"
 )
 
@@ -13,7 +15,7 @@ func init() {
 			Name:        "shorten",
 			Aliases:     []string{"st"},
 			Category:    bot.CategoryUtils,
-			Description: "Shorten a URL",
+			Description: t.Translate().Commands.Shorten.Description.Str(),
 			Parameters: []discord.CommandOption{
 				&discord.StringOption{
 					OptionName:  "url",
@@ -27,7 +29,7 @@ func init() {
 				if len(args) == 0 {
 					ctx.ReplyError(bot.ComplexMessageData{
 						Embed: discord.Embed{
-							Title:       "Shorten",
+							Title:       t.Translate().Commands.Shorten.Title.Str(),
 							Description: "You need to provide a URL to shorten. Example: `!shorten https://google.com`",
 						},
 					})
@@ -39,7 +41,7 @@ func init() {
 				if err != nil {
 					ctx.ReplyError(bot.ComplexMessageData{
 						Embed: discord.Embed{
-							Title:       "Shorten",
+							Title:       t.Translate().Commands.Shorten.Title.Str(),
 							Description: "Failed to shorten URL.",
 						},
 					})
@@ -48,8 +50,8 @@ func init() {
 
 				ctx.Reply(bot.ComplexMessageData{
 					Embed: discord.Embed{
-						Title:       "Shorten",
-						Description: shortened,
+						Title:       t.Translate().Commands.Shorten.Title.Str(),
+						Description: i18n.Replace(t.Translate().Commands.Shorten.Response.Str(), shortened),
 					},
 				})
 

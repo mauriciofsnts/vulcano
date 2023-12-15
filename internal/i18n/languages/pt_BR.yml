@@ -10,6 +10,8 @@ Errors:
   ToSave: Ocorreu um erro ao salvar os dados
   NotATextChannel: O canal ${0} não é um canal de texto
   AlreadyRegistered: Você já está cadastrado
+  MissingParamter: Parâmetro ${0} não informado
+  InvalidParameter: Parâmetro ${0} inválido
 
 Utils:
   LessThanAMinute: Menos de um minuto
@@ -45,8 +47,14 @@ Commands:
     Response: 'URL encurtada: ${0}'
   Holiday:
     Title: 📅  Feriado
-    Description: 'Mostra os feriados do ano.'
+    Description: 'Retorna o próximo feriado nacional.'
   Uptime:
     Title: 🕒  Uptime
     Description: 'Mostra o tempo de atividade do bot.'
     Response: 'Tempo de atividade: ${0}'
+  Generate:
+    Title: 🛠️  Gerar
+    Description: 'Gera informações aleatórias para desenvolvimento, como CPF, CNPJ, RG, UUID e pessoa.'
+  OpenSourcesProjects:
+    Title: 📂  Projetos de código aberto
+    Description: 'Lista os projetos de código aberto do Vulcano.'

@@ -8,6 +8,7 @@ import (
 
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
+	"github.com/mauriciofsnts/vulcano/internal/discord/t"
 )
 
 type Holiday struct {
@@ -22,7 +23,7 @@ func init() {
 		bot.Command{
 			Name:        "holiday",
 			Aliases:     []string{"feriado"},
-			Description: "Shows the next holiday",
+			Description: t.Translate().Commands.Holiday.Description.Str(),
 			Category:    bot.CategoryUtils,
 			Handler: func(ctx *bot.Context) {
 				commandTitle := ctx.T.Commands.Holiday.Title.Str()

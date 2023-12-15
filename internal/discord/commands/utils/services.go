@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
+	"github.com/mauriciofsnts/vulcano/internal/discord/t"
 )
 
 func init() {
@@ -11,14 +12,15 @@ func init() {
 		bot.Command{
 			Name:        "services",
 			Aliases:     []string{"services"},
-			Description: "List of open services",
+			Description: t.Translate().Commands.OpenSourcesProjects.Description.Str(),
 			Category:    bot.CategoryUtils,
 			Handler: func(ctx *bot.Context) {
 
 				ctx.Reply(bot.ComplexMessageData{
 					Embed: discord.Embed{
-						Title: "Open Services",
-						URL:   "https://github.com/mauriciofsnts",
+						Title:       t.Translate().Commands.OpenSourcesProjects.Title.Str(),
+						Description: t.Translate().Commands.OpenSourcesProjects.Description.Str(),
+						URL:         "https://github.com/mauriciofsnts",
 						Fields: []discord.EmbedField{
 							{
 								Name:   "URL Shortener",
