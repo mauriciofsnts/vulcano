@@ -23,6 +23,7 @@ func newLanguageEnum(key EnumLanguage) EnumLanguage {
 
 var (
 	LanguageBrazilian = newLanguageEnum("pt_BR")
+	LanguageEnglish   = newLanguageEnum("en_US")
 )
 
 func loadLanguage(lang EnumLanguage) error {
@@ -62,7 +63,7 @@ func GetLanguage(lang EnumLanguage) *Language {
 	language, found := languageMap[lang]
 
 	if !found {
-		language = languageMap[LanguageBrazilian]
+		language = languageMap[LanguageEnglish]
 	}
 
 	return language
