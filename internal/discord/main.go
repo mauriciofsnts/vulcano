@@ -1,16 +1,14 @@
 package discord
 
 import (
-	"os"
-	"os/signal"
-	"syscall"
-
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
 	"github.com/pauloo27/logger"
 
 	// register commands
 	_ "github.com/mauriciofsnts/vulcano/internal/discord/commands"
 )
+
+var Bot *bot.Discord
 
 func Start() error {
 	logger.Info("Starting bot...")
@@ -21,11 +19,7 @@ func Start() error {
 		return err
 	}
 
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
-	<-sc
-
-	bot.Close()
+	Bot = bot
 
 	return nil
 }

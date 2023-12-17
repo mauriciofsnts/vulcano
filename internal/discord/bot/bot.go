@@ -54,6 +54,11 @@ func New() (bot *Discord, err error) {
 	return bot, nil
 }
 
-func (bot *Discord) Close() {
-	bot.State.Close()
+func (bot *Discord) Close() error {
+	return bot.State.Close()
+}
+
+func (bot *Discord) IsAlive() bool {
+	me, _ := bot.State.Me()
+	return me != nil
 }

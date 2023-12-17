@@ -19,6 +19,7 @@ require (
 
 require (
 	github.com/diamondburned/arikawa/v3 v3.3.3
+	github.com/go-chi/chi v1.5.5
 	github.com/google/uuid v1.3.1
 	github.com/pauloo27/logger v0.0.0-20230613054337-e866488ae2f4
 	github.com/stretchr/testify v1.8.4
