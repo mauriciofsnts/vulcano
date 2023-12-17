@@ -26,8 +26,11 @@ func run() error {
 	server := &http.Server{
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
+		Handler:      r,
 		Addr:         fmt.Sprintf(":%s", config.Vulcano.Port),
 	}
+
+	logger.Infof("HTTP server started on port %s", config.Vulcano.Port)
 
 	return server.ListenAndServe()
 }
