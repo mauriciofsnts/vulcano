@@ -2,13 +2,13 @@ package bot
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"github.com/diamondburned/arikawa/v3/api/cmdroute"
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/diamondburned/arikawa/v3/state"
 	"github.com/mauriciofsnts/vulcano/internal/config"
-	"github.com/pauloo27/logger"
 )
 
 type Configuration struct {
@@ -48,7 +48,7 @@ func New() (bot *Discord, err error) {
 	bot.InitHandler()
 
 	if err := bot.State.Open(context.Background()); err != nil {
-		logger.Debug("Failed to open state:", err)
+		slog.Error("Failed to open state:", err)
 	}
 
 	return bot, nil

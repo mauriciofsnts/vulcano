@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -8,11 +9,19 @@ import (
 	"github.com/mauriciofsnts/vulcano/internal/config"
 	"github.com/mauriciofsnts/vulcano/internal/discord"
 	"github.com/mauriciofsnts/vulcano/internal/server"
-	"github.com/pauloo27/logger"
 )
 
 func Start() {
-	logger.HandleFatal(config.LoadConfig(), "Failed to load config, check if config.yaml exists")
+	SetupLog()
+
+	slog.Info("Starting Vulcano...")
+
+	err := config.LoadConfig()
+
+	if err != nil {
+		slog.Error("Cannot load config file: ", err)
+		os.Exit(1)
+	}
 
 	go discord.Start()
 	go server.StartHttpServer()
@@ -21,10 +30,10 @@ func Start() {
 	//lint:ignore SA1016 i dont know, it just works lol
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
 	<-stop
-	err := discord.Bot.Close()
+	err = discord.Bot.Close()
 	if err != nil {
-		logger.Error("Cannot close discord bot, but we are going to close anyway")
+		slog.Error("Cannot close discord bot, but we are going to close anyway")
 	}
 
-	logger.Info("Bye bye!")
+	slog.Info("Bye bye!")
 }

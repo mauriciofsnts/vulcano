@@ -2,17 +2,17 @@ package server
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/mauriciofsnts/vulcano/internal/config"
-	"github.com/pauloo27/logger"
 )
 
 func run() error {
-	logger.Info("Starting HTTP server...")
+	slog.Info("Starting HTTP server...")
 
 	r := chi.NewRouter()
 
@@ -30,11 +30,16 @@ func run() error {
 		Addr:         fmt.Sprintf(":%s", config.Vulcano.Port),
 	}
 
-	logger.Infof("HTTP server started on port %s", config.Vulcano.Port)
+	slog.Info("HTTP server started on port " + config.Vulcano.Port)
 
 	return server.ListenAndServe()
 }
 
 func StartHttpServer() {
-	logger.HandleFatal(run(), "Failed to start HTTP server")
+	err := run()
+
+	if err != nil {
+		slog.Error("Failed to start HTTP server: ", err)
+		panic(err)
+	}
 }

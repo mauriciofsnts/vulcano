@@ -1,8 +1,9 @@
 package discord
 
 import (
+	"log/slog"
+
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
-	"github.com/pauloo27/logger"
 
 	// register commands
 	_ "github.com/mauriciofsnts/vulcano/internal/discord/commands"
@@ -11,7 +12,7 @@ import (
 var Bot *bot.Discord
 
 func Start() error {
-	logger.Info("Starting bot...")
+	slog.Info("Starting bot...")
 
 	bot, err := bot.New()
 

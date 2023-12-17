@@ -2,11 +2,11 @@ package i18n
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 
 	"github.com/ghodss/yaml"
-	"github.com/pauloo27/logger"
 )
 
 type EnumLanguage string
@@ -53,7 +53,7 @@ func init() {
 
 	for _, lang := range Languages {
 		if err := loadLanguage(lang); err != nil {
-			logger.Fatal("Failed to load languages: ", err)
+			slog.Error("Failed to load languages: ", err)
 		}
 	}
 

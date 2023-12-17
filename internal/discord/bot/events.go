@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"log/slog"
 	"strings"
 	"time"
 
@@ -8,7 +9,6 @@ import (
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/mauriciofsnts/vulcano/internal/i18n"
-	"github.com/pauloo27/logger"
 )
 
 func (bot Discord) onInteractionCreateEvent(event *gateway.InteractionCreateEvent) {
@@ -22,7 +22,7 @@ func (bot Discord) onInteractionCreateEvent(event *gateway.InteractionCreateEven
 		cmd, found := GetCommand(data.Name)
 
 		if !found {
-			logger.Debug("Command not found")
+			slog.Debug("Command not found")
 			return
 		}
 
@@ -63,7 +63,7 @@ func (bot Discord) onMessageCreateEvent(event *gateway.MessageCreateEvent) {
 	cmd, found := GetCommandByNameAndAliases(commandName)
 
 	if !found {
-		logger.Debug("Command not found")
+		slog.Debug("Command not found")
 		return
 	}
 
@@ -84,12 +84,12 @@ func (bot Discord) onMessageCreateEvent(event *gateway.MessageCreateEvent) {
 func (bot Discord) InitHandler() {
 	bot.State.AddHandler(func(event *gateway.ReadyEvent) {
 		bot.StartedAt = time.Now()
-		logger.Debug("Bot is ready!")
+		slog.Info("Bot started")
 
 		var discCommands []api.CreateCommandData
 
 		for _, command := range cmnd {
-			logger.Debug("Command registered:", command.Name)
+			slog.Debug("📃 Registering command: %s", command.Name)
 
 			discCommands = append(discCommands, api.CreateCommandData{
 				Name:        command.Name,
@@ -104,11 +104,10 @@ func (bot Discord) InitHandler() {
 		cmds, err := bot.State.BulkOverwriteCommands(applicationId, discCommands)
 
 		if err != nil {
-			logger.Debug("Failed to register commands:", err)
+			slog.Error("Failed to register commands:", err)
 		}
 
-		logger.Debug("Commands registered:", len(cmds))
-
+		slog.Debug("Commands registered:", len(cmds))
 	})
 
 	bot.State.AddHandler(func(event *gateway.InteractionCreateEvent) {

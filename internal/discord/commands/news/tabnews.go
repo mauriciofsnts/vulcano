@@ -3,6 +3,7 @@ package news
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"sync"
 
@@ -10,7 +11,6 @@ import (
 	"github.com/mauriciofsnts/vulcano/internal/discord/bot"
 	"github.com/mauriciofsnts/vulcano/internal/discord/t"
 	"github.com/mauriciofsnts/vulcano/internal/providers/shorten"
-	"github.com/pauloo27/logger"
 )
 
 type Article struct {
@@ -60,7 +60,7 @@ func getTabNews() ([]discord.EmbedField, error) {
 			)
 
 			if err != nil {
-				logger.Debugf("Error shortening url: %v", err)
+				slog.Debug("Error shortening url: ", err)
 			}
 
 			value := fmt.Sprintf("⭐ %d · %s · %s", article.Tabcoins, article.Owner_username, shortenedUrl)
@@ -89,7 +89,7 @@ func init() {
 			fields, err := getTabNews()
 
 			if err != nil {
-				logger.Debugf("Error getting tabnews: %s", err)
+				slog.Error("Error getting tabnews: ", err)
 
 				ctx.Reply(bot.ComplexMessageData{
 					Embed: discord.Embed{
