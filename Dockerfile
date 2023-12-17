@@ -17,4 +17,6 @@ RUN go mod download
 
 RUN make dist 
 
+EXPOSE 8080
+
 ENTRYPOINT [ "/app/vulcano" ]
