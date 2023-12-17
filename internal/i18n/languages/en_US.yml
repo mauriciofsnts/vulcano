@@ -1,0 +1,59 @@
+Lang:
+  Name: English
+  ShortName: en-US
+  Author: vulcano
+
+Errros:
+  Title: Error
+  Generic: An unknown error has occurred
+  ToSave: An error occurred while saving the data
+  NotATextChannel: The channel ${0} is not a text channel
+  AlreadyRegistered: You are already registered
+  MissingParamter: Parameter ${0} not informed
+  InvalidParameter: Invalid parameter ${0}
+
+Utils:
+  LessThanAMinute: Less than a minute
+  Minutes: Minutes
+  Minute: Minute
+  Hours: Hours
+  Hour: Hour
+  Days: Days
+  Day: Day
+  Months: Months
+  Month: Month
+  Years: Years
+  Year: Year
+
+Commands:
+  Ping:
+    Title: 🏓  Ping!
+    Description: 'Check if the bot is online.'
+    Response: Pong 🏓
+  Help:
+    Description: 'List all commands or information about a specific command.'
+    Title: 🌟 Vulcano commands
+    Response: 'Use ${0}help <command> to get more information about a specific command.'
+  Tools:
+    Title: 🛠️  Tools
+    Description: Generates random information for development, such as CPF, CNPJ, RG, UUID and person.
+  Tabnews:
+    Title: 📰  Tabnews
+    Description: 'Shows the latest news from the TabNews website.'
+  Shorten:
+    Title: 🔗  Shorten
+    Description: 'Shorten a URL.'
+    Response: 'Shortened URL: ${0}'
+  Holiday:
+    Title: 📅  Holiday
+    Description: 'Returns the next national holiday.'
+  Uptime:
+    Title: 🕒  Uptime
+    Description: 'Shows the bot uptime.'
+    Response: 'Uptime: ${0}'
+  Generate:
+    Title: 🛠️  Generate
+    Description: 'Generates random information for development, such as CPF, CNPJ, RG, UUID and person.'
+  OpenSourcesProjects:
+    Title: 📂  Open source projects
+    Description: 'Lists the Vulcano open source projects.'
