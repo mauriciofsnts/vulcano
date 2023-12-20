@@ -14,34 +14,99 @@ func init() {
 		Aliases:     []string{"help"},
 		Description: t.Translate().Commands.Help.Description.Str(),
 		Category:    bot.CategoryBot,
+		Parameters: []discord.CommandOption{
+			&discord.StringOption{
+				OptionName:  "command",
+				Description: "Command to get help",
+				Required:    false,
+			},
+		},
 		Handler: func(ctx *bot.Context) {
-			categories := bot.GetCategories()
+			args := ctx.RawArgs
 
-			var fields []discord.EmbedField
+			if len(args) > 0 {
+				cmd, found := bot.GetCommand(args[0])
 
-			for category, commands := range categories {
-				var value string
+				if !found {
+					ctx.ReplyError(bot.ComplexMessageData{
+						Embed: discord.Embed{
+							Title:       "Not found",
+							Description: "Command not found",
+						},
+					})
 
-				for _, command := range commands {
-					value += buildCommandResponse(command)
+					return
 				}
 
-				fields = append(fields, discord.EmbedField{
-					Name:  category,
-					Value: value,
-				})
+				commandEmbed := buildHelpCommandEmbed(*cmd)
+
+				ctx.Reply(bot.ComplexMessageData{Embed: commandEmbed})
+
+				return
 			}
 
-			ctx.Reply(bot.ComplexMessageData{
-				Embed: discord.Embed{
-					Title:       t.Translate().Commands.Help.Title.Str(),
-					Description: i18n.Replace(t.Translate().Commands.Help.Response.Str(), config.Vulcano.Prefix),
-					Fields:      fields,
-				},
-			})
+			embed := buildListCommandsEmbed()
+
+			ctx.Reply(bot.ComplexMessageData{Embed: embed})
 
 		},
 	})
+}
+
+func buildListCommandsEmbed() discord.Embed {
+	categories := bot.GetCategories()
+
+	var fields []discord.EmbedField
+
+	for category, commands := range categories {
+		var value string
+
+		for _, command := range commands {
+			value += buildCommandResponse(command)
+		}
+
+		fields = append(fields, discord.EmbedField{
+			Name:  category,
+			Value: value,
+		})
+	}
+
+	return discord.Embed{
+		Title:       t.Translate().Commands.Help.Title.Str(),
+		Description: i18n.Replace(t.Translate().Commands.Help.Response.Str(), config.Vulcano.Prefix),
+		Fields:      fields,
+	}
+}
+
+func buildHelpCommandEmbed(command bot.Command) discord.Embed {
+	return discord.Embed{
+		Title:       command.Name,
+		Description: command.Description,
+		Fields: []discord.EmbedField{
+			{
+				Name:   t.Translate().Utils.Usage.Str(),
+				Value:  buildUsageResponse(command),
+				Inline: true,
+			},
+			{
+				Name:   t.Translate().Utils.Aliases.Str(),
+				Value:  buildAliasesResponse(command.Aliases),
+				Inline: true,
+			},
+		},
+	}
+}
+
+func buildUsageResponse(command bot.Command) string {
+	var response string
+
+	response += config.Vulcano.Prefix + command.Name
+
+	for _, param := range command.Parameters {
+		response += " " + param.Name()
+	}
+
+	return response
 }
 
 func buildCommandResponse(command bot.Command) string {

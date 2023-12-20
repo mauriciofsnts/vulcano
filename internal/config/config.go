@@ -1,7 +1,8 @@
 package config
 
 type Config struct {
-	Token  string
-	Prefix string
-	Port   string
+	Token      string
+	Prefix     string
+	Port       string
+	NewsAPIKey string
 }

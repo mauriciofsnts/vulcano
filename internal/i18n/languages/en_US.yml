@@ -24,6 +24,8 @@ Utils:
   Month: Month
   Years: Years
   Year: Year
+  Usage: Usage
+  Aliases: Aliases
 
 Commands:
   Ping:
@@ -34,12 +36,16 @@ Commands:
     Description: 'List all commands or information about a specific command.'
     Title: 🌟 Vulcano commands
     Response: 'Use ${0}help <command> to get more information about a specific command.'
+    Parameters: 
   Tools:
     Title: 🛠️  Tools
-    Description: Generates random information for development, such as CPF, CNPJ, RG, UUID and person.
+    Description: Generates random information for development.
   Tabnews:
     Title: 📰  Tabnews
     Description: 'Shows the latest news from the TabNews website.'
+  NewsAPI:
+    Title: 📰  NewsAPI
+    Description: 'Shows the latest news from the NewsAPI website.'
   Shorten:
     Title: 🔗  Shorten
     Description: 'Shorten a URL.'

@@ -32,6 +32,7 @@ type Commands struct {
 	Ping                Command
 	Tools               Command
 	Tabnews             Command
+	NewsAPI             Command
 	Shorten             Command
 	Holiday             Command
 	Uptime              Command
@@ -65,6 +66,8 @@ type Utils struct {
 	Month           LanguageEntry
 	Years           LanguageEntry
 	Year            LanguageEntry
+	Usage           LanguageEntry
+	Aliases         LanguageEntry
 }
 
 type Help struct {

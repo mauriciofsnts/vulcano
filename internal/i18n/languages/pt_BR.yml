@@ -24,7 +24,9 @@ Utils:
   Months: Meses
   Month: Mês
   Years: Anos
-  Year: Ano
+  Year: Ano 
+  Usage: Uso
+  Aliases: Aliases
 
 Commands:
   Ping:
@@ -37,10 +39,13 @@ Commands:
     Response: 'Use ${0}help <comando> para obter mais informações sobre um comando específico.'
   Tools:
     Title: 🛠️  Ferramentas
-    Description: Gera informações aleatórias para desenvolvimento, como CPF, CNPJ, RG, UUID e pessoa.
+    Description: Gera informações aleatórias para desenvolvimento.
   Tabnews:
     Title: 📰  Tabnews
     Description: 'Mostra as últimas notícias do site TabNews.'
+  NewsAPI:
+    Title: 📰  NewsAPI
+    Description: 'Mostra as últimas notícias do site NewsAPI.'
   Shorten:
     Title: 🔗  Shorten
     Description: 'Encurta uma URL.'

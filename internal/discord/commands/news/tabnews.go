@@ -13,7 +13,7 @@ import (
 	"github.com/mauriciofsnts/vulcano/internal/providers/shorten"
 )
 
-type Article struct {
+type TabnewsArticle struct {
 	Id                  string `json:"id"`
 	Owner_id            string `json:"owner_id"`
 	Parent_id           string `json:"parent_id"`
@@ -37,7 +37,7 @@ func getTabNews() ([]discord.EmbedField, error) {
 	}
 	defer res.Body.Close()
 
-	var articles []Article
+	var articles []TabnewsArticle
 
 	if err := json.NewDecoder(res.Body).Decode(&articles); err != nil {
 		return nil, err
@@ -49,7 +49,7 @@ func getTabNews() ([]discord.EmbedField, error) {
 
 	for i, article := range articles {
 		wg.Add(1)
-		go func(idx int, article Article) {
+		go func(idx int, article TabnewsArticle) {
 			defer wg.Done()
 
 			shortenedUrl := ""
