@@ -11,7 +11,7 @@ COPY Makefile .
 
 COPY internal internal
 COPY cmd cmd
-COPY config.yml .
+COPY .env .
 
 RUN go mod download
 
