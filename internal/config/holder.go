@@ -1,9 +1,7 @@
 package config
 
 import (
-	"os"
-
-	"github.com/ghodss/yaml"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -11,17 +9,17 @@ var (
 )
 
 func LoadConfig() error {
-	f, err := os.ReadFile("./config.yml")
+	viper.AddConfigPath(".")
+
+	viper.SetConfigType("env")
+	viper.SetConfigFile(".env")
+
+	err := viper.ReadInConfig()
 
 	if err != nil {
 		return err
 	}
 
-	err = yaml.Unmarshal(f, &Vulcano)
-
-	if err != nil {
-		return err
-	}
-
+	err = viper.Unmarshal(&Vulcano)
 	return nil
 }
