@@ -33,8 +33,13 @@ func init() {
 								Inline: false,
 							},
 							{
-								Name:   "Web Development",
-								Value:  "https://speedify.dev/",
+								Name:   "It's me",
+								Value:  "https://mrtz.dev/",
+								Inline: false,
+							},
+							{
+								Name:   "SquareFox Digital",
+								Value:  "https://squarefox.digital/",
 								Inline: false,
 							},
 						},
