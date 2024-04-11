@@ -27,7 +27,7 @@ config.yml
 .vscode
 /tmp
 
-.env*
+.env
 .flaskenv*
 !.env.project
 !.env.vault
