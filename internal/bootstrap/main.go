@@ -24,7 +24,10 @@ func Start() {
 	}
 
 	go discord.Start()
-	go server.StartHttpServer()
+
+	if config.Vulcano.Port != "" {
+		go server.StartHttpServer()
+	}
 
 	stop := make(chan os.Signal, 1)
 	//lint:ignore SA1016 i dont know, it just works lol
