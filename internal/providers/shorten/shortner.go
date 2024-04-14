@@ -5,8 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"time"
+
+	"github.com/mauriciofsnts/vulcano/internal/config"
 )
 
 const endpoint = "https://url.db.cafe/api/v1/links"
@@ -30,6 +33,13 @@ var client = &http.Client{
 // and returns the shortened URL string and any error encountered.
 func Shortner(url string, keepAliveFor *int) (string, error) {
 
+	apiKey := config.Vulcano.ShurlApiKey
+
+	if apiKey == "" {
+		slog.Error("No API key provided for shortening URL")
+		return "", fmt.Errorf("no API key provided for shortening URL")
+	}
+
 	requestBody, err := json.Marshal(map[string]any{
 		"original_url": url,
 		"ttl":          5259600,
@@ -39,7 +49,17 @@ func Shortner(url string, keepAliveFor *int) (string, error) {
 		return "", err
 	}
 
-	res, err := client.Post(endpoint, "application/json", bytes.NewBuffer(requestBody))
+	// add headers to the request
+	req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(requestBody))
+
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-API-Key", apiKey)
+
+	res, err := client.Do(req)
 
 	if err != nil {
 		return "", err

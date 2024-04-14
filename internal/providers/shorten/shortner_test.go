@@ -19,5 +19,5 @@ func TestShortner(t *testing.T) {
 	// Call the Shortner function with the test server URL
 	shortLink, err := shorten.Shortner(testServer.URL, nil)
 	assert.NoError(t, err)
-	assert.Contains(t, shortLink, "https://st.mrzt.dev/")
+	assert.Contains(t, shortLink, "https://url.db.cafe/")
 }
