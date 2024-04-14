@@ -3,24 +3,19 @@ package shorten
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
 )
 
-const endpoint = "https://st.mrzt.dev/api/v2/links"
+const endpoint = "https://url.db.cafe/api/v1/links"
 
 type Response struct {
-	Address     string `json:"address"`
-	Banned      bool   `json:"banned"`
-	CreatedAt   string `json:"created_at"`
-	Id          string `json:"id"`
-	Link        string `json:"link"`
-	Password    bool   `json:"password"`
-	Target      string `json:"target"`
-	Description string `json:"description"`
-	UpdatedAt   string `json:"updated_at"`
-	VisitCount  int    `json:"visit_count"`
+	Slug        string `json:"slug"`
+	Domain      string `json:"domain"`
+	OriginalURL string `json:"original_url"`
+	TTL         int    `json:"ttl"`
 }
 
 var client = &http.Client{
@@ -35,9 +30,9 @@ var client = &http.Client{
 // and returns the shortened URL string and any error encountered.
 func Shortner(url string, keepAliveFor *int) (string, error) {
 
-	requestBody, err := json.Marshal(map[string]string{
-		"target":       url,
-		"showAdvanced": "false",
+	requestBody, err := json.Marshal(map[string]any{
+		"original_url": url,
+		"ttl":          5259600,
 	})
 
 	if err != nil {
@@ -66,5 +61,7 @@ func Shortner(url string, keepAliveFor *int) (string, error) {
 		return "", err
 	}
 
-	return response.Link, nil
+	responseUrl := fmt.Sprintf("https://%s/%s", response.Domain, response.Slug)
+
+	return responseUrl, nil
 }
