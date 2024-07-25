@@ -11,6 +11,8 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/gateway"
 	"github.com/mauriciofsnts/exodia/internal/config"
+
+	_ "github.com/mauriciofsnts/exodia/internal/discord/commands"
 )
 
 func InitDiscord() {

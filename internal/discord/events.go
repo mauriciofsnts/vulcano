@@ -4,10 +4,9 @@ import (
 	"log/slog"
 	"strings"
 
-	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/mauriciofsnts/exodia/internal/config"
-	"github.com/mauriciofsnts/exodia/internal/discord/commands"
+	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
 )
 
 func OnMessageCreatedEvent(event *events.MessageCreate) {
@@ -24,45 +23,47 @@ func OnMessageCreatedEvent(event *events.MessageCreate) {
 	msg := strings.Split(message.Content, " ")
 
 	commandName := strings.TrimPrefix(msg[0], config.Envs.Discord.Prefix)
-	found, _ := commands.SearchCommandByAlias(commandName)
+	found, cmd := ctx.SearchCommandByAlias(commandName)
 
-	if found == false {
+	if !found {
 		// in this case is possible because is the user that is sending the message
-		// return
+		return
 	}
 
 	args := msg[1:]
 
-	slog.Info("Args: ", slog.String("args", strings.Join(args, " ")))
+	slog.Debug("Args: ", slog.String("args", strings.Join(args, " ")))
 
-	if commandName == "ping" {
-		event.Client().Rest().CreateMessage(event.ChannelID, discord.MessageCreate{
-			Content: "Pong!",
-		})
+	trigger := ctx.TriggerEvent{
+		AuthorId:       message.Author.ID.String(),
+		ChannelId:      message.ChannelID.String(),
+		GuildId:        message.GuildID.String(),
+		MessageId:      message.ID.String(),
+		EventTimestamp: message.CreatedAt,
 	}
 
+	ctx.Execute(args, cmd, trigger, ctx.MESSAGE)
 }
 
 func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate) {
 	data := event.SlashCommandInteractionData()
 
 	commandName := data.CommandName()
+	found, cmd := ctx.SearchCommandByAlias(commandName)
 
-	found, _ := commands.SearchCommandByAlias(commandName)
-
-	if found == false {
+	if !found {
 		slog.Error("Command not found: ", slog.String("command", commandName))
 		slog.Error("The user can't dispatch an unknown slash command. Check if the command is registered")
-		// return
+		return
 	}
 
 	slog.Debug("Command found: ", slog.String("command", commandName))
 
-	// trigger := commands.TriggerEvent{
-	// 	GuildId:        event.GuildID().String(),
-	// 	ChannelId:      event.Channel().ID().String(),
-	// 	EventTimestamp: event.CreatedAt(),
-	// }
+	trigger := ctx.TriggerEvent{
+		GuildId:        event.GuildID().String(),
+		ChannelId:      event.Channel().ID().String(),
+		EventTimestamp: event.CreatedAt(),
+	}
 
 	var commandArgs []string
 
@@ -70,11 +71,7 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 		commandArgs = append(commandArgs, string(option.Value))
 	}
 
-	//TODO! Implement the command execution
-	if commandName == "ping" {
-		event.CreateMessage(discord.NewMessageCreateBuilder().SetContent(data.String("pong")).Build())
-	}
-
+	ctx.Execute(commandArgs, cmd, trigger, ctx.SLASH_COMMAND)
 }
 
 func OnReadyEvent(event *events.Ready) {

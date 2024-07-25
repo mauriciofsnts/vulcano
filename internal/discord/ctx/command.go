@@ -1,4 +1,4 @@
-package commands
+package ctx
 
 type Command struct {
 	Name        string
@@ -7,17 +7,20 @@ type Command struct {
 	Handler     func(ctx *Context)
 }
 
-var commands map[string]Command
+var commands = make(map[string]Command)
 
 func AttachCommand(name string, cmd Command) {
 	commands[name] = cmd
 }
 
 func SearchCommandByAlias(alias string) (bool, *Command) {
-	for _, cmd := range commands {
-		for _, a := range cmd.Aliases {
-			if a == alias {
-				return true, &cmd
+	for _, command := range commands {
+		if command.Name == alias {
+			return true, &command
+		}
+		for _, cmdalias := range command.Aliases {
+			if cmdalias == alias {
+				return true, &command
 			}
 		}
 	}
