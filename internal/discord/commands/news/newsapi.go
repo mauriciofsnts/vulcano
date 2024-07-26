@@ -1,8 +1,6 @@
 package news
 
 import (
-	"log/slog"
-
 	"github.com/disgoorg/disgo/discord"
 	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
 	"github.com/mauriciofsnts/exodia/internal/providers/utils"
@@ -22,8 +20,9 @@ func init() {
 				MaxValue:    utils.PtrTo(99),
 			},
 		},
-		Handler: func(ctx *ctx.Context) {
-			slog.Info("Executing... Pong!")
+		Handler: func(ctx *ctx.Context) discord.MessageCreate {
+			msg := discord.NewMessageCreateBuilder().SetContent("Pong!").Build()
+			return msg
 		},
 	})
 }

@@ -32,7 +32,7 @@ func InitDiscord() {
 			),
 		),
 		bot.WithEventListenerFunc(OnMessageCreatedEvent),
-		// bot.WithEventListenerFunc(OnInteractionCreatedEvent),
+		bot.WithEventListenerFunc(OnInteractionCreatedEvent),
 		bot.WithEventListenerFunc(OnReadyEvent),
 	)
 

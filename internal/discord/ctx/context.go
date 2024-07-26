@@ -2,6 +2,8 @@ package ctx
 
 import (
 	"time"
+
+	"github.com/disgoorg/disgo/discord"
 )
 
 type EventType string
@@ -31,7 +33,7 @@ func Execute(
 	command *Command,
 	trigger TriggerEvent,
 	eventType EventType,
-) {
+) discord.MessageCreate {
 	ctx := &Context{
 		StartTimestamp: time.Now(),
 		TriggerEvent:   trigger,
@@ -39,5 +41,5 @@ func Execute(
 		Args:           args,
 	}
 
-	command.Handler(ctx)
+	return command.Handler(ctx)
 }

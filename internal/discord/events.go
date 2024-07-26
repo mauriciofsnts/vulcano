@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"strings"
 
+	disgo "github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/mauriciofsnts/exodia/internal/config"
 	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
@@ -42,7 +43,10 @@ func OnMessageCreatedEvent(event *events.MessageCreate) {
 		EventTimestamp: message.CreatedAt,
 	}
 
-	ctx.Execute(args, cmd, trigger, ctx.MESSAGE)
+	content := ctx.Execute(args, cmd, trigger, ctx.MESSAGE)
+	content.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
+
+	event.Client().Rest().CreateMessage(event.ChannelID, content)
 }
 
 func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate) {
@@ -71,7 +75,8 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 		commandArgs = append(commandArgs, string(option.Value))
 	}
 
-	ctx.Execute(commandArgs, cmd, trigger, ctx.SLASH_COMMAND)
+	msg := ctx.Execute(commandArgs, cmd, trigger, ctx.SLASH_COMMAND)
+	event.CreateMessage(msg)
 }
 
 func OnReadyEvent(event *events.Ready) {
