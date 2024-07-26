@@ -12,6 +12,8 @@ loglevel: DEBUG
 discord:
   token: "your_token_here"
   prefix: "!"
+  guildId: "your_guild_id_here"
+  syncCommands: false
 
 # shortener configuration
 shortener:

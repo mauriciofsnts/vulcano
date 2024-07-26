@@ -28,8 +28,10 @@ type Shortener struct {
 }
 
 type Discord struct {
-	Token  string `validate:"required"`
-	Prefix string `validate:"required"`
+	Token        string `validate:"required"`
+	Prefix       string `validate:"required"`
+	GuildID      string `validate:"required"`
+	SyncCommands bool
 }
 
 type LogLevel string

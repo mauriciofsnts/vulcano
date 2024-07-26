@@ -13,6 +13,7 @@ import (
 	"github.com/mauriciofsnts/exodia/internal/config"
 
 	_ "github.com/mauriciofsnts/exodia/internal/discord/commands"
+	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
 )
 
 func InitDiscord() {
@@ -33,7 +34,6 @@ func InitDiscord() {
 		bot.WithEventListenerFunc(OnMessageCreatedEvent),
 		// bot.WithEventListenerFunc(OnInteractionCreatedEvent),
 		bot.WithEventListenerFunc(OnReadyEvent),
-		// bot.WithEventListenerFunc()
 	)
 
 	if err != nil {
@@ -41,10 +41,14 @@ func InitDiscord() {
 		panic(err)
 	}
 
-	defer client.Close(context.TODO())
+	defer client.Close(context.Background())
+
+	if config.Envs.Discord.SyncCommands {
+		ctx.SyncCommands(client)
+	}
 
 	// connect to the gateway
-	if err = client.OpenGateway(context.TODO()); err != nil {
+	if err = client.OpenGateway(context.Background()); err != nil {
 		slog.Error("Error while connecting to the gateway: ", slog.Any("error", err))
 		panic(err)
 	}
