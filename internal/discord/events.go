@@ -67,13 +67,13 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 		EventTimestamp: event.CreatedAt(),
 	}
 
-	var commandArgs []string
+	var args []string
 
 	for _, option := range data.Options {
-		commandArgs = append(commandArgs, string(option.Value))
+		args = append(args, string(option.Value))
 	}
 
-	msg := ctx.Execute(commandArgs, cmd, trigger, ctx.SLASH_COMMAND, StartedAt)
+	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, StartedAt)
 	event.CreateMessage(msg)
 }
 

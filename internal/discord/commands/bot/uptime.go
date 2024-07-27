@@ -2,7 +2,6 @@ package bot
 
 import (
 	"fmt"
-	"log/slog"
 	"strings"
 	"time"
 
@@ -17,8 +16,7 @@ func init() {
 		Description: "Shows how long the bot has been online",
 		Options:     []discord.ApplicationCommandOption{},
 		Handler: func(ctx *ctx.Context) discord.MessageCreate {
-			slog.Debug("Uptime command called", ctx.BotStartedAt)
-			uptime := time.Since(ctx.BotStartedAt)
+			uptime := time.Since(ctx.BotStartAt)
 
 			return ctx.Reply(ctx.Embed(
 				"🕒  Uptime",
