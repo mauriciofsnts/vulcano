@@ -46,7 +46,9 @@ func Init() {
 
 	defer client.Close(context.Background())
 
-	ctx.SyncCommands(client)
+	if config.Envs.Discord.SyncCommands {
+		ctx.SyncCommands(client)
+	}
 
 	// connect to the gateway
 	if err = client.OpenGateway(context.Background()); err != nil {
