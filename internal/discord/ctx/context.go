@@ -22,6 +22,7 @@ type TriggerEvent struct {
 }
 
 type Context struct {
+	BotStartedAt   time.Time
 	StartTimestamp time.Time
 	TriggerEvent   TriggerEvent
 	Type           EventType
@@ -36,6 +37,7 @@ func Execute(
 	command *Command,
 	trigger TriggerEvent,
 	eventType EventType,
+	botStartedAt time.Time,
 ) discord.MessageCreate {
 	ctx := &Context{
 		StartTimestamp: time.Now(),
@@ -45,6 +47,7 @@ func Execute(
 		Reply:          Reply,
 		Embed:          Embed,
 		ErrorEmbed:     ErrorEmbed,
+		BotStartedAt:   botStartedAt,
 	}
 
 	return command.Handler(ctx)

@@ -43,7 +43,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate) {
 		EventTimestamp: message.CreatedAt,
 	}
 
-	content := ctx.Execute(args, cmd, trigger, ctx.MESSAGE)
+	content := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt)
 	content.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
 
 	event.Client().Rest().CreateMessage(event.ChannelID, content)
@@ -73,7 +73,7 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 		commandArgs = append(commandArgs, string(option.Value))
 	}
 
-	msg := ctx.Execute(commandArgs, cmd, trigger, ctx.SLASH_COMMAND)
+	msg := ctx.Execute(commandArgs, cmd, trigger, ctx.SLASH_COMMAND, StartedAt)
 	event.CreateMessage(msg)
 }
 

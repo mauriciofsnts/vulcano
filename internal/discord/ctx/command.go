@@ -5,8 +5,6 @@ import (
 
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
-	"github.com/disgoorg/snowflake/v2"
-	"github.com/mauriciofsnts/exodia/internal/config"
 )
 
 type Command struct {
@@ -53,8 +51,9 @@ func ParseCommandsToSlashCommands() []discord.ApplicationCommandCreate {
 
 func SyncCommands(client bot.Client) {
 	commands := ParseCommandsToSlashCommands()
+	var err error
 
-	if _, err := client.Rest().SetGuildCommands(client.ApplicationID(), snowflake.MustParse(config.Envs.Discord.GuildID), commands); err != nil {
-		slog.Error("error while registering guild commands", slog.Any("err", err))
+	if _, err = client.Rest().SetGlobalCommands(client.ApplicationID(), commands); err != nil {
+		slog.Error("error while registering commands: ", err)
 	}
 }

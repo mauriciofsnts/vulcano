@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
@@ -16,7 +17,9 @@ import (
 	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
 )
 
-func InitDiscord() {
+var StartedAt time.Time
+
+func Init() {
 	slog.Debug("Initializing Bot...")
 	slog.Debug("Disgo version ", slog.String("version", disgo.Version))
 
@@ -43,15 +46,15 @@ func InitDiscord() {
 
 	defer client.Close(context.Background())
 
-	if config.Envs.Discord.SyncCommands {
-		ctx.SyncCommands(client)
-	}
+	ctx.SyncCommands(client)
 
 	// connect to the gateway
 	if err = client.OpenGateway(context.Background()); err != nil {
 		slog.Error("Error while connecting to the gateway: ", slog.Any("error", err))
 		panic(err)
 	}
+
+	StartedAt = time.Now()
 
 	slog.Info("Bot is running. Press CTRL+C to exit.")
 	s := make(chan os.Signal, 1)

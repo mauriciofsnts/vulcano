@@ -8,5 +8,5 @@ import (
 func Bootstrap() {
 	config.ConfigLogger()
 	config.Init()
-	discord.InitDiscord()
+	discord.Init()
 }
