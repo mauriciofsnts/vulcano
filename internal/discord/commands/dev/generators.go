@@ -28,14 +28,16 @@ func init() {
 				},
 			},
 		},
-		Handler: func(ctx *ctx.Context) discord.MessageCreate {
+		Handler: func(ctx *ctx.Context) *discord.MessageCreate {
 			args := ctx.Args
 
 			if len(args) == 0 {
-				return ctx.Reply(
+				reply := ctx.Build(
 					ctx.ErrorEmbed(
 						errors.New("you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`"),
 					))
+
+				return &reply
 			}
 
 			var value string
@@ -73,17 +75,21 @@ func init() {
 
 				value = uuid.String()
 			default:
-				return ctx.Reply(
+				reply := ctx.Build(
 					ctx.ErrorEmbed(
 						errors.New("invalid type of information to generate. Available types: `cpf`, `uuid`, `cnpj`"),
 					))
+
+				return &reply
 			}
 
-			return ctx.Reply(ctx.Embed(
+			reply := ctx.Build(ctx.Embed(
 				fmt.Sprintf("Generated %s", args[0]),
 				value,
 				[]discord.EmbedField{},
 			))
+
+			return &reply
 		},
 	})
 }

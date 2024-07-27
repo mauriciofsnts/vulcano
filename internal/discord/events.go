@@ -4,13 +4,14 @@ import (
 	"log/slog"
 	"strings"
 
+	"github.com/disgoorg/disgo/bot"
 	disgo "github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/mauriciofsnts/exodia/internal/config"
 	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
 )
 
-func OnMessageCreatedEvent(event *events.MessageCreate) {
+func OnMessageCreatedEvent(event *events.MessageCreate, client *bot.Client) {
 	message := event.Message
 
 	if message.Author.Bot {
@@ -21,9 +22,9 @@ func OnMessageCreatedEvent(event *events.MessageCreate) {
 		return
 	}
 
-	msg := strings.Split(message.Content, " ")
+	inputMessage := strings.Split(message.Content, " ")
 
-	commandName := strings.TrimPrefix(msg[0], config.Envs.Discord.Prefix)
+	commandName := strings.TrimPrefix(inputMessage[0], config.Envs.Discord.Prefix)
 	found, cmd := ctx.SearchCommandByAlias(commandName)
 
 	if !found {
@@ -31,7 +32,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate) {
 		return
 	}
 
-	args := msg[1:]
+	args := inputMessage[1:]
 
 	slog.Debug("Args: ", slog.String("args", strings.Join(args, " ")))
 
@@ -43,13 +44,15 @@ func OnMessageCreatedEvent(event *events.MessageCreate) {
 		EventTimestamp: message.CreatedAt,
 	}
 
-	content := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt)
-	content.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
+	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, *client)
 
-	event.Client().Rest().CreateMessage(event.ChannelID, content)
+	if msg != nil {
+		msg.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
+		event.Client().Rest().CreateMessage(event.ChannelID, *msg)
+	}
 }
 
-func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate) {
+func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate, client *bot.Client) {
 	data := event.SlashCommandInteractionData()
 
 	commandName := data.CommandName()
@@ -73,8 +76,11 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 		args = append(args, string(option.Value))
 	}
 
-	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, StartedAt)
-	event.CreateMessage(msg)
+	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, StartedAt, *client)
+
+	if msg != nil {
+		event.CreateMessage(*msg)
+	}
 }
 
 func OnReadyEvent(event *events.Ready) {

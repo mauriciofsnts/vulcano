@@ -26,12 +26,13 @@ func init() {
 				MaxValue:    utils.PtrTo(99),
 			},
 		},
-		Handler: func(ctx *ctx.Context) discord.MessageCreate {
+		Handler: func(ctx *ctx.Context) *discord.MessageCreate {
 			tnArticles, err := news.GetTnNews(1, 15)
 
 			if err != nil {
 				embed := ctx.ErrorEmbed(err)
-				return ctx.Reply(embed)
+				reply := ctx.Build(embed)
+				return &reply
 			}
 
 			fields := make([]discord.EmbedField, len(tnArticles))
@@ -70,7 +71,8 @@ func init() {
 				fields,
 			)
 
-			return ctx.Reply(embed)
+			reply := ctx.Build(embed)
+			return &reply
 		},
 	})
 }

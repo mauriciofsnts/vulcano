@@ -20,8 +20,9 @@ func init() {
 				MaxValue:    utils.PtrTo(99),
 			},
 		},
-		Handler: func(ctx *ctx.Context) discord.MessageCreate {
-			return ctx.Reply(ctx.Embed("Newsapi", "This command is not implemented yet", nil))
+		Handler: func(ctx *ctx.Context) *discord.MessageCreate {
+			reply := ctx.Build(ctx.Embed("Newsapi", "This command is not implemented yet", nil))
+			return &reply
 		},
 	})
 }

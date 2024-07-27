@@ -3,6 +3,7 @@ package ctx
 import (
 	"time"
 
+	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
 )
 
@@ -25,9 +26,10 @@ type Context struct {
 	BotStartAt     time.Time
 	CommandStartAt time.Time
 	TriggerEvent   TriggerEvent
+	Client         bot.Client
 	Type           EventType
 	Args           []string
-	Reply          func(embed discord.Embed) discord.MessageCreate
+	Build          func(embed discord.Embed) discord.MessageCreate
 	Embed          func(title string, description string, fields []discord.EmbedField) discord.Embed
 	ErrorEmbed     func(err error) discord.Embed
 }
@@ -38,22 +40,24 @@ func Execute(
 	trigger TriggerEvent,
 	eventType EventType,
 	botStartAt time.Time,
-) discord.MessageCreate {
+	client bot.Client,
+) *discord.MessageCreate {
 	ctx := &Context{
 		CommandStartAt: time.Now(),
 		TriggerEvent:   trigger,
 		Type:           eventType,
 		Args:           args,
-		Reply:          Reply,
+		Build:          Build,
 		Embed:          Embed,
 		ErrorEmbed:     ErrorEmbed,
 		BotStartAt:     botStartAt,
+		Client:         client,
 	}
 
 	return command.Handler(ctx)
 }
 
-func Reply(embed discord.Embed) discord.MessageCreate {
+func Build(embed discord.Embed) discord.MessageCreate {
 	builder := discord.NewMessageCreateBuilder()
 	builder.SetEmbeds(embed)
 	return builder.Build()
