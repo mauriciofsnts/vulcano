@@ -31,8 +31,6 @@ func OnMessageCreatedEvent(event *events.MessageCreate) {
 		return
 	}
 
-	slog.Info("Command found: ", slog.String("command", commandName))
-
 	args := msg[1:]
 
 	slog.Debug("Args: ", slog.String("args", strings.Join(args, " ")))
@@ -48,12 +46,6 @@ func OnMessageCreatedEvent(event *events.MessageCreate) {
 	content := ctx.Execute(args, cmd, trigger, ctx.MESSAGE)
 	content.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
 
-	slog.Info("Replying to message: ", slog.String("message", content.Embeds[0].Title))
-
-	for _, embed := range content.Embeds[0].Fields {
-		slog.Info("Embed field: ", slog.String("name", embed.Name), slog.String("value", embed.Value))
-	}
-
 	event.Client().Rest().CreateMessage(event.ChannelID, content)
 }
 
@@ -68,8 +60,6 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 		slog.Error("The user can't dispatch an unknown slash command. Check if the command is registered")
 		return
 	}
-
-	slog.Info("Command found: ", slog.String("command", commandName))
 
 	trigger := ctx.TriggerEvent{
 		GuildId:        event.GuildID().String(),

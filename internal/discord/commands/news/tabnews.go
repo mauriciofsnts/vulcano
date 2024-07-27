@@ -49,7 +49,7 @@ func init() {
 					)
 
 					if err != nil {
-						slog.Info("Error shortening url: ", err.Error(), "")
+						slog.Error("Error shortening url: ", err.Error(), "")
 					}
 
 					value := fmt.Sprintf("⭐ %d · %s · %s", article.Tabcoins, article.Owner_username, shortenedUrl)
