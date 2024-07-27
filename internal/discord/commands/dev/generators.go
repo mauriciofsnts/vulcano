@@ -28,68 +28,71 @@ func init() {
 				},
 			},
 		},
-		Handler: func(ctx *ctx.Context) *discord.MessageCreate {
-			args := ctx.Args
-
-			if len(args) == 0 {
-				reply := ctx.Build(
-					ctx.ErrorEmbed(
-						errors.New("you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`"),
-					))
-
-				return &reply
-			}
-
-			var value string
-
-			switch args[0] {
-			case "cnpj":
-				cnpj := utils.GenerateCNPJ()
-
-				var cnpjMaskRe = regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
-				components := cnpjMaskRe.FindStringSubmatch(cnpj)
-
-				maskedCNPJ := fmt.Sprintf(
-					"%s.%s.%s/%s-%s",
-					components[1], components[2], components[3], components[4], components[5],
-				)
-
-				value = "With mask: " + cnpj + "\nWithout mask: " + maskedCNPJ
-
-			case "cpf":
-				cpf := utils.GenerateCPF()
-
-				var cpfMaskRe = regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)
-
-				components := cpfMaskRe.FindStringSubmatch(cpf)
-
-				maskedCPF := fmt.Sprintf(
-					"%s.%s.%s-%s",
-					components[1], components[2], components[3], components[4],
-				)
-
-				value = "With mask: " + cpf + "\nWithout mask: " + maskedCPF
-
-			case "uuid":
-				uuid, _ := uuid.NewUUID()
-
-				value = uuid.String()
-			default:
-				reply := ctx.Build(
-					ctx.ErrorEmbed(
-						errors.New("invalid type of information to generate. Available types: `cpf`, `uuid`, `cnpj`"),
-					))
-
-				return &reply
-			}
-
-			reply := ctx.Build(ctx.Embed(
-				fmt.Sprintf("Generated %s", args[0]),
-				value,
-				[]discord.EmbedField{},
-			))
-
-			return &reply
-		},
+		Handler: generateHandler,
 	})
+}
+
+func generateHandler(ctx *ctx.Context) *discord.MessageCreate {
+	args := ctx.Args
+
+	if len(args) == 0 {
+		return buildErrorResponse(ctx, "you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`")
+	}
+
+	var value string
+
+	switch args[0] {
+	case "cnpj":
+		value = generateCNPJ()
+	case "cpf":
+		value = generateCPF()
+	case "uuid":
+		value = generateUUID()
+	default:
+		return buildErrorResponse(ctx, "invalid type of information to generate. Available types: `cpf`, `uuid`, `cnpj`")
+	}
+
+	reply := ctx.Build(ctx.Embed(
+		fmt.Sprintf("Generated %s", args[0]),
+		value,
+		nil,
+	))
+
+	return &reply
+}
+
+func buildErrorResponse(ctx *ctx.Context, message string) *discord.MessageCreate {
+	reply := ctx.Build(
+		ctx.ErrorEmbed(
+			errors.New(message),
+		),
+	)
+	return &reply
+}
+
+func generateCNPJ() string {
+	cnpj := utils.GenerateCNPJ()
+	cnpjMaskRe := regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
+	components := cnpjMaskRe.FindStringSubmatch(cnpj)
+	maskedCNPJ := fmt.Sprintf(
+		"%s.%s.%s/%s-%s",
+		components[1], components[2], components[3], components[4], components[5],
+	)
+	return fmt.Sprintf("With mask: ```%s```\nWithout mask: ```%s```", cnpj, maskedCNPJ)
+}
+
+func generateCPF() string {
+	cpf := utils.GenerateCPF()
+	cpfMaskRe := regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)
+	components := cpfMaskRe.FindStringSubmatch(cpf)
+	maskedCPF := fmt.Sprintf(
+		"%s.%s.%s-%s",
+		components[1], components[2], components[3], components[4],
+	)
+	return fmt.Sprintf("With mask: ```%s```\nWithout mask: ```%s```", cpf, maskedCPF)
+}
+
+func generateUUID() string {
+	uuid, _ := uuid.NewUUID()
+	return uuid.String()
 }

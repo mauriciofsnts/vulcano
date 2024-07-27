@@ -3,6 +3,7 @@ package news
 import (
 	"fmt"
 	"log/slog"
+	"strconv"
 	"sync"
 
 	"github.com/disgoorg/disgo/discord"
@@ -27,7 +28,16 @@ func init() {
 			},
 		},
 		Handler: func(ctx *ctx.Context) *discord.MessageCreate {
-			tnArticles, err := news.GetTnNews(1, 15)
+			page := 1
+
+			if len(ctx.Args) > 0 {
+				value, err := strconv.Atoi(ctx.Args[0])
+				if err == nil && value >= 1 {
+					page = value
+				}
+			}
+
+			tnArticles, err := news.GetTnNews(page, 15)
 
 			if err != nil {
 				embed := ctx.ErrorEmbed(err)
