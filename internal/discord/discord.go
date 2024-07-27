@@ -10,6 +10,7 @@ import (
 
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
+	"github.com/disgoorg/disgo/events"
 	"github.com/disgoorg/disgo/gateway"
 	"github.com/mauriciofsnts/exodia/internal/config"
 
@@ -34,8 +35,6 @@ func Init() {
 				gateway.IntentMessageContent,
 			),
 		),
-		bot.WithEventListenerFunc(OnMessageCreatedEvent),
-		bot.WithEventListenerFunc(OnInteractionCreatedEvent),
 		bot.WithEventListenerFunc(OnReadyEvent),
 	)
 
@@ -44,9 +43,20 @@ func Init() {
 		panic(err)
 	}
 
+	client.AddEventListeners(&events.ListenerAdapter{
+		OnMessageCreate: func(event *events.MessageCreate) {
+			OnMessageCreatedEvent(event, &client)
+		},
+		OnApplicationCommandInteraction: func(event *events.ApplicationCommandInteractionCreate) {
+			OnInteractionCreatedEvent(event, &client)
+		},
+	})
+
 	defer client.Close(context.Background())
 
-	ctx.SyncCommands(client)
+	if config.Envs.Discord.SyncCommands {
+		ctx.SyncCommands(client)
+	}
 
 	// connect to the gateway
 	if err = client.OpenGateway(context.Background()); err != nil {

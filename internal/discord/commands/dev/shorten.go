@@ -11,7 +11,7 @@ import (
 func init() {
 	ctx.AttachCommand("shorten", ctx.Command{
 		Name:        "shorten",
-		Aliases:     []string{"st"},
+		Aliases:     []string{"sht", "st"},
 		Description: "Shorten a URL",
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionString{
@@ -20,23 +20,27 @@ func init() {
 				Required:    true,
 			},
 		},
-		Handler: func(ctx *ctx.Context) discord.MessageCreate {
+		Handler: func(ctx *ctx.Context) *discord.MessageCreate {
 			args := ctx.Args
 
 			if len(args) == 0 {
-				return ctx.Reply(
+				reply := ctx.Build(
 					ctx.ErrorEmbed(
-						errors.New("you need to specify the URL to shorten"),
+						errors.New("you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`"),
 					))
+
+				return &reply
 			}
 
-			shortened, err := shorten.Shortner(args[0], nil)
+			url, err := shorten.Shortner(args[0], nil)
 
 			if err != nil {
-				return ctx.Reply(ctx.ErrorEmbed(err))
+				reply := ctx.Build(ctx.ErrorEmbed(err))
+				return &reply
 			}
 
-			return ctx.Reply(ctx.Embed("Shortened URL", shortened, nil))
+			reply := ctx.Build(ctx.Embed("Shortened URL", url, nil))
+			return &reply
 		},
 	})
 }
