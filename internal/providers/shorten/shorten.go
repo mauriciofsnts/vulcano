@@ -28,7 +28,7 @@ var httpClient = &http.Client{
 // Shortner takes a URL string and an optional keepAliveFor duration in seconds,
 // sends a POST request to the endpoint with the URL as the target,
 // and returns the shortened URL string and any error encountered.
-func Shortner(url string, keepAliveFor int) (string, error) {
+func Shortner(url string, keepAliveFor *int) (string, error) {
 	// thanks to pauloo27 for the shorten url service, give him a star
 	// https://github.com/pauloo27/shurl
 	endpoint := config.Envs.Shortener.Endpoint

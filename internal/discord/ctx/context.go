@@ -26,6 +26,9 @@ type Context struct {
 	TriggerEvent   TriggerEvent
 	Type           EventType
 	Args           []string
+	Reply          func(embed discord.Embed) discord.MessageCreate
+	Embed          func(title string, description string, fields []discord.EmbedField) discord.Embed
+	ErrorEmbed     func(err error) discord.Embed
 }
 
 func Execute(
@@ -39,7 +42,43 @@ func Execute(
 		TriggerEvent:   trigger,
 		Type:           eventType,
 		Args:           args,
+		Reply:          Reply,
+		Embed:          Embed,
+		ErrorEmbed:     ErrorEmbed,
 	}
 
 	return command.Handler(ctx)
+}
+
+func Reply(embed discord.Embed) discord.MessageCreate {
+	builder := discord.NewMessageCreateBuilder()
+	builder.SetEmbeds(embed)
+	return builder.Build()
+}
+
+func Embed(
+	title string,
+	description string,
+	fields []discord.EmbedField,
+) discord.Embed {
+	embedBuilder := discord.NewEmbedBuilder()
+	embedBuilder.
+		SetTitle(title).
+		SetDescription(description).
+		SetColor(0xffffff).
+		SetFields(fields...)
+
+	return embedBuilder.Build()
+}
+
+func ErrorEmbed(
+	err error,
+) discord.Embed {
+	embedBuilder := discord.NewEmbedBuilder()
+	embedBuilder.
+		SetTitle("An error occurred").
+		SetDescription(err.Error()).
+		SetColor(0xff0000)
+
+	return embedBuilder.Build()
 }

@@ -21,8 +21,7 @@ func init() {
 			},
 		},
 		Handler: func(ctx *ctx.Context) discord.MessageCreate {
-			msg := discord.NewMessageCreateBuilder().SetContent("Pong!").Build()
-			return msg
+			return ctx.Reply(ctx.Embed("Newsapi", "This command is not implemented yet", nil))
 		},
 	})
 }

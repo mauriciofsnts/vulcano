@@ -23,8 +23,9 @@ type TnArticle struct {
 	Children_deep_count int16  `json:"children_deep_count"`
 }
 
-func GetTnNews(page int) ([]TnArticle, error) {
-	const endpoint = "https://www.tabnews.com.br/api/v1/contents?strategy=relevant"
+func GetTnNews(page int, maxSize int) ([]TnArticle, error) {
+
+	endpoint := fmt.Sprintf("https://www.tabnews.com.br/api/v1/contents?strategy=relevant&per_page=%d", maxSize)
 
 	res, err := http.Get(fmt.Sprintf("%s&page=%d", endpoint, page))
 
