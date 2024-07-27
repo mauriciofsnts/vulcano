@@ -5,6 +5,7 @@ import (
 
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
+	"github.com/disgoorg/snowflake/v2"
 )
 
 type EventType string
@@ -15,10 +16,10 @@ const (
 )
 
 type TriggerEvent struct {
-	AuthorId       string
-	ChannelId      string
-	GuildId        string
-	MessageId      string
+	AuthorId       snowflake.ID
+	ChannelId      snowflake.ID
+	GuildId        snowflake.ID
+	MessageId      snowflake.ID
 	EventTimestamp time.Time
 }
 

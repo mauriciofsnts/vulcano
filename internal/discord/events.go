@@ -37,10 +37,10 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client *bot.Client) {
 	slog.Debug("Args: ", slog.String("args", strings.Join(args, " ")))
 
 	trigger := ctx.TriggerEvent{
-		AuthorId:       message.Author.ID.String(),
-		ChannelId:      message.ChannelID.String(),
-		GuildId:        message.GuildID.String(),
-		MessageId:      message.ID.String(),
+		AuthorId:       message.Author.ID,
+		ChannelId:      message.ChannelID,
+		GuildId:        *message.GuildID,
+		MessageId:      message.ID,
 		EventTimestamp: message.CreatedAt,
 	}
 
@@ -65,9 +65,10 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 	}
 
 	trigger := ctx.TriggerEvent{
-		GuildId:        event.GuildID().String(),
-		ChannelId:      event.Channel().ID().String(),
+		GuildId:        *event.GuildID(),
+		ChannelId:      event.Channel().ID(),
 		EventTimestamp: event.CreatedAt(),
+		AuthorId:       event.User().ID,
 	}
 
 	var args []string

@@ -1,10 +1,7 @@
 package bot
 
 import (
-	"log/slog"
-
 	"github.com/disgoorg/disgo/discord"
-	"github.com/disgoorg/snowflake/v2"
 	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
 )
 
@@ -22,12 +19,7 @@ func init() {
 					[]discord.EmbedField{},
 				))
 
-			msg, err := ctx.Client.Rest().CreateMessage(snowflake.MustParse(ctx.TriggerEvent.ChannelId), reply)
-
-			if err == nil {
-				slog.Info("Message sent: %s", msg.ID)
-				ctx.Client.Rest().DeleteMessage(snowflake.MustParse(ctx.TriggerEvent.ChannelId), msg.ID)
-			}
+			ctx.Client.Rest().CreateMessage(ctx.TriggerEvent.ChannelId, reply)
 
 			return nil
 		},

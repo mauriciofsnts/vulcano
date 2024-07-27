@@ -3,7 +3,6 @@ package shorten
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -14,6 +13,7 @@ import (
 type Response struct {
 	Slug        string `json:"slug"`
 	Domain      string `json:"domain"`
+	URL         string `json:"url"`
 	OriginalURL string `json:"original_url"`
 	TTL         int    `json:"ttl"`
 }
@@ -73,7 +73,5 @@ func Shortner(url string, keepAliveFor *int) (string, error) {
 		return "", err
 	}
 
-	shortenedURL := fmt.Sprintf("https://%s/%s", response.Domain, response.Slug)
-
-	return shortenedURL, nil
+	return response.URL, nil
 }
