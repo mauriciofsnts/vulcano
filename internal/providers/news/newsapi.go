@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/mauriciofsnts/exodia/internal/config"
 )
 
 type Source struct {
@@ -29,12 +31,12 @@ type NewsAPIResponse struct {
 	Articles     []NewsApiArticle
 }
 
-func GetNewsAPIHeadlines() ([]NewsApiArticle, error) {
-	const endpoint = "https://newsapi.org/v2/top-headlines?country=br"
+func GetNewsAPIHeadlines(page int) ([]NewsApiArticle, error) {
+	const endpoint = "https://newsapi.org/v2/top-headlines?country=br&pageSize=15"
 
-	apiKey := "YOUR_API_KEY"
+	apiKey := config.Envs.News.NewsapiApikey
 
-	res, err := http.Get(fmt.Sprintf("%s&apiKey=%s", endpoint, apiKey))
+	res, err := http.Get(fmt.Sprintf("%s&apiKey=%s&page=%d", endpoint, apiKey, page))
 
 	if err != nil {
 		return nil, err

@@ -12,6 +12,7 @@ type Config struct {
 	LogLevel  LogLevel
 	Discord   Discord
 	Shortener Shortener
+	News      News
 }
 
 type Database struct {
@@ -32,6 +33,10 @@ type Discord struct {
 	Prefix       string `validate:"required"`
 	GuildID      string `validate:"required"`
 	SyncCommands bool
+}
+
+type News struct {
+	NewsapiApikey string `validate:"required" mapstructure:"newsapi_apikey"`
 }
 
 type LogLevel string

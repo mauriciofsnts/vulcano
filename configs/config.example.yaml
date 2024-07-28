@@ -19,3 +19,6 @@ discord:
 shortener:
   endpoint: "https://url.db.cafe/api/v1/links"
   apiKey: "your_api_key_here"
+
+news:
+  newsapi_apikey: "your_newsapi_api_key_here"
