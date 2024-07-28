@@ -50,6 +50,9 @@ func Init() {
 		OnApplicationCommandInteraction: func(event *events.ApplicationCommandInteractionCreate) {
 			OnInteractionCreatedEvent(event, &client)
 		},
+		OnGuildChannelCreate: func(event *events.GuildChannelCreate) {
+			OnGuildChannelCreatedEvent(event, &client)
+		},
 	})
 
 	defer client.Close(context.Background())

@@ -87,3 +87,9 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 func OnReadyEvent(event *events.Ready) {
 	slog.Info("Bot is ready!")
 }
+
+func OnGuildChannelCreatedEvent(event *events.GuildChannelCreate, client *bot.Client) {
+	channelId := event.ChannelID
+	message := disgo.NewMessageCreateBuilder().SetContent("first!").Build()
+	event.Client().Rest().CreateMessage(channelId, message)
+}
