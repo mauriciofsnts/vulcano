@@ -30,9 +30,8 @@ type Context struct {
 	Client         bot.Client
 	Type           EventType
 	Args           []string
-	Build          func(embed discord.Embed) discord.MessageCreate
-	Embed          func(title string, description string, fields []discord.EmbedField) discord.Embed
-	ErrorEmbed     func(err error) discord.Embed
+	Reply          func(title string, description string, fields []discord.EmbedField) discord.MessageCreate
+	ReplyErr       func(err error) discord.MessageCreate
 }
 
 func Execute(
@@ -48,9 +47,8 @@ func Execute(
 		TriggerEvent:   trigger,
 		Type:           eventType,
 		Args:           args,
-		Build:          Build,
-		Embed:          Embed,
-		ErrorEmbed:     ErrorEmbed,
+		Reply:          Reply,
+		ReplyErr:       ReplyErr,
 		BotStartAt:     botStartAt,
 		Client:         client,
 	}
@@ -58,35 +56,37 @@ func Execute(
 	return command.Handler(ctx)
 }
 
-func Build(embed discord.Embed) discord.MessageCreate {
-	builder := discord.NewMessageCreateBuilder()
-	builder.SetEmbeds(embed)
-	return builder.Build()
-}
-
-func Embed(
+func Reply(
 	title string,
 	description string,
 	fields []discord.EmbedField,
-) discord.Embed {
+) discord.MessageCreate {
+	builder := discord.NewMessageCreateBuilder()
+
 	embedBuilder := discord.NewEmbedBuilder()
 	embedBuilder.
 		SetTitle(title).
 		SetDescription(description).
 		SetColor(0xffffff).
 		SetFields(fields...)
+	embed := embedBuilder.Build()
 
-	return embedBuilder.Build()
+	builder.SetEmbeds(embed)
+	return builder.Build()
 }
 
-func ErrorEmbed(
+func ReplyErr(
 	err error,
-) discord.Embed {
+) discord.MessageCreate {
+	builder := discord.NewMessageCreateBuilder()
+
 	embedBuilder := discord.NewEmbedBuilder()
 	embedBuilder.
 		SetTitle("An error occurred").
 		SetDescription(err.Error()).
 		SetColor(0xff0000)
 
-	return embedBuilder.Build()
+	embed := embedBuilder.Build()
+	builder.SetEmbeds(embed)
+	return builder.Build()
 }

@@ -52,21 +52,12 @@ func generateHandler(ctx *ctx.Context) *discord.MessageCreate {
 		return buildErrorResponse(ctx, "invalid type of information to generate. Available types: `cpf`, `uuid`, `cnpj`")
 	}
 
-	reply := ctx.Build(ctx.Embed(
-		fmt.Sprintf("Generated %s", args[0]),
-		value,
-		nil,
-	))
-
+	reply := ctx.Reply(fmt.Sprintf("Generated %s", args[0]), value, nil)
 	return &reply
 }
 
 func buildErrorResponse(ctx *ctx.Context, message string) *discord.MessageCreate {
-	reply := ctx.Build(
-		ctx.ErrorEmbed(
-			errors.New(message),
-		),
-	)
+	reply := ctx.ReplyErr(errors.New(message))
 	return &reply
 }
 

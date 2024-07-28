@@ -40,8 +40,7 @@ func init() {
 			tnArticles, err := news.GetTnNews(page, 15)
 
 			if err != nil {
-				embed := ctx.ErrorEmbed(err)
-				reply := ctx.Build(embed)
+				reply := ctx.ReplyErr(err)
 				return &reply
 			}
 
@@ -75,13 +74,7 @@ func init() {
 
 			wg.Wait()
 
-			embed := ctx.Embed(
-				"Latest news from Tabnews",
-				"Here are the latest news from the tabnews website",
-				fields,
-			)
-
-			reply := ctx.Build(embed)
+			reply := ctx.Reply("Latest news from Tabnews", "Here are the latest news from the tabnews website", fields)
 			return &reply
 		},
 	})

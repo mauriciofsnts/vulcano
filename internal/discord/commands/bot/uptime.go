@@ -17,14 +17,7 @@ func init() {
 		Options:     []discord.ApplicationCommandOption{},
 		Handler: func(ctx *ctx.Context) *discord.MessageCreate {
 			uptime := time.Since(ctx.BotStartAt)
-
-			reply := ctx.Build(
-				ctx.Embed(
-					"🕒  Uptime",
-					fmt.Sprintf("I've been online for %s", durationAsText(uptime)),
-					[]discord.EmbedField{},
-				))
-
+			reply := ctx.Reply("🕒  Uptime", fmt.Sprintf("I've been online for %s", durationAsText(uptime)), nil)
 			return &reply
 		},
 	})
