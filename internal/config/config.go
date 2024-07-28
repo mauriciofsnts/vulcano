@@ -1,7 +1,7 @@
 package config
 
 import (
-	"log"
+	"log/slog"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
@@ -62,13 +62,13 @@ func Init() {
 	}
 
 	if err := viper.Unmarshal(&Envs); err != nil {
-		log.Fatalf("Unable to decode into struct, %v", err)
+		slog.Error("Unable to decode into struct, %v", err)
 		panic("Unable to decode into struct, check the config file")
 	}
 
 	validate := validator.New()
 	if err := validate.Struct(&Envs); err != nil {
-		log.Fatalf("Missing required attributes %v\n", err)
+		slog.Error("Missing required attributes %v\n", err)
 		panic("Missing required attributes")
 	}
 }
