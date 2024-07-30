@@ -18,7 +18,7 @@ func init() {
 				{Name: "Website", Value: "https://mrtz.dev/"},
 			}
 
-			reply := ctx.Reply("Services", "Here is a list of services available", fields)
+			reply := ctx.Response.Reply("Services", "Here is a list of services available", fields)
 			return &reply
 		},
 	})

@@ -24,18 +24,18 @@ func init() {
 			args := ctx.Args
 
 			if len(args) == 0 {
-				reply := ctx.ReplyErr(errors.New("you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`"))
+				reply := ctx.Response.ReplyErr(errors.New("you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`"))
 				return &reply
 			}
 
 			url, err := shorten.Shortner(args[0], nil)
 
 			if err != nil {
-				reply := ctx.ReplyErr(err)
+				reply := ctx.Response.ReplyErr(err)
 				return &reply
 			}
 
-			reply := ctx.Reply("Shortened URL", url, nil)
+			reply := ctx.Response.Reply("Shortened URL", url, nil)
 			return &reply
 		},
 	})

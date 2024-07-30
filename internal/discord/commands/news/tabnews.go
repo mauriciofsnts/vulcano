@@ -40,7 +40,7 @@ func init() {
 			tnArticles, err := news.GetTnNews(page, 15)
 
 			if err != nil {
-				reply := ctx.ReplyErr(err)
+				reply := ctx.Response.ReplyErr(err)
 				return &reply
 			}
 
@@ -74,7 +74,7 @@ func init() {
 
 			wg.Wait()
 
-			reply := ctx.Reply("Latest news from Tabnews", "Here are the latest news from the tabnews website", fields)
+			reply := ctx.Response.Reply("Latest news from Tabnews", "Here are the latest news from the tabnews website", fields)
 			return &reply
 		},
 	})

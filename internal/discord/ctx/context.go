@@ -24,14 +24,17 @@ type TriggerEvent struct {
 }
 
 type Context struct {
-	BotStartAt     time.Time
-	CommandStartAt time.Time
-	TriggerEvent   TriggerEvent
-	Client         bot.Client
-	Type           EventType
-	Args           []string
-	Reply          func(title string, description string, fields []discord.EmbedField) discord.MessageCreate
-	ReplyErr       func(err error) discord.MessageCreate
+	BotStartAt   time.Time
+	TriggerEvent TriggerEvent
+	Client       bot.Client
+	Type         EventType
+	Args         []string
+	Response     Response
+}
+
+type Response struct {
+	Reply    func(title string, description string, fields []discord.EmbedField) discord.MessageCreate
+	ReplyErr func(err error) discord.MessageCreate
 }
 
 func Execute(
@@ -43,14 +46,15 @@ func Execute(
 	client bot.Client,
 ) *discord.MessageCreate {
 	ctx := &Context{
-		CommandStartAt: time.Now(),
-		TriggerEvent:   trigger,
-		Type:           eventType,
-		Args:           args,
-		Reply:          Reply,
-		ReplyErr:       ReplyErr,
-		BotStartAt:     botStartAt,
-		Client:         client,
+		TriggerEvent: trigger,
+		Type:         eventType,
+		Args:         args,
+		BotStartAt:   botStartAt,
+		Client:       client,
+		Response: Response{
+			Reply:    Reply,
+			ReplyErr: ReplyErr,
+		},
 	}
 
 	return command.Handler(ctx)

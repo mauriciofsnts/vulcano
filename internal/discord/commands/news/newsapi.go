@@ -40,7 +40,7 @@ func init() {
 			articles, err := news.GetNewsAPIHeadlines(page)
 
 			if err != nil {
-				reply := ctx.ReplyErr(err)
+				reply := ctx.Response.ReplyErr(err)
 				return &reply
 			}
 
@@ -78,7 +78,7 @@ func init() {
 
 			wg.Wait()
 
-			reply := ctx.Reply("NewsAPI", "Here are the latest news from NewsAPI", fields)
+			reply := ctx.Response.Reply("NewsAPI", "Here are the latest news from NewsAPI", fields)
 			return &reply
 		},
 	})
