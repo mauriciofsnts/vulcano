@@ -1,4 +1,4 @@
-BINARY_NAME = exodia
+BINARY_NAME = bot
 TEST_COMMAND = gotest
 
 .PHONY: build

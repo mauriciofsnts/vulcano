@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"github.com/disgoorg/disgo/discord"
-	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
-	"github.com/mauriciofsnts/exodia/internal/providers/shorten"
+	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/providers/shorten"
 )
 
 func init() {

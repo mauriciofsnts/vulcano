@@ -2,7 +2,7 @@ package bot
 
 import (
 	"github.com/disgoorg/disgo/discord"
-	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 )
 
 func init() {

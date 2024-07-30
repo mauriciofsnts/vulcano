@@ -12,10 +12,10 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/events"
 	"github.com/disgoorg/disgo/gateway"
-	"github.com/mauriciofsnts/exodia/internal/config"
+	"github.com/mauriciofsnts/bot/internal/config"
 
-	_ "github.com/mauriciofsnts/exodia/internal/discord/commands"
-	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
+	_ "github.com/mauriciofsnts/bot/internal/discord/commands"
+	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 )
 
 var StartedAt time.Time

@@ -1,8 +1,8 @@
 package internal
 
 import (
-	"github.com/mauriciofsnts/exodia/internal/config"
-	"github.com/mauriciofsnts/exodia/internal/discord"
+	"github.com/mauriciofsnts/bot/internal/config"
+	"github.com/mauriciofsnts/bot/internal/discord"
 )
 
 func Bootstrap() {

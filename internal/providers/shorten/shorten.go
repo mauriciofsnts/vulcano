@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/mauriciofsnts/exodia/internal/config"
+	"github.com/mauriciofsnts/bot/internal/config"
 )
 
 type Response struct {

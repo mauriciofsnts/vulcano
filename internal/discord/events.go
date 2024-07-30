@@ -7,8 +7,8 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	disgo "github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
-	"github.com/mauriciofsnts/exodia/internal/config"
-	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/config"
+	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 )
 
 func OnMessageCreatedEvent(event *events.MessageCreate, client *bot.Client) {

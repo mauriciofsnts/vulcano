@@ -22,6 +22,6 @@ RUN addgroup -S user && adduser -S user -G user
 USER user
 
 WORKDIR /app 
-COPY --from=builder /app/exodia /app/exodia
+COPY --from=builder /app/bot /app/bot
 
-ENTRYPOINT ["/app/exodia"]
+ENTRYPOINT ["/app/bot"]

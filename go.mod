@@ -1,4 +1,4 @@
-module github.com/mauriciofsnts/exodia
+module github.com/mauriciofsnts/bot
 
 go 1.22.5
 

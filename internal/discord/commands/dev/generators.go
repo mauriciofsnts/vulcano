@@ -7,8 +7,8 @@ import (
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/google/uuid"
-	"github.com/mauriciofsnts/exodia/internal/discord/ctx"
-	"github.com/mauriciofsnts/exodia/internal/providers/utils"
+	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/providers/utils"
 )
 
 func init() {
