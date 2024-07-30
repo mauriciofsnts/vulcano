@@ -58,7 +58,7 @@ func init() {
 					shortenedUrl, err := shorten.Shortner(article.Url, nil)
 
 					if err != nil {
-						slog.Debug("Error shortening url: ", err)
+						slog.Debug("Error shortening url: ", "error", err)
 					}
 
 					var value string

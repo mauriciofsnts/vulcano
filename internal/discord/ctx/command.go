@@ -54,6 +54,6 @@ func SyncCommands(client bot.Client) {
 	var err error
 
 	if _, err = client.Rest().SetGlobalCommands(client.ApplicationID(), commands); err != nil {
-		slog.Error("error while registering commands: ", err)
+		slog.Error("error while registering commands: ", "error", err)
 	}
 }
