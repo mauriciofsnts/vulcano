@@ -9,6 +9,7 @@ import (
 	"github.com/disgoorg/disgo/events"
 	"github.com/mauriciofsnts/bot/internal/config"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+	customEvents "github.com/mauriciofsnts/bot/internal/discord/events"
 )
 
 func OnMessageCreatedEvent(event *events.MessageCreate, client *bot.Client) {
@@ -92,4 +93,8 @@ func OnGuildChannelCreatedEvent(event *events.GuildChannelCreate, client *bot.Cl
 	channelId := event.ChannelID
 	message := disgo.NewMessageCreateBuilder().SetContent("first!").Build()
 	event.Client().Rest().CreateMessage(channelId, message)
+}
+
+func OnMessageReactionAddedEvent(event *events.MessageReactionAdd, client *bot.Client) {
+	customEvents.OnGamble(event, *client)
 }

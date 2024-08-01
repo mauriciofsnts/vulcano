@@ -10,6 +10,7 @@ import (
 
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
+	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/disgoorg/disgo/gateway"
 	"github.com/mauriciofsnts/bot/internal/config"
@@ -33,7 +34,9 @@ func Init() {
 				gateway.IntentDirectMessages,
 				gateway.IntentGuildVoiceStates,
 				gateway.IntentMessageContent,
+				gateway.IntentGuildMessageReactions,
 			),
+			gateway.WithPresenceOpts(gateway.WithListeningActivity("your bullshit", gateway.WithActivityState("lol")), gateway.WithOnlineStatus(discord.OnlineStatusDND)),
 		),
 		bot.WithEventListenerFunc(OnReadyEvent),
 	)
@@ -52,6 +55,9 @@ func Init() {
 		},
 		OnGuildChannelCreate: func(event *events.GuildChannelCreate) {
 			OnGuildChannelCreatedEvent(event, &client)
+		},
+		OnMessageReactionAdd: func(event *events.MessageReactionAdd) {
+			OnMessageReactionAddedEvent(event, &client)
 		},
 	})
 
