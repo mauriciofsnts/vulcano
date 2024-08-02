@@ -59,6 +59,9 @@ func Init() {
 		OnMessageReactionAdd: func(event *events.MessageReactionAdd) {
 			OnMessageReactionAddedEvent(event, &client)
 		},
+		OnComponentInteraction: func(event *events.ComponentInteractionCreate) {
+			OnComponentInteractionEvent(event, &client)
+		},
 	})
 
 	defer client.Close(context.Background())

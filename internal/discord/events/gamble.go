@@ -11,10 +11,13 @@ import (
 )
 
 func OnGamble(event *discordEvents.MessageReactionAdd, client bot.Client) {
-	if event.Member.User.Bot || *event.Emoji.Name != "🎲" {
+	// this command is only for users and not bots
+	// and the event must be in a guild
+	if event.Member.User.Bot || *event.Emoji.Name != "🎲" || event.GuildID == nil {
 		return
 	}
 
+	// it should not be nil, but just in case we check
 	if client == nil {
 		return
 	}

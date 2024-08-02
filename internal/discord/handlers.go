@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/disgoorg/disgo/bot"
+	"github.com/disgoorg/disgo/discord"
 	disgo "github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/mauriciofsnts/bot/internal/config"
@@ -97,4 +98,24 @@ func OnGuildChannelCreatedEvent(event *events.GuildChannelCreate, client *bot.Cl
 
 func OnMessageReactionAddedEvent(event *events.MessageReactionAdd, client *bot.Client) {
 	customEvents.OnGamble(event, *client)
+}
+
+func OnComponentInteractionEvent(event *events.ComponentInteractionCreate, client *bot.Client) {
+	id := event.ComponentInteraction.Data.CustomID()
+
+	found, component := ctx.FindComponentStateById(id)
+
+	if !found {
+		slog.Error("Button state not found: ", slog.String("id", id))
+		return
+	}
+
+	embeds := component.Handler(&component.State)
+
+	if embeds == nil {
+		slog.Error("Embeds not found")
+		return
+	}
+
+	event.UpdateMessage(discord.MessageUpdate{Embeds: embeds})
 }

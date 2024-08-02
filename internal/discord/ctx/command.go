@@ -57,3 +57,39 @@ func SyncCommands(client bot.Client) {
 		slog.Error("error while registering commands: ", "error", err)
 	}
 }
+
+type ComponentState struct {
+	TriggerEvent TriggerEvent
+	Client       bot.Client
+	State        []any
+}
+
+type ComponentHandler func(ctx *ComponentState) *[]discord.Embed
+
+type Component struct {
+	State   ComponentState
+	Handler ComponentHandler
+}
+
+var buttonState = make(map[string]Component)
+
+func AttachComponentState(id string, component Component) {
+	buttonState[id] = component
+}
+
+func UpdateComponentStateById(id string, state []any) {
+	component, ok := buttonState[id]
+	if ok {
+		component.State.State = state
+		buttonState[id] = component
+	}
+}
+
+func FindComponentStateById(id string) (bool, Component) {
+	component, ok := buttonState[id]
+	return ok, component
+}
+
+func RemoveComponentStateById(id string) {
+	delete(buttonState, id)
+}

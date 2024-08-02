@@ -13,6 +13,7 @@ type EventType string
 const (
 	SLASH_COMMAND EventType = "SLASH_COMMAND"
 	MESSAGE       EventType = "MESSAGE"
+	BTN_COMPONENT EventType = "BTN_COMPONENT"
 )
 
 type TriggerEvent struct {
@@ -51,10 +52,7 @@ func Execute(
 		Args:         args,
 		BotStartAt:   botStartAt,
 		Client:       client,
-		Response: Response{
-			Reply:    Reply,
-			ReplyErr: ReplyErr,
-		},
+		Response:     Response{Reply: Reply, ReplyErr: ReplyErr},
 	}
 
 	return command.Handler(ctx)
