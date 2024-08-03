@@ -20,7 +20,7 @@ func init() {
 				Required:    true,
 			},
 		},
-		Handler: func(ctx *ctx.Context) *discord.MessageCreate {
+		Handler: func(ctx ctx.Context) *discord.MessageCreate {
 			args := ctx.Args
 
 			if len(args) == 0 {

@@ -27,14 +27,11 @@ func init() {
 				MaxValue:    utils.PtrTo(99),
 			},
 		},
-		Handler: func(ctx *ctx.Context) *discord.MessageCreate {
-			page := 1
+		Handler: func(ctx ctx.Context) *discord.MessageCreate {
+			page, err := strconv.Atoi(ctx.Args[0])
 
-			if len(ctx.Args) > 0 {
-				value, err := strconv.Atoi(ctx.Args[0])
-				if err == nil && value >= 1 {
-					page = value
-				}
+			if err != nil {
+				page = 1
 			}
 
 			articles, err := news.GetNewsAPIHeadlines(page)

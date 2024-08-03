@@ -46,7 +46,7 @@ func Execute(
 	botStartAt time.Time,
 	client bot.Client,
 ) *discord.MessageCreate {
-	ctx := &Context{
+	ctx := Context{
 		TriggerEvent: trigger,
 		Type:         eventType,
 		Args:         args,

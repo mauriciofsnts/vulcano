@@ -15,7 +15,7 @@ func init() {
 		Aliases:     []string{"up"},
 		Description: "Shows how long the bot has been online",
 		Options:     []discord.ApplicationCommandOption{},
-		Handler: func(ctx *ctx.Context) *discord.MessageCreate {
+		Handler: func(ctx ctx.Context) *discord.MessageCreate {
 			uptime := time.Since(ctx.BotStartAt)
 			reply := ctx.Response.Reply("🕒  Uptime", fmt.Sprintf("I've been online for %s", durationAsText(uptime)), nil)
 			return &reply

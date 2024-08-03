@@ -32,7 +32,7 @@ func init() {
 	})
 }
 
-func generateHandler(ctx *ctx.Context) *discord.MessageCreate {
+func generateHandler(ctx ctx.Context) *discord.MessageCreate {
 	args := ctx.Args
 
 	if len(args) == 0 {

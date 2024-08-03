@@ -13,7 +13,7 @@ type Command struct {
 	Description string
 	Aliases     []string
 	Options     []discord.ApplicationCommandOption
-	Handler     func(ctx *Context) *discord.MessageCreate
+	Handler     func(ctx Context) *discord.MessageCreate
 }
 
 var commands = make(map[string]Command)

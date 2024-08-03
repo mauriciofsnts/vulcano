@@ -28,49 +28,45 @@ func init() {
 				MaxValue:    utils.PtrTo(99),
 			},
 		},
-		Handler: handleTabnewsCommand,
+		Handler: func(cmd ctx.Context) *discord.MessageCreate {
+			page, err := strconv.Atoi(cmd.Args[0])
+
+			if err != nil {
+				page = 1
+			}
+
+			fields, err := fetchNews(page)
+
+			if err != nil {
+				reply := cmd.Response.ReplyErr(err)
+				return &reply
+			}
+
+			messageBuilder := discord.NewMessageCreateBuilder()
+			embedBuilder := discord.NewEmbedBuilder().
+				SetTitle("Latest news from Tabnews").
+				SetDescription("Here are the latest news from the tabnews website").
+				SetColor(0xffffff).
+				SetFields(fields...).
+				SetFooter(fmt.Sprintf("Page %d", page), "")
+			embed := embedBuilder.Build()
+			messageBuilder.SetEmbeds(embed)
+
+			actionButtonId := fmt.Sprintf("tabnews-next-%d", cmd.TriggerEvent.MessageId)
+			prevButtonId := fmt.Sprintf("tabnews-prev-%d", cmd.TriggerEvent.MessageId)
+
+			messageBuilder.AddActionRow(discord.NewSecondaryButton("➡️", actionButtonId))
+
+			msg := messageBuilder.Build()
+
+			ctx.AttachComponentState(actionButtonId, createComponentState(page+1, cmd))
+			ctx.AttachComponentState(prevButtonId, createComponentState(page-1, cmd))
+			return &msg
+		},
 	})
 }
 
-func handleTabnewsCommand(cmd *ctx.Context) *discord.MessageCreate {
-	page := 1
-	if len(cmd.Args) > 0 {
-		if value, err := strconv.Atoi(cmd.Args[0]); err == nil && value >= 1 {
-			page = value
-		}
-	}
-
-	fields, err := fetchNews(page)
-	if err != nil {
-		reply := cmd.Response.ReplyErr(err)
-		return &reply
-	}
-
-	messageBuilder := discord.NewMessageCreateBuilder()
-	embedBuilder := discord.NewEmbedBuilder().
-		SetTitle("Latest news from Tabnews").
-		SetDescription("Here are the latest news from the tabnews website").
-		SetColor(0xffffff).
-		SetFields(fields...)
-	embed := embedBuilder.Build()
-	messageBuilder.SetEmbeds(embed)
-
-	actionButtonId := fmt.Sprintf("tabnews-next-%d", cmd.TriggerEvent.MessageId)
-	prevButtonId := fmt.Sprintf("tabnews-prev-%d", cmd.TriggerEvent.MessageId)
-
-	messageBuilder.AddActionRow(discord.NewSecondaryButton("➡️", actionButtonId))
-
-	msg := messageBuilder.Build()
-
-	cmd.Client.Rest().CreateMessage(cmd.TriggerEvent.ChannelId, msg)
-
-	ctx.AttachComponentState(actionButtonId, createComponentState(page+1, cmd))
-	ctx.AttachComponentState(prevButtonId, createComponentState(page-1, cmd))
-
-	return nil
-}
-
-func createComponentState(nextPage int, cmd *ctx.Context) ctx.Component {
+func createComponentState(nextPage int, cmd ctx.Context) ctx.Component {
 	return ctx.Component{State: ctx.ComponentState{
 		TriggerEvent: cmd.TriggerEvent,
 		Client:       cmd.Client,
