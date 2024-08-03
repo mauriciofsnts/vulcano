@@ -48,19 +48,19 @@ func Init() {
 
 	client.AddEventListeners(&events.ListenerAdapter{
 		OnMessageCreate: func(event *events.MessageCreate) {
-			OnMessageCreatedEvent(event, &client)
+			OnMessageCreatedEvent(event, client)
 		},
 		OnApplicationCommandInteraction: func(event *events.ApplicationCommandInteractionCreate) {
-			OnInteractionCreatedEvent(event, &client)
+			OnInteractionCreatedEvent(event, client)
 		},
 		OnGuildChannelCreate: func(event *events.GuildChannelCreate) {
-			OnGuildChannelCreatedEvent(event, &client)
+			OnGuildChannelCreatedEvent(event, client)
 		},
 		OnMessageReactionAdd: func(event *events.MessageReactionAdd) {
-			OnMessageReactionAddedEvent(event, &client)
+			OnMessageReactionAddedEvent(event, client)
 		},
 		OnComponentInteraction: func(event *events.ComponentInteractionCreate) {
-			OnComponentInteractionEvent(event, &client)
+			OnComponentInteractionEvent(event, client)
 		},
 	})
 

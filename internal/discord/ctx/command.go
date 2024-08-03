@@ -5,6 +5,7 @@ import (
 
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
+	"github.com/disgoorg/disgo/events"
 )
 
 type Command struct {
@@ -64,7 +65,7 @@ type ComponentState struct {
 	State        []any
 }
 
-type ComponentHandler func(ctx *ComponentState) *[]discord.Embed
+type ComponentHandler func(event *events.ComponentInteractionCreate, ctx *ComponentState)
 
 type Component struct {
 	State   ComponentState

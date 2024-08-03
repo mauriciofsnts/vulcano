@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/disgoorg/disgo/bot"
-	"github.com/disgoorg/disgo/discord"
 	disgo "github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/mauriciofsnts/bot/internal/config"
@@ -13,7 +12,7 @@ import (
 	customEvents "github.com/mauriciofsnts/bot/internal/discord/events"
 )
 
-func OnMessageCreatedEvent(event *events.MessageCreate, client *bot.Client) {
+func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client) {
 	message := event.Message
 
 	if message.Author.Bot {
@@ -46,7 +45,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client *bot.Client) {
 		EventTimestamp: message.CreatedAt,
 	}
 
-	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, *client)
+	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, client)
 
 	if msg != nil {
 		msg.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
@@ -54,7 +53,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client *bot.Client) {
 	}
 }
 
-func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate, client *bot.Client) {
+func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate, client bot.Client) {
 	data := event.SlashCommandInteractionData()
 
 	commandName := data.CommandName()
@@ -79,7 +78,7 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 		args = append(args, string(option.Value))
 	}
 
-	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, StartedAt, *client)
+	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, StartedAt, client)
 
 	if msg != nil {
 		event.CreateMessage(*msg)
@@ -90,19 +89,18 @@ func OnReadyEvent(event *events.Ready) {
 	slog.Info("Bot is ready!")
 }
 
-func OnGuildChannelCreatedEvent(event *events.GuildChannelCreate, client *bot.Client) {
+func OnGuildChannelCreatedEvent(event *events.GuildChannelCreate, client bot.Client) {
 	channelId := event.ChannelID
 	message := disgo.NewMessageCreateBuilder().SetContent("first!").Build()
 	event.Client().Rest().CreateMessage(channelId, message)
 }
 
-func OnMessageReactionAddedEvent(event *events.MessageReactionAdd, client *bot.Client) {
-	customEvents.OnGamble(event, *client)
+func OnMessageReactionAddedEvent(event *events.MessageReactionAdd, client bot.Client) {
+	customEvents.OnGamble(event, client)
 }
 
-func OnComponentInteractionEvent(event *events.ComponentInteractionCreate, client *bot.Client) {
+func OnComponentInteractionEvent(event *events.ComponentInteractionCreate, client bot.Client) {
 	id := event.ComponentInteraction.Data.CustomID()
-
 	found, component := ctx.FindComponentStateById(id)
 
 	if !found {
@@ -110,12 +108,5 @@ func OnComponentInteractionEvent(event *events.ComponentInteractionCreate, clien
 		return
 	}
 
-	embeds := component.Handler(&component.State)
-
-	if embeds == nil {
-		slog.Error("Embeds not found")
-		return
-	}
-
-	event.UpdateMessage(discord.MessageUpdate{Embeds: embeds})
+	component.Handler(event, &component.State)
 }

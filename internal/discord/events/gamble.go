@@ -17,11 +17,6 @@ func OnGamble(event *discordEvents.MessageReactionAdd, client bot.Client) {
 		return
 	}
 
-	// it should not be nil, but just in case we check
-	if client == nil {
-		return
-	}
-
 	// roll a dice from 1 to 10
 	roll := rand.Intn(10) + 1
 
