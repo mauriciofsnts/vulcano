@@ -56,7 +56,7 @@ func generateHandler(ctx ctx.Context) *discord.MessageCreate {
 	return &reply
 }
 
-func buildErrorResponse(ctx *ctx.Context, message string) *discord.MessageCreate {
+func buildErrorResponse(ctx ctx.Context, message string) *discord.MessageCreate {
 	reply := ctx.Response.ReplyErr(errors.New(message))
 	return &reply
 }

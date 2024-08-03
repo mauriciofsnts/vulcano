@@ -55,7 +55,14 @@ func init() {
 			actionButtonId := fmt.Sprintf("tabnews-next-%d", cmd.TriggerEvent.MessageId)
 			prevButtonId := fmt.Sprintf("tabnews-prev-%d", cmd.TriggerEvent.MessageId)
 
-			messageBuilder.AddActionRow(discord.NewSecondaryButton("➡️", actionButtonId))
+			if page > 1 {
+				messageBuilder.AddActionRow(
+					discord.NewSecondaryButton("⬅️", prevButtonId),
+					discord.NewSecondaryButton("➡️", actionButtonId),
+				)
+			} else {
+				messageBuilder.AddActionRow(discord.NewSecondaryButton("➡️", actionButtonId))
+			}
 
 			msg := messageBuilder.Build()
 
