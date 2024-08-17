@@ -29,10 +29,14 @@ func init() {
 			},
 		},
 		Handler: func(cmd ctx.Context) *discord.MessageCreate {
-			page, err := strconv.Atoi(cmd.Args[0])
+			page := 1
 
-			if err != nil {
-				page = 1
+			if len(cmd.Args) > 0 {
+				parsedPage, err := strconv.Atoi(cmd.Args[0])
+				if err != nil {
+					page = 1
+				}
+				page = parsedPage
 			}
 
 			fields, err := fetchNews(page)
@@ -126,7 +130,7 @@ func fetchNews(page int) ([]discord.EmbedField, error) {
 		page = minPage
 	}
 
-	tnArticles, err := news.GetTnNews(page, 15)
+	tnArticles, err := news.GetTnNews(page, 12)
 
 	if err != nil {
 		return nil, err
