@@ -3,14 +3,12 @@ package news
 import (
 	"fmt"
 	"log/slog"
-	"strconv"
 	"sync"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 	"github.com/mauriciofsnts/bot/internal/providers/news"
 	"github.com/mauriciofsnts/bot/internal/providers/shorten"
-	"github.com/mauriciofsnts/bot/internal/providers/utils"
 )
 
 func init() {
@@ -18,23 +16,8 @@ func init() {
 		Name:        "Newsapi",
 		Aliases:     []string{"news"},
 		Description: "Get the latest news from the newsapi website",
-		Options: []discord.ApplicationCommandOption{
-			discord.ApplicationCommandOptionInt{
-				Name:        "page",
-				Description: "The page number you want to see",
-				Required:    false,
-				MinValue:    utils.PtrTo(1),
-				MaxValue:    utils.PtrTo(99),
-			},
-		},
 		Handler: func(ctx ctx.Context) *discord.MessageCreate {
-			page, err := strconv.Atoi(ctx.Args[0])
-
-			if err != nil {
-				page = 1
-			}
-
-			articles, err := news.GetNewsAPIHeadlines(page)
+			articles, err := news.GetNewsAPIHeadlines(1)
 
 			if err != nil {
 				reply := ctx.Response.ReplyErr(err)
