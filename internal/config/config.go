@@ -8,11 +8,16 @@ import (
 )
 
 type Config struct {
+	Server    Server
 	DB        Database
 	LogLevel  LogLevel
 	Discord   Discord
 	Shortener Shortener
 	News      News
+}
+
+type Server struct {
+	Port string `validate:"required"`
 }
 
 type Database struct {
