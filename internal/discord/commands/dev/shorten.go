@@ -2,6 +2,7 @@ package dev
 
 import (
 	"errors"
+	"log/slog"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
@@ -29,12 +30,14 @@ func init() {
 		Handler: func(ctx ctx.Context) *discord.MessageCreate {
 			args := ctx.Args
 
+			slog.Info("shorten", "args", args[1])
+
 			if len(args) == 0 {
 				reply := ctx.Response.ReplyErr(errors.New("you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`"))
 				return &reply
 			}
 
-			url, err := shorten.Shortner(args[0], shorten.Options{Slug: args[1], KeepAliveFor: utils.PtrTo(0)})
+			url, err := shorten.Shortner(args[0], &shorten.Options{Slug: args[1], KeepAliveFor: utils.PtrTo(0)})
 
 			if err != nil {
 				reply := ctx.Response.ReplyErr(err)
