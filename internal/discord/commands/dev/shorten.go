@@ -6,6 +6,7 @@ import (
 	"github.com/disgoorg/disgo/discord"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 	"github.com/mauriciofsnts/bot/internal/providers/shorten"
+	"github.com/mauriciofsnts/bot/internal/providers/utils"
 )
 
 func init() {
@@ -19,6 +20,11 @@ func init() {
 				Description: "URL to shorten",
 				Required:    true,
 			},
+			discord.ApplicationCommandOptionString{
+				Name:        "slug",
+				Description: "Custom alias for the shortened URL",
+				Required:    false,
+			},
 		},
 		Handler: func(ctx ctx.Context) *discord.MessageCreate {
 			args := ctx.Args
@@ -28,7 +34,7 @@ func init() {
 				return &reply
 			}
 
-			url, err := shorten.Shortner(args[0], nil)
+			url, err := shorten.Shortner(args[0], shorten.Options{Slug: args[1], KeepAliveFor: utils.PtrTo(0)})
 
 			if err != nil {
 				reply := ctx.Response.ReplyErr(err)
