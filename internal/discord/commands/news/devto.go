@@ -13,7 +13,7 @@ import (
 
 func init() {
 	ctx.AttachCommand("devto", ctx.Command{
-		Name:        "Devto",
+		Name:        "devto",
 		Aliases:     []string{"devto"},
 		Description: "Get the latest news from the devto website",
 		Handler: func(ctx ctx.Context) *discord.MessageCreate {

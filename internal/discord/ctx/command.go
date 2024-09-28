@@ -42,7 +42,7 @@ func ParseCommandsToSlashCommands() []discord.ApplicationCommandCreate {
 	for _, command := range commands {
 		slashCommands = append(slashCommands, discord.SlashCommandCreate{
 			Name:        command.Name,
-			Description: command.Description,
+			Description: command.Name,
 			Options:     command.Options,
 		})
 	}
@@ -52,10 +52,9 @@ func ParseCommandsToSlashCommands() []discord.ApplicationCommandCreate {
 
 func SyncCommands(client bot.Client) {
 	commands := ParseCommandsToSlashCommands()
-	var err error
 
-	if _, err = client.Rest().SetGlobalCommands(client.ApplicationID(), commands); err != nil {
-		slog.Error("error while registering commands: ", "error", err)
+	if _, err := client.Rest().SetGlobalCommands(client.ApplicationID(), commands); err != nil {
+		slog.Info("error while registering commands", slog.Any("err", err))
 	}
 }
 

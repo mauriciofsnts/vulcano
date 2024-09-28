@@ -24,6 +24,7 @@ var StartedAt time.Time
 func Init() {
 	slog.Debug("Initializing Bot...")
 	slog.Debug("Disgo version ", slog.String("version", disgo.Version))
+	slog.Debug("Commands prefix: ", slog.String("prefix", config.Envs.Discord.Prefix))
 
 	// Initialize Discord
 	client, err := disgo.New(config.Envs.Discord.Token,

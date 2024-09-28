@@ -13,7 +13,7 @@ import (
 
 func init() {
 	ctx.AttachCommand("newsapi", ctx.Command{
-		Name:        "Newsapi",
+		Name:        "newsapi",
 		Aliases:     []string{"news"},
 		Description: "Get the latest news from the newsapi website",
 		Handler: func(ctx ctx.Context) *discord.MessageCreate {

@@ -16,7 +16,7 @@ import (
 
 func init() {
 	ctx.AttachCommand("tabnews", ctx.Command{
-		Name:        "Tabnews",
+		Name:        "tabnews",
 		Aliases:     []string{"tn", "tabnews"},
 		Description: "Get the latest news from the tabnews website",
 		Options: []discord.ApplicationCommandOption{

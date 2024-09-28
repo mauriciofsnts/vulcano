@@ -19,7 +19,7 @@ func init() {
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionString{
 				Name:        "option",
-				Description: "Type of information to generate. Available types: `cpf`, `uuid`, `cnpj`",
+				Description: "Available types: `cpf`, `uuid`, `cnpj`",
 				Required:    true,
 				Choices: []discord.ApplicationCommandOptionChoiceString{
 					{Name: "CPF", Value: "cpf"},
