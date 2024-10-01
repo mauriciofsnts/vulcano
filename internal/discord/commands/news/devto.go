@@ -44,7 +44,7 @@ func init() {
 					var value string
 
 					if len(article.Description) > 0 {
-						value = fmt.Sprintf("%s\n\n%s", article.Description, shortenedUrl)
+						value = fmt.Sprintf("%s\n%s", article.Description, shortenedUrl)
 					} else {
 						value = shortenedUrl
 					}
