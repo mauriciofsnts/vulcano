@@ -3,6 +3,7 @@ package dev
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"regexp"
 
 	"github.com/disgoorg/disgo/discord"
@@ -38,6 +39,8 @@ func generateHandler(ctx ctx.Context) *discord.MessageCreate {
 	if len(args) == 0 {
 		return buildErrorResponse(ctx, "you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`")
 	}
+
+	slog.Info("Generating information", slog.Any("type", args[0]))
 
 	var value string
 

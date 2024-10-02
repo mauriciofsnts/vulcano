@@ -1,6 +1,8 @@
 package discord
 
 import (
+	"encoding/json"
+	"fmt"
 	"log/slog"
 	"strings"
 
@@ -40,9 +42,14 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client) {
 	trigger := ctx.TriggerEvent{
 		AuthorId:       message.Author.ID,
 		ChannelId:      message.ChannelID,
-		GuildId:        *message.GuildID,
 		MessageId:      message.ID,
 		EventTimestamp: message.CreatedAt,
+	}
+
+	guildId := message.GuildID
+
+	if guildId != nil {
+		trigger.GuildId = *guildId
 	}
 
 	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, client)
@@ -66,16 +73,29 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 	}
 
 	trigger := ctx.TriggerEvent{
-		GuildId:        *event.GuildID(),
 		ChannelId:      event.Channel().ID(),
 		EventTimestamp: event.CreatedAt(),
 		AuthorId:       event.User().ID,
 	}
 
+	guildId := event.GuildID()
+
+	if guildId != nil {
+		trigger.GuildId = *guildId
+	}
+
 	var args []string
 
 	for _, option := range data.Options {
-		args = append(args, string(option.Value))
+		var value any
+
+		err := json.Unmarshal(option.Value, &value)
+
+		if err != nil {
+			return
+		}
+
+		args = append(args, fmt.Sprintf("%v", value))
 	}
 
 	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, StartedAt, client)
