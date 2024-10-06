@@ -15,7 +15,7 @@ import (
 )
 
 func init() {
-	ctx.AttachCommand("tabnews", ctx.Command{
+	ctx.RegisterCommand("tabnews", ctx.Command{
 		Name:        "tabnews",
 		Aliases:     []string{"tn", "tabnews"},
 		Description: "Get the latest news from the tabnews website",
@@ -70,8 +70,8 @@ func init() {
 
 			msg := messageBuilder.Build()
 
-			ctx.AttachComponentState(actionButtonId, createComponentState(page+1, cmd))
-			ctx.AttachComponentState(prevButtonId, createComponentState(page-1, cmd))
+			ctx.RegisterComponent(actionButtonId, createComponentState(page+1, cmd))
+			ctx.RegisterComponent(prevButtonId, createComponentState(page-1, cmd))
 			return &msg
 		},
 	})
@@ -98,8 +98,8 @@ func createComponentState(nextPage int, cmd ctx.Context) ctx.Component {
 		actionButtonId := fmt.Sprintf("tabnews-next-%d", cmd.TriggerEvent.MessageId)
 		prevButtonId := fmt.Sprintf("tabnews-prev-%d", cmd.TriggerEvent.MessageId)
 
-		ctx.UpdateComponentStateById(actionButtonId, []interface{}{page + 1})
-		ctx.UpdateComponentStateById(prevButtonId, []interface{}{page - 1})
+		ctx.UpdateComponentState(actionButtonId, []interface{}{page + 1})
+		ctx.UpdateComponentState(prevButtonId, []interface{}{page - 1})
 
 		newActionRow := discord.NewActionRow()
 		newActionRow.AddComponents(discord.NewSecondaryButton("⬅️", prevButtonId), discord.NewSecondaryButton("➡️", actionButtonId))

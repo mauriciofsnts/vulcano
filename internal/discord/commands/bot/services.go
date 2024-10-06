@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	ctx.AttachCommand("services", ctx.Command{
+	ctx.RegisterCommand("services", ctx.Command{
 		Name:        "services",
 		Aliases:     []string{"services"},
 		Description: "List of services available",

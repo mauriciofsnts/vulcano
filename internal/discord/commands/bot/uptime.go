@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	ctx.AttachCommand("uptime", ctx.Command{
+	ctx.RegisterCommand("uptime", ctx.Command{
 		Name:        "uptime",
 		Aliases:     []string{"up"},
 		Description: "Shows how long the bot has been online",

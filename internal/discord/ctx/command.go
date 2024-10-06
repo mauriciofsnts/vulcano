@@ -18,11 +18,11 @@ type Command struct {
 
 var commands = make(map[string]Command)
 
-func AttachCommand(name string, cmd Command) {
+func RegisterCommand(name string, cmd Command) {
 	commands[name] = cmd
 }
 
-func SearchCommandByAlias(alias string) (bool, *Command) {
+func GetCommandByAlias(alias string) (bool, *Command) {
 	for _, command := range commands {
 		if command.Name == alias {
 			return true, &command
@@ -36,13 +36,13 @@ func SearchCommandByAlias(alias string) (bool, *Command) {
 	return false, nil
 }
 
-func ParseCommandsToSlashCommands() []discord.ApplicationCommandCreate {
+func ConvertToSlashCommands() []discord.ApplicationCommandCreate {
 	var slashCommands []discord.ApplicationCommandCreate
 
 	for _, command := range commands {
 		slashCommands = append(slashCommands, discord.SlashCommandCreate{
 			Name:        command.Name,
-			Description: command.Name,
+			Description: command.Description,
 			Options:     command.Options,
 		})
 	}
@@ -50,14 +50,15 @@ func ParseCommandsToSlashCommands() []discord.ApplicationCommandCreate {
 	return slashCommands
 }
 
-func SyncCommands(client bot.Client) {
-	commands := ParseCommandsToSlashCommands()
+func SyncSlashCommands(client bot.Client) {
+	slashCommands := ConvertToSlashCommands()
 
-	if _, err := client.Rest().SetGlobalCommands(client.ApplicationID(), commands); err != nil {
-		slog.Info("error while registering commands", slog.Any("err", err))
+	if _, err := client.Rest().SetGlobalCommands(client.ApplicationID(), slashCommands); err != nil {
+		slog.Info("Failed to register commands", slog.Any("error", err))
 	}
 }
 
+// Componente
 type ComponentState struct {
 	TriggerEvent TriggerEvent
 	Client       bot.Client
@@ -73,23 +74,22 @@ type Component struct {
 
 var buttonState = make(map[string]Component)
 
-func AttachComponentState(id string, component Component) {
+func RegisterComponent(id string, component Component) {
 	buttonState[id] = component
 }
 
-func UpdateComponentStateById(id string, state []any) {
-	component, ok := buttonState[id]
-	if ok {
+func UpdateComponentState(id string, state []any) {
+	if component, ok := buttonState[id]; ok {
 		component.State.State = state
 		buttonState[id] = component
 	}
 }
 
-func FindComponentStateById(id string) (bool, Component) {
+func GetComponentState(id string) (bool, Component) {
 	component, ok := buttonState[id]
 	return ok, component
 }
 
-func RemoveComponentStateById(id string) {
+func RemoveComponent(id string) {
 	delete(buttonState, id)
 }

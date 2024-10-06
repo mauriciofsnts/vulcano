@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	ctx.AttachCommand("devto", ctx.Command{
+	ctx.RegisterCommand("devto", ctx.Command{
 		Name:        "devto",
 		Aliases:     []string{"devto"},
 		Description: "Get the latest news from the devto website",

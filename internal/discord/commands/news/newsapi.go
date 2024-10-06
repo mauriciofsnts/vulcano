@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	ctx.AttachCommand("newsapi", ctx.Command{
+	ctx.RegisterCommand("newsapi", ctx.Command{
 		Name:        "newsapi",
 		Aliases:     []string{"news"},
 		Description: "Get the latest news from the newsapi website",

@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	ctx.AttachCommand("shorten", ctx.Command{
+	ctx.RegisterCommand("shorten", ctx.Command{
 		Name:        "shorten",
 		Aliases:     []string{"sht", "st"},
 		Description: "Shorten a URL",

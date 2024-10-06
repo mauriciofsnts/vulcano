@@ -28,7 +28,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client) {
 	inputMessage := strings.Split(message.Content, " ")
 
 	commandName := strings.TrimPrefix(inputMessage[0], config.Envs.Discord.Prefix)
-	found, cmd := ctx.SearchCommandByAlias(commandName)
+	found, cmd := ctx.GetCommandByAlias(commandName)
 
 	if !found {
 		// in this case is possible because is the user that is sending the message
@@ -64,7 +64,7 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 	data := event.SlashCommandInteractionData()
 
 	commandName := data.CommandName()
-	found, cmd := ctx.SearchCommandByAlias(commandName)
+	found, cmd := ctx.GetCommandByAlias(commandName)
 
 	if !found {
 		slog.Error("Command not found: ", slog.String("command", commandName))
@@ -121,7 +121,7 @@ func OnMessageReactionAddedEvent(event *events.MessageReactionAdd, client bot.Cl
 
 func OnComponentInteractionEvent(event *events.ComponentInteractionCreate, client bot.Client) {
 	id := event.ComponentInteraction.Data.CustomID()
-	found, component := ctx.FindComponentStateById(id)
+	found, component := ctx.GetComponentState(id)
 
 	if !found {
 		slog.Error("Button state not found: ", slog.String("id", id))
