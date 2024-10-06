@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	ctx.AttachCommand("ping", ctx.Command{
+	ctx.RegisterCommand("ping", ctx.Command{
 		Name:        "ping",
 		Aliases:     []string{"pong"},
 		Description: "Just a simple hello world command",

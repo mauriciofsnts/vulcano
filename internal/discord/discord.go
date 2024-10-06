@@ -68,7 +68,7 @@ func Init() {
 	defer client.Close(context.Background())
 
 	if config.Envs.Discord.SyncCommands {
-		ctx.SyncCommands(client)
+		ctx.SyncSlashCommands(client)
 	}
 
 	// connect to the gateway

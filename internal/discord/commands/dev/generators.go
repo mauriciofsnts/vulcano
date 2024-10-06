@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	ctx.AttachCommand("generate", ctx.Command{
+	ctx.RegisterCommand("generate", ctx.Command{
 		Name:        "generate",
 		Aliases:     []string{"gen", "g"},
 		Description: "Generate random information",
