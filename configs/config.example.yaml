@@ -2,11 +2,16 @@ server:
   port: 8080
 
 db:
-  host: localhost
-  port: 5432
-  user: postgres
-  password: password
-  database: my_database
+  type: 'sqlite'
+  migrate: true
+  # postgres:
+  #   host: 'localhost'
+  #   port: 5432
+  #   user: 'admin'
+  #   password: 'admin'
+  #   dbname: 'test'
+  sqlite:
+    path: './db.sqlite'
 
 # The possible log levels are: DEBUG, INFO and ERROR
 loglevel: DEBUG

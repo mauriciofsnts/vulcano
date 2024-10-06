@@ -2,30 +2,58 @@ package config
 
 import (
 	"log/slog"
-
-	"github.com/go-playground/validator/v10"
-	"github.com/spf13/viper"
 )
 
 type Config struct {
 	Server    Server
-	DB        Database
-	LogLevel  LogLevel
+	DB        DatabaseConfig
+	Log       LogConfig
 	Discord   Discord
 	Shortener Shortener
 	News      News
 }
 
+type LogType string
+
+const (
+	LogTypeText    LogType = "text"
+	LogTypeJSON    LogType = "json"
+	LogTypeColored LogType = "colored"
+)
+
+type LogConfig struct {
+	Level      slog.Level
+	Type       LogType
+	ShowSource bool
+}
 type Server struct {
 	Port string `validate:"required"`
 }
 
-type Database struct {
-	Host     string `validate:"required"`
-	Port     string `validate:"required"`
-	User     string `validate:"required"`
-	Password string `validate:"required"`
-	Database string `validate:"required"`
+type DatabaseType string
+
+const (
+	Postgres DatabaseType = "postgres"
+	Sqlite   DatabaseType = "sqlite"
+)
+
+type DatabaseConfig struct {
+	Type     DatabaseType
+	Postgres PostgresConfig `yaml:"postgres"`
+	Sqlite   SqliteConfig   `yaml:"sqlite"`
+	Migrate  bool
+}
+
+type PostgresConfig struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+	Database string
+}
+
+type SqliteConfig struct {
+	Path string
 }
 
 type Shortener struct {
@@ -44,36 +72,4 @@ type News struct {
 	NewsapiApikey string `validate:"required" mapstructure:"newsapi_apikey"`
 }
 
-type LogLevel string
-
-const (
-	Info  LogLevel = "INFO"
-	Debug LogLevel = "DEBUG"
-	Error LogLevel = "ERROR"
-)
-
 var Envs Config
-
-func Init() {
-	viper.SetConfigType("yaml")
-	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
-	viper.AddConfigPath("./configs/")
-
-	err := viper.ReadInConfig()
-
-	if err != nil {
-		panic("An error occurred while reading the config file: " + err.Error())
-	}
-
-	if err := viper.Unmarshal(&Envs); err != nil {
-		slog.Error("Unable to decode into struct, %v", err)
-		panic("Unable to decode into struct, check the config file")
-	}
-
-	validate := validator.New()
-	if err := validate.Struct(&Envs); err != nil {
-		slog.Error("Missing required attributes %v\n", err)
-		panic("Missing required attributes")
-	}
-}
