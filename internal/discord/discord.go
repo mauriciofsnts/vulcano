@@ -17,12 +17,11 @@ import (
 	"github.com/mauriciofsnts/bot/internal/config"
 	_ "github.com/mauriciofsnts/bot/internal/discord/commands"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
-	"github.com/mauriciofsnts/bot/internal/providers"
 )
 
 var StartedAt time.Time
 
-func Init(cfg config.Config, providers providers.Providers) {
+func Init(cfg config.Config) {
 	slog.Debug("Initializing Bot...")
 	slog.Debug("Disgo version ", slog.String("version", disgo.Version))
 	slog.Debug("Commands prefix: ", slog.String("prefix", cfg.Discord.Prefix))
@@ -50,10 +49,10 @@ func Init(cfg config.Config, providers providers.Providers) {
 
 	client.AddEventListeners(&events.ListenerAdapter{
 		OnMessageCreate: func(event *events.MessageCreate) {
-			OnMessageCreatedEvent(event, client, cfg, providers)
+			OnMessageCreatedEvent(event, client, cfg)
 		},
 		OnApplicationCommandInteraction: func(event *events.ApplicationCommandInteractionCreate) {
-			OnInteractionCreatedEvent(event, client, providers)
+			OnInteractionCreatedEvent(event, client)
 		},
 		OnGuildChannelCreate: func(event *events.GuildChannelCreate) {
 			OnGuildChannelCreatedEvent(event, client)

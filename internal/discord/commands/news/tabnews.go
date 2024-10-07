@@ -39,7 +39,7 @@ func init() {
 				page = parsedPage
 			}
 
-			fields, err := fetchNews(page, cmd.Providers)
+			fields, err := fetchNews(page)
 
 			if err != nil {
 				reply := cmd.Response.ReplyErr(err)
@@ -70,14 +70,14 @@ func init() {
 
 			msg := messageBuilder.Build()
 
-			ctx.RegisterComponent(actionButtonId, createComponentState(page+1, cmd, cmd.Providers))
-			ctx.RegisterComponent(prevButtonId, createComponentState(page-1, cmd, cmd.Providers))
+			ctx.RegisterComponent(actionButtonId, createComponentState(page+1, cmd))
+			ctx.RegisterComponent(prevButtonId, createComponentState(page-1, cmd))
 			return &msg
 		},
 	})
 }
 
-func createComponentState(nextPage int, cmd ctx.Context, provider providers.Providers) ctx.Component {
+func createComponentState(nextPage int, cmd ctx.Context) ctx.Component {
 	return ctx.Component{
 		State: ctx.ComponentState{
 			TriggerEvent: cmd.TriggerEvent,
@@ -86,7 +86,7 @@ func createComponentState(nextPage int, cmd ctx.Context, provider providers.Prov
 		},
 		Handler: func(event *events.ComponentInteractionCreate, state *ctx.ComponentState) {
 			page := state.State[0].(int)
-			fields, _ := fetchNews(page, provider)
+			fields, _ := fetchNews(page)
 
 			embedBuilder := discord.NewEmbedBuilder().
 				SetTitle("Latest news from Tabnews").
@@ -125,14 +125,14 @@ func createComponentState(nextPage int, cmd ctx.Context, provider providers.Prov
 		}}
 }
 
-func fetchNews(page int, provider providers.Providers) ([]discord.EmbedField, error) {
+func fetchNews(page int) ([]discord.EmbedField, error) {
 	minPage := 1
 
 	if page < minPage {
 		page = minPage
 	}
 
-	tnArticles, err := provider.News.Tabnews(page, 12)
+	tnArticles, err := providers.Providers.News.Tabnews(page, 12)
 
 	if err != nil {
 		return nil, err
@@ -145,7 +145,7 @@ func fetchNews(page int, provider providers.Providers) ([]discord.EmbedField, er
 		wg.Add(1)
 		go func(idx int, article news.TabnewsArticle) {
 			defer wg.Done()
-			shortenedUrl, err := provider.Shorten.St(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
+			shortenedUrl, err := providers.Providers.Shorten.St(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
 
 			if err != nil {
 				slog.Error("Error shortening url: ", "err", err.Error())

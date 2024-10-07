@@ -5,6 +5,7 @@ import (
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/providers"
 	"github.com/mauriciofsnts/bot/internal/providers/shorten"
 	"github.com/mauriciofsnts/bot/internal/utils"
 )
@@ -34,7 +35,7 @@ func init() {
 				return &reply
 			}
 
-			url, err := ctx.Providers.Shorten.St(args[0], &shorten.Options{Slug: args[1], KeepAliveFor: utils.PtrTo(0)})
+			url, err := providers.Providers.Shorten.St(args[0], &shorten.Options{KeepAliveFor: utils.PtrTo(0)})
 
 			if err != nil {
 				reply := ctx.Response.ReplyErr(err)

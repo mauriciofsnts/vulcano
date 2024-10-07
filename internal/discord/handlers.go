@@ -12,10 +12,9 @@ import (
 	"github.com/mauriciofsnts/bot/internal/config"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 	customEvents "github.com/mauriciofsnts/bot/internal/discord/events"
-	"github.com/mauriciofsnts/bot/internal/providers"
 )
 
-func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg config.Config, providers providers.Providers) {
+func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg config.Config) {
 	message := event.Message
 
 	if message.Author.Bot {
@@ -51,7 +50,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg c
 		trigger.GuildId = *guildId
 	}
 
-	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, client, providers)
+	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, client)
 
 	if msg != nil {
 		msg.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
@@ -59,7 +58,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg c
 	}
 }
 
-func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate, client bot.Client, providers providers.Providers) {
+func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate, client bot.Client) {
 	data := event.SlashCommandInteractionData()
 
 	commandName := data.CommandName()
@@ -97,7 +96,7 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 		args = append(args, fmt.Sprintf("%v", value))
 	}
 
-	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, StartedAt, client, providers)
+	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, StartedAt, client)
 
 	if msg != nil {
 		event.CreateMessage(*msg)

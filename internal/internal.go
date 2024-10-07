@@ -33,12 +33,12 @@ func Bootstrap(cfg config.Config) {
 		os.Exit(1)
 	}
 
-	providers := providers.Providers{
+	providers.Providers = &providers.Provider{
 		Shorten: shorten.New(cfg),
 		News:    news.New(cfg),
 		DB:      db,
 	}
 
 	go server.StartHttpServer()
-	discord.Init(cfg, providers)
+	discord.Init(cfg)
 }
