@@ -93,7 +93,7 @@ func Shortner(apiKey string, endpoint string, url string, opts *Options) (string
 }
 
 type URLShortener struct {
-	St func(url string, opts *Options) (string, error)
+	Shorten func(url string, opts *Options) (string, error)
 }
 
 func New(cfg config.Config) URLShortener {
@@ -101,7 +101,7 @@ func New(cfg config.Config) URLShortener {
 	endpoint := cfg.Shortener.Endpoint
 
 	return URLShortener{
-		St: func(url string, opts *Options) (string, error) {
+		Shorten: func(url string, opts *Options) (string, error) {
 			return Shortner(apiKey, endpoint, url, opts)
 		},
 	}

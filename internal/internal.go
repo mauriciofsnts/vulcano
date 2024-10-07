@@ -34,9 +34,9 @@ func Bootstrap(cfg config.Config) {
 	}
 
 	providers.Providers = &providers.Provider{
-		Shorten: shorten.New(cfg),
-		News:    news.New(cfg),
-		DB:      db,
+		URLShortener: shorten.New(cfg),
+		News:         news.New(cfg),
+		DB:           db,
 	}
 
 	go server.StartHttpServer()

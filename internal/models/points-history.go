@@ -1,12 +1,12 @@
 package models
 
-import "time"
+import "gorm.io/gorm"
 
 type PointsHistory struct {
-	RecordID     uint      `gorm:"primaryKey"`
-	GuildUserID  uint      `gorm:"not null"`
-	Date         time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-	PointsChange int       `gorm:"not null"`
+	gorm.Model
+	RecordID     uint `gorm:"primaryKey"`
+	GuildUserID  uint `gorm:"not null"`
+	PointsChange int  `gorm:"not null"`
 
 	// Relationships
 	GuildUser GuildUser `gorm:"foreignKey:GuildUserID"`

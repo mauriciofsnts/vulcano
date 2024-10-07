@@ -1,9 +1,13 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Guild struct {
-	GuildID   uint      `gorm:"primaryKey"`
+	gorm.Model
 	GuildName string    `gorm:"not null"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 

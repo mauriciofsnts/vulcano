@@ -26,7 +26,6 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg c
 	}
 
 	inputMessage := strings.Split(message.Content, " ")
-
 	commandName := strings.TrimPrefix(inputMessage[0], cfg.Discord.Prefix)
 	found, cmd := ctx.GetCommandByAlias(commandName)
 
