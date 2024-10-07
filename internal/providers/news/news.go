@@ -10,45 +10,25 @@ import (
 )
 
 type NewsApiSource struct {
-	Id   string
-	Name string
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type NewsApiArticle struct {
-	Source      NewsApiSource
-	Author      *string
-	Title       string
-	Description string
-	Url         string
-	UrlToImage  string
-	PublishedAt time.Time
-	Content     string
+	Source      NewsApiSource `json:"source"`
+	Author      *string       `json:"author"`
+	Title       string        `json:"title"`
+	Description string        `json:"description"`
+	Url         string        `json:"url"`
+	UrlToImage  string        `json:"urlToImage"`
+	PublishedAt time.Time     `json:"publishedAt"`
+	Content     string        `json:"content"`
 }
 
 type NewsAPIResponse struct {
-	Status       string
-	TotalResults int
-	Articles     []NewsApiArticle
-}
-
-func GetFromNewsAPI(apiKey string, page int) ([]NewsApiArticle, error) {
-	const endpoint = "https://newsapi.org/v2/top-headlines?country=br&pageSize=15"
-
-	res, err := http.Get(fmt.Sprintf("%s&apiKey=%s&page=%d", endpoint, apiKey, page))
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	var newsAPIResponse NewsAPIResponse
-
-	if err := json.NewDecoder(res.Body).Decode(&newsAPIResponse); err != nil {
-		return nil, err
-	}
-
-	return newsAPIResponse.Articles, nil
+	Status       string           `json:"status"`
+	TotalResults int              `json:"totalResults"`
+	Articles     []NewsApiArticle `json:"articles"`
 }
 
 type TabnewsArticle struct {
@@ -66,26 +46,6 @@ type TabnewsArticle struct {
 	Tabcoins            int16  `json:"tabcoins"`
 	Owner_username      string `json:"owner_username"`
 	Children_deep_count int16  `json:"children_deep_count"`
-}
-
-func GetFromTabnews(page int, maxSize int) ([]TabnewsArticle, error) {
-	endpoint := fmt.Sprintf("https://www.tabnews.com.br/api/v1/contents?strategy=relevant&per_page=%d", maxSize)
-
-	res, err := http.Get(fmt.Sprintf("%s&page=%d", endpoint, page))
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	var articles []TabnewsArticle
-
-	if err := json.NewDecoder(res.Body).Decode(&articles); err != nil {
-		return nil, err
-	}
-
-	return articles, nil
 }
 
 type DevtoArticle struct {
@@ -131,22 +91,53 @@ type DevtoArticle struct {
 	} `json:"organization"`
 }
 
-const PER_PAGE = 10
+// Helper function to make HTTP requests and parse the response
+func fetchAndDecode(url string, target interface{}) error {
+	res, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
 
-func GetFromDevto(page int) ([]DevtoArticle, error) {
-	const endpoint = "https://dev.to/api/articles"
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("unexpected status code: %d", res.StatusCode)
+	}
 
-	res, err := http.Get(fmt.Sprintf("%s?page=%d&per_page=%d", endpoint, page, PER_PAGE))
+	return json.NewDecoder(res.Body).Decode(target)
+}
 
+func GetFromNewsAPI(apiKey string, page int) ([]NewsApiArticle, error) {
+	url := fmt.Sprintf("https://newsapi.org/v2/top-headlines?country=br&pageSize=15&apiKey=%s&page=%d", apiKey, page)
+
+	var headlines NewsAPIResponse
+	err := fetchAndDecode(url, &headlines)
 	if err != nil {
 		return nil, err
 	}
 
-	defer res.Body.Close()
+	return headlines.Articles, nil
+}
+
+func GetFromTabnews(page int, maxSize int) ([]TabnewsArticle, error) {
+	url := fmt.Sprintf("https://www.tabnews.com.br/api/v1/contents?strategy=relevant&per_page=%d&page=%d", maxSize, page)
+
+	var articles []TabnewsArticle
+	err := fetchAndDecode(url, &articles)
+	if err != nil {
+		return nil, err
+	}
+
+	return articles, nil
+}
+
+const PER_PAGE = 10
+
+func GetFromDevto(page int) ([]DevtoArticle, error) {
+	url := fmt.Sprintf("https://dev.to/api/articles?page=%d&per_page=%d", page, PER_PAGE)
 
 	var articles []DevtoArticle
-
-	if err := json.NewDecoder(res.Body).Decode(&articles); err != nil {
+	err := fetchAndDecode(url, &articles)
+	if err != nil {
 		return nil, err
 	}
 
@@ -160,17 +151,11 @@ type NewsProvider struct {
 }
 
 func New(cfg config.Config) NewsProvider {
-	newsapiApiKey := cfg.News.NewsapiApikey
-
 	return NewsProvider{
 		NewsApi: func(page int) ([]NewsApiArticle, error) {
-			return GetFromNewsAPI(newsapiApiKey, page)
+			return GetFromNewsAPI(cfg.News.NewsapiApikey, page)
 		},
-		Tabnews: func(page int, maxSize int) ([]TabnewsArticle, error) {
-			return GetFromTabnews(page, maxSize)
-		},
-		Devto: func(page int) ([]DevtoArticle, error) {
-			return GetFromDevto(page)
-		},
+		Tabnews: GetFromTabnews,
+		Devto:   GetFromDevto,
 	}
 }
