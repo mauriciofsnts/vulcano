@@ -8,7 +8,6 @@ import (
 	"github.com/disgoorg/disgo/discord"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 	"github.com/mauriciofsnts/bot/internal/providers/news"
-	"github.com/mauriciofsnts/bot/internal/providers/shorten"
 )
 
 func init() {
@@ -17,7 +16,7 @@ func init() {
 		Aliases:     []string{"devto"},
 		Description: "Get the latest news from the devto website",
 		Handler: func(ctx ctx.Context) *discord.MessageCreate {
-			articles, err := news.GetDevtoArticles(1)
+			articles, err := ctx.Providers.News.Devto(1)
 
 			if err != nil {
 				reply := ctx.Response.ReplyErr(err)
@@ -35,7 +34,7 @@ func init() {
 
 					shortenedUrl := ""
 
-					shortenedUrl, err := shorten.Shortner(article.URL, nil)
+					shortenedUrl, err := ctx.Providers.Shorten.St(article.URL, nil)
 
 					if err != nil {
 						slog.Debug("Error shortening url: ", "error", err)

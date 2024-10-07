@@ -9,9 +9,9 @@ import (
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/providers"
 	"github.com/mauriciofsnts/bot/internal/providers/news"
-	"github.com/mauriciofsnts/bot/internal/providers/shorten"
-	"github.com/mauriciofsnts/bot/internal/providers/utils"
+	"github.com/mauriciofsnts/bot/internal/utils"
 )
 
 func init() {
@@ -39,7 +39,7 @@ func init() {
 				page = parsedPage
 			}
 
-			fields, err := fetchNews(page)
+			fields, err := fetchNews(page, cmd.Providers)
 
 			if err != nil {
 				reply := cmd.Response.ReplyErr(err)
@@ -70,67 +70,69 @@ func init() {
 
 			msg := messageBuilder.Build()
 
-			ctx.RegisterComponent(actionButtonId, createComponentState(page+1, cmd))
-			ctx.RegisterComponent(prevButtonId, createComponentState(page-1, cmd))
+			ctx.RegisterComponent(actionButtonId, createComponentState(page+1, cmd, cmd.Providers))
+			ctx.RegisterComponent(prevButtonId, createComponentState(page-1, cmd, cmd.Providers))
 			return &msg
 		},
 	})
 }
 
-func createComponentState(nextPage int, cmd ctx.Context) ctx.Component {
-	return ctx.Component{State: ctx.ComponentState{
-		TriggerEvent: cmd.TriggerEvent,
-		Client:       cmd.Client,
-		State:        []interface{}{nextPage},
-	}, Handler: func(event *events.ComponentInteractionCreate, state *ctx.ComponentState) {
-		page := state.State[0].(int)
-		fields, _ := fetchNews(page)
+func createComponentState(nextPage int, cmd ctx.Context, provider providers.Providers) ctx.Component {
+	return ctx.Component{
+		State: ctx.ComponentState{
+			TriggerEvent: cmd.TriggerEvent,
+			Client:       cmd.Client,
+			State:        []interface{}{nextPage},
+		},
+		Handler: func(event *events.ComponentInteractionCreate, state *ctx.ComponentState) {
+			page := state.State[0].(int)
+			fields, _ := fetchNews(page, provider)
 
-		embedBuilder := discord.NewEmbedBuilder().
-			SetTitle("Latest news from Tabnews").
-			SetDescription("Here are the latest news from the tabnews website").
-			SetColor(0xffffff).
-			SetFooter(fmt.Sprintf("Page %d", page), "").
-			SetFields(fields...)
-		embed := embedBuilder.Build()
-		embeds := []discord.Embed{embed}
+			embedBuilder := discord.NewEmbedBuilder().
+				SetTitle("Latest news from Tabnews").
+				SetDescription("Here are the latest news from the tabnews website").
+				SetColor(0xffffff).
+				SetFooter(fmt.Sprintf("Page %d", page), "").
+				SetFields(fields...)
+			embed := embedBuilder.Build()
+			embeds := []discord.Embed{embed}
 
-		actionButtonId := fmt.Sprintf("tabnews-next-%d", cmd.TriggerEvent.MessageId)
-		prevButtonId := fmt.Sprintf("tabnews-prev-%d", cmd.TriggerEvent.MessageId)
+			actionButtonId := fmt.Sprintf("tabnews-next-%d", cmd.TriggerEvent.MessageId)
+			prevButtonId := fmt.Sprintf("tabnews-prev-%d", cmd.TriggerEvent.MessageId)
 
-		ctx.UpdateComponentState(actionButtonId, []interface{}{page + 1})
-		ctx.UpdateComponentState(prevButtonId, []interface{}{page - 1})
+			ctx.UpdateComponentState(actionButtonId, []interface{}{page + 1})
+			ctx.UpdateComponentState(prevButtonId, []interface{}{page - 1})
 
-		newActionRow := discord.NewActionRow()
-		newActionRow.AddComponents(discord.NewSecondaryButton("⬅️", prevButtonId), discord.NewSecondaryButton("➡️", actionButtonId))
+			newActionRow := discord.NewActionRow()
+			newActionRow.AddComponents(discord.NewSecondaryButton("⬅️", prevButtonId), discord.NewSecondaryButton("➡️", actionButtonId))
 
-		components := discord.ActionRowComponent{
-			discord.NewSecondaryButton("➡️", actionButtonId),
-		}
-
-		if page > 1 {
-			components = discord.ActionRowComponent{
-				discord.NewSecondaryButton("⬅️", prevButtonId),
+			components := discord.ActionRowComponent{
 				discord.NewSecondaryButton("➡️", actionButtonId),
 			}
-		}
 
-		event.UpdateMessage(discord.MessageUpdate{
-			Embeds:     &embeds,
-			Components: &[]discord.ContainerComponent{components},
-		})
+			if page > 1 {
+				components = discord.ActionRowComponent{
+					discord.NewSecondaryButton("⬅️", prevButtonId),
+					discord.NewSecondaryButton("➡️", actionButtonId),
+				}
+			}
 
-	}}
+			event.UpdateMessage(discord.MessageUpdate{
+				Embeds:     &embeds,
+				Components: &[]discord.ContainerComponent{components},
+			})
+
+		}}
 }
 
-func fetchNews(page int) ([]discord.EmbedField, error) {
+func fetchNews(page int, provider providers.Providers) ([]discord.EmbedField, error) {
 	minPage := 1
 
 	if page < minPage {
 		page = minPage
 	}
 
-	tnArticles, err := news.GetTnNews(page, 12)
+	tnArticles, err := provider.News.Tabnews(page, 12)
 
 	if err != nil {
 		return nil, err
@@ -141,11 +143,12 @@ func fetchNews(page int) ([]discord.EmbedField, error) {
 
 	for i, article := range tnArticles {
 		wg.Add(1)
-		go func(idx int, article news.TnArticle) {
+		go func(idx int, article news.TabnewsArticle) {
 			defer wg.Done()
-			shortenedUrl, err := shorten.Shortner(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
+			shortenedUrl, err := provider.Shorten.St(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
+
 			if err != nil {
-				slog.Error("error shortening url: ", "err", err.Error())
+				slog.Error("Error shortening url: ", "err", err.Error())
 				return
 			}
 

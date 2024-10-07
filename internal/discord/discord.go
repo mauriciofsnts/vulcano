@@ -13,21 +13,22 @@ import (
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/disgoorg/disgo/gateway"
-	"github.com/mauriciofsnts/bot/internal/config"
 
+	"github.com/mauriciofsnts/bot/internal/config"
 	_ "github.com/mauriciofsnts/bot/internal/discord/commands"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/providers"
 )
 
 var StartedAt time.Time
 
-func Init() {
+func Init(cfg config.Config, providers providers.Providers) {
 	slog.Debug("Initializing Bot...")
 	slog.Debug("Disgo version ", slog.String("version", disgo.Version))
-	slog.Debug("Commands prefix: ", slog.String("prefix", config.Envs.Discord.Prefix))
+	slog.Debug("Commands prefix: ", slog.String("prefix", cfg.Discord.Prefix))
 
 	// Initialize Discord
-	client, err := disgo.New(config.Envs.Discord.Token,
+	client, err := disgo.New(cfg.Discord.Token,
 		bot.WithGatewayConfigOpts(
 			gateway.WithIntents(
 				gateway.IntentGuilds,
@@ -49,10 +50,10 @@ func Init() {
 
 	client.AddEventListeners(&events.ListenerAdapter{
 		OnMessageCreate: func(event *events.MessageCreate) {
-			OnMessageCreatedEvent(event, client)
+			OnMessageCreatedEvent(event, client, cfg, providers)
 		},
 		OnApplicationCommandInteraction: func(event *events.ApplicationCommandInteractionCreate) {
-			OnInteractionCreatedEvent(event, client)
+			OnInteractionCreatedEvent(event, client, providers)
 		},
 		OnGuildChannelCreate: func(event *events.GuildChannelCreate) {
 			OnGuildChannelCreatedEvent(event, client)
@@ -63,11 +64,14 @@ func Init() {
 		OnComponentInteraction: func(event *events.ComponentInteractionCreate) {
 			OnComponentInteractionEvent(event, client)
 		},
+		OnGuildVoiceJoin: func(event *events.GuildVoiceJoin) {
+			slog.Info("User joined voice channel", slog.Any("user", event.Member.User.ID), slog.Any("channel", event.VoiceState.ChannelID))
+		},
 	})
 
 	defer client.Close(context.Background())
 
-	if config.Envs.Discord.SyncCommands {
+	if cfg.Discord.SyncCommands {
 		ctx.SyncSlashCommands(client)
 	}
 

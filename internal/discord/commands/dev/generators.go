@@ -3,13 +3,12 @@ package dev
 import (
 	"errors"
 	"fmt"
-	"log/slog"
 	"regexp"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/google/uuid"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
-	"github.com/mauriciofsnts/bot/internal/providers/utils"
+	"github.com/mauriciofsnts/bot/internal/utils"
 )
 
 func init() {
@@ -29,18 +28,16 @@ func init() {
 				},
 			},
 		},
-		Handler: generateHandler,
+		Handler: handler,
 	})
 }
 
-func generateHandler(ctx ctx.Context) *discord.MessageCreate {
+func handler(ctx ctx.Context) *discord.MessageCreate {
 	args := ctx.Args
 
 	if len(args) == 0 {
 		return buildErrorResponse(ctx, "you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`")
 	}
-
-	slog.Info("Generating information", slog.Any("type", args[0]))
 
 	var value string
 

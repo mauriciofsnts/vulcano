@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	DefaultConfigPath = "/configs/config.yaml"
+	DefaultConfigPath = "./configs/config.yaml"
 )
 
 func main() {

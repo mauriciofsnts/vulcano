@@ -12,22 +12,23 @@ import (
 	"github.com/mauriciofsnts/bot/internal/config"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 	customEvents "github.com/mauriciofsnts/bot/internal/discord/events"
+	"github.com/mauriciofsnts/bot/internal/providers"
 )
 
-func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client) {
+func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg config.Config, providers providers.Providers) {
 	message := event.Message
 
 	if message.Author.Bot {
 		return
 	}
 
-	if !strings.HasPrefix(message.Content, config.Envs.Discord.Prefix) {
+	if !strings.HasPrefix(message.Content, cfg.Discord.Prefix) {
 		return
 	}
 
 	inputMessage := strings.Split(message.Content, " ")
 
-	commandName := strings.TrimPrefix(inputMessage[0], config.Envs.Discord.Prefix)
+	commandName := strings.TrimPrefix(inputMessage[0], cfg.Discord.Prefix)
 	found, cmd := ctx.GetCommandByAlias(commandName)
 
 	if !found {
@@ -36,8 +37,6 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client) {
 	}
 
 	args := inputMessage[1:]
-
-	slog.Debug("Args: ", slog.String("args", strings.Join(args, " ")))
 
 	trigger := ctx.TriggerEvent{
 		AuthorId:       message.Author.ID,
@@ -52,7 +51,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client) {
 		trigger.GuildId = *guildId
 	}
 
-	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, client)
+	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, client, providers)
 
 	if msg != nil {
 		msg.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
@@ -60,7 +59,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client) {
 	}
 }
 
-func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate, client bot.Client) {
+func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate, client bot.Client, providers providers.Providers) {
 	data := event.SlashCommandInteractionData()
 
 	commandName := data.CommandName()
@@ -98,7 +97,7 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 		args = append(args, fmt.Sprintf("%v", value))
 	}
 
-	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, StartedAt, client)
+	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, StartedAt, client, providers)
 
 	if msg != nil {
 		event.CreateMessage(*msg)
