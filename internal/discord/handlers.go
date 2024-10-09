@@ -127,3 +127,8 @@ func OnComponentInteractionEvent(event *events.ComponentInteractionCreate, clien
 
 	component.Handler(event, &component.State)
 }
+
+func OnGuildReady(event *events.GuildReady) {
+	slog.Info("Guild is ready!")
+	//
+}

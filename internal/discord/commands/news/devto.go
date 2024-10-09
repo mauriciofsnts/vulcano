@@ -17,7 +17,7 @@ func init() {
 		Aliases:     []string{"devto"},
 		Description: "Get the latest news from the devto website",
 		Handler: func(ctx ctx.Context) *discord.MessageCreate {
-			articles, err := providers.Providers.News.Devto(5)
+			articles, err := providers.News.Devto(5)
 
 			if err != nil {
 				reply := ctx.Response.ReplyErr(err)
@@ -35,7 +35,7 @@ func init() {
 
 					shortenedUrl := ""
 
-					shortenedUrl, err := providers.Providers.Shorten(article.URL, nil)
+					shortenedUrl, err := providers.Shorten.ShortURL(article.URL, nil)
 
 					if err != nil {
 						slog.Debug("Error shortening url: ", "error", err)

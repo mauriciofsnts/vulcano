@@ -35,7 +35,7 @@ func init() {
 				return &reply
 			}
 
-			url, err := providers.Providers.Shorten(args[0], &shorten.Options{KeepAliveFor: utils.PtrTo(0)})
+			url, err := providers.Shorten.ShortURL(args[0], &shorten.Options{KeepAliveFor: utils.PtrTo(0)})
 
 			if err != nil {
 				reply := ctx.Response.ReplyErr(err)

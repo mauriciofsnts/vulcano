@@ -132,7 +132,7 @@ func fetchNews(page int) ([]discord.EmbedField, error) {
 		page = minPage
 	}
 
-	tnArticles, err := providers.Providers.News.Tabnews(page, 12)
+	tnArticles, err := providers.News.Tabnews(page, 12)
 
 	if err != nil {
 		return nil, err
@@ -145,7 +145,7 @@ func fetchNews(page int) ([]discord.EmbedField, error) {
 		wg.Add(1)
 		go func(idx int, article news.TabnewsArticle) {
 			defer wg.Done()
-			shortenedUrl, err := providers.Providers.Shorten(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
+			shortenedUrl, err := providers.Shorten.ShortURL(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
 
 			if err != nil {
 				slog.Error("Error shortening url: ", "err", err.Error())

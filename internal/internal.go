@@ -8,8 +8,6 @@ import (
 	"github.com/mauriciofsnts/bot/internal/database"
 	"github.com/mauriciofsnts/bot/internal/discord"
 	"github.com/mauriciofsnts/bot/internal/providers"
-	"github.com/mauriciofsnts/bot/internal/providers/news"
-	"github.com/mauriciofsnts/bot/internal/providers/shorten"
 	"github.com/mauriciofsnts/bot/internal/server"
 )
 
@@ -33,11 +31,7 @@ func Bootstrap(cfg config.Config) {
 		os.Exit(1)
 	}
 
-	providers.Providers = &providers.Provider{
-		URLShortener: shorten.New(cfg),
-		News:         news.New(cfg),
-		DB:           db,
-	}
+	providers.New(db, cfg)
 
 	go server.StartHttpServer()
 	discord.Init(cfg)

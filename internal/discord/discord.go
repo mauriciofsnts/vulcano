@@ -66,6 +66,9 @@ func Init(cfg config.Config) {
 		OnGuildVoiceJoin: func(event *events.GuildVoiceJoin) {
 			slog.Info("User joined voice channel", slog.Any("user", event.Member.User.ID), slog.Any("channel", event.VoiceState.ChannelID))
 		},
+		OnGuildReady: func(event *events.GuildReady) {
+			OnGuildReady(event)
+		},
 	})
 
 	defer client.Close(context.Background())
