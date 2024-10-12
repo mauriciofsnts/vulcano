@@ -11,6 +11,5 @@ type GuildMember struct {
 	Coins        uint   `gorm:"default:0"`  // Number of coins the user has in the guild
 
 	// Relationships
-	Guild  Guild  `gorm:"foreignKey:GuildID"`
-	Member Member `gorm:"foreignKey:MemberID"`
+	Guild Guild `gorm:"foreignKey:GuildID"`
 }
