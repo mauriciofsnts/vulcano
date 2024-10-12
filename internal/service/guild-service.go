@@ -1,13 +1,14 @@
 package service
 
 import (
-	"github.com/disgoorg/snowflake/v2"
+	"github.com/disgoorg/disgo/discord"
+	"github.com/mauriciofsnts/bot/internal/models"
 	"github.com/mauriciofsnts/bot/internal/repository"
 	"gorm.io/gorm"
 )
 
 type IGuildService interface {
-	EnsureGuildExists(guildId snowflake.ID)
+	EnsureGuildExists(guild discord.Guild) bool
 }
 
 type GuildService struct {
@@ -20,5 +21,18 @@ func NewGuildService(db *gorm.DB) IGuildService {
 	}
 }
 
-func (s *GuildService) EnsureGuildExists(guildId snowflake.ID) {
+func (s *GuildService) EnsureGuildExists(guild discord.Guild) bool {
+	g := &models.Guild{}
+	err := s.repository.GetGuildByGuildId(guild.ID, g)
+
+	if err != nil {
+		err := s.repository.Create(&models.Guild{
+			GuildName: guild.Name,
+			GuildID:   guild.ID.String(),
+		})
+
+		return err == nil
+	}
+
+	return true
 }

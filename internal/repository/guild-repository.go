@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/disgoorg/snowflake/v2"
 	"github.com/mauriciofsnts/bot/internal/models"
 	"gorm.io/gorm"
 )
@@ -11,6 +12,10 @@ type GuildRepository struct {
 
 func NewGuildRepository(db *gorm.DB) GuildRepository {
 	return GuildRepository{
-		GenericRepository: NewGenericRepository[models.Guild](db),
+		NewGenericRepository[models.Guild](db),
 	}
+}
+
+func (r *GuildRepository) GetGuildByGuildId(id snowflake.ID, entity *models.Guild) error {
+	return r.db.Where("guild_id = ?", id).First(entity).Error
 }

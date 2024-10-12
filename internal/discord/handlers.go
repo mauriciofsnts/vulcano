@@ -12,16 +12,33 @@ import (
 	"github.com/mauriciofsnts/bot/internal/config"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 	customEvents "github.com/mauriciofsnts/bot/internal/discord/events"
+	"github.com/mauriciofsnts/bot/internal/providers"
 )
 
 func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg config.Config) {
+	// TODO: Separate this function in guild and direct message
+
 	message := event.Message
+	guildId := message.GuildID
 
 	if message.Author.Bot {
 		return
 	}
 
+	if guildId != nil {
+		err := providers.Services.GuildMember.EnsureMemberValidity(message.Author.ID.String(), event.GuildID.String())
+
+		if err != nil {
+			slog.Error("Error ensuring member validity: ", err)
+		}
+	}
+
 	if !strings.HasPrefix(message.Content, cfg.Discord.Prefix) {
+
+		if guildId != nil {
+			providers.Services.GuildMember.IncrementMessageCount(message.Author.ID.String(), message.GuildID.String())
+		}
+
 		return
 	}
 
@@ -43,8 +60,6 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg c
 		EventTimestamp: message.CreatedAt,
 	}
 
-	guildId := message.GuildID
-
 	if guildId != nil {
 		trigger.GuildId = *guildId
 	}
@@ -54,6 +69,10 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg c
 	if msg != nil {
 		msg.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
 		event.Client().Rest().CreateMessage(event.ChannelID, *msg)
+
+		if guildId != nil {
+			providers.Services.GuildMember.IncrementCommandCount(message.Author.ID.String(), guildId.String())
+		}
 	}
 }
 
@@ -99,6 +118,7 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 
 	if msg != nil {
 		event.CreateMessage(*msg)
+		providers.Services.GuildMember.IncrementCommandCount(event.User().ID.String(), guildId.String())
 	}
 }
 
@@ -129,6 +149,6 @@ func OnComponentInteractionEvent(event *events.ComponentInteractionCreate, clien
 }
 
 func OnGuildReady(event *events.GuildReady) {
-	slog.Info("Guild is ready!")
-	//
+	// ensure than guild is created, if is not create the guild on database
+	providers.Services.Guild.EnsureGuildExists(event.Guild)
 }

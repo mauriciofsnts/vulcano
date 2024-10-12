@@ -6,5 +6,5 @@ import (
 )
 
 func Migrate(db *gorm.DB) error {
-	return db.AutoMigrate(&models.User{}, &models.Guild{}, &models.GuildUser{}, &models.PointsHistory{})
+	return db.AutoMigrate(&models.Guild{}, &models.Member{}, &models.GuildMember{})
 }
