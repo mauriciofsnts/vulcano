@@ -12,6 +12,7 @@ type IGuildMemberService interface {
 	EnsureMemberValidity(guildID, userID string) error
 	IncrementMessageCount(guildID, userID string)
 	IncrementCommandCount(guildID, userID string)
+	GetBalance(guildID, userID string) (uint, error)
 }
 
 type GuildMemberService struct {
@@ -67,4 +68,14 @@ func (r *GuildMemberService) IncrementCommandCount(guildID, userID string) {
 	if err := r.repository.Update(&member); err != nil {
 		slog.Error("Error updating member: %v", err)
 	}
+}
+
+func (r *GuildMemberService) GetBalance(guildID, userID string) (uint, error) {
+	var member models.GuildMember
+
+	if err := r.repository.GetGuildMemberByGuildIDAndUserID(guildID, userID, &member); err != nil {
+		return 0, err
+	}
+
+	return member.Coins, nil
 }

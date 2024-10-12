@@ -1,6 +1,7 @@
 package ctx
 
 import (
+	"log/slog"
 	"time"
 
 	"github.com/disgoorg/disgo/bot"
@@ -46,6 +47,8 @@ func Execute(
 	botStartAt time.Time,
 	client bot.Client,
 ) *discord.MessageCreate {
+	slog.Info("Trigger event: ", slog.Any("trigger", trigger))
+
 	ctx := Context{
 		TriggerEvent: trigger,
 		Type:         eventType,

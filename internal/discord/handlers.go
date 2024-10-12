@@ -26,7 +26,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg c
 	}
 
 	if guildId != nil {
-		err := providers.Services.GuildMember.EnsureMemberValidity(message.Author.ID.String(), event.GuildID.String())
+		err := providers.Services.GuildMember.EnsureMemberValidity(event.GuildID.String(), message.Author.ID.String())
 
 		if err != nil {
 			slog.Error("Error ensuring member validity: ", err)
@@ -36,7 +36,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg c
 	if !strings.HasPrefix(message.Content, cfg.Discord.Prefix) {
 
 		if guildId != nil {
-			providers.Services.GuildMember.IncrementMessageCount(message.Author.ID.String(), message.GuildID.String())
+			providers.Services.GuildMember.IncrementMessageCount(message.GuildID.String(), message.Author.ID.String())
 		}
 
 		return
@@ -64,6 +64,8 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg c
 		trigger.GuildId = *guildId
 	}
 
+	slog.Info("Trigger event: ", slog.Any("trigger", trigger))
+
 	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, client)
 
 	if msg != nil {
@@ -71,7 +73,7 @@ func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg c
 		event.Client().Rest().CreateMessage(event.ChannelID, *msg)
 
 		if guildId != nil {
-			providers.Services.GuildMember.IncrementCommandCount(message.Author.ID.String(), guildId.String())
+			providers.Services.GuildMember.IncrementCommandCount(guildId.String(), message.Author.ID.String())
 		}
 	}
 }
@@ -98,6 +100,12 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 
 	if guildId != nil {
 		trigger.GuildId = *guildId
+
+		err := providers.Services.GuildMember.EnsureMemberValidity(guildId.String(), event.User().ID.String())
+
+		if err != nil {
+			slog.Error("Error ensuring member validity: ", err)
+		}
 	}
 
 	var args []string
@@ -118,7 +126,7 @@ func OnInteractionCreatedEvent(event *events.ApplicationCommandInteractionCreate
 
 	if msg != nil {
 		event.CreateMessage(*msg)
-		providers.Services.GuildMember.IncrementCommandCount(event.User().ID.String(), guildId.String())
+		providers.Services.GuildMember.IncrementCommandCount(guildId.String(), event.User().ID.String())
 	}
 }
 
