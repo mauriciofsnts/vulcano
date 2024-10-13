@@ -5,10 +5,12 @@ import (
 	"log/slog"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/models"
 	"github.com/mauriciofsnts/bot/internal/providers"
 	"github.com/mauriciofsnts/bot/internal/providers/news"
 	"github.com/mauriciofsnts/bot/internal/utils"
@@ -70,22 +72,34 @@ func init() {
 
 			msg := messageBuilder.Build()
 
-			ctx.RegisterComponent(actionButtonId, createComponentState(page+1, cmd))
-			ctx.RegisterComponent(prevButtonId, createComponentState(page-1, cmd))
+			providers.Services.GuildState.CreateComponentState(&models.GuildState{
+				GuildID:        cmd.TriggerEvent.GuildId.String(),
+				ComponentID:    actionButtonId,
+				AuthorID:       cmd.TriggerEvent.AuthorId.String(),
+				ChannelID:      cmd.TriggerEvent.ChannelId.String(),
+				MessageID:      cmd.TriggerEvent.MessageId.String(),
+				Command:        "tabnews",
+				State:          []interface{}{page + 1},
+				Ttl:            time.Now(),
+				EventTimestamp: cmd.TriggerEvent.EventTimestamp,
+			})
+
+			providers.Services.GuildState.CreateComponentState(&models.GuildState{
+				GuildID:        cmd.TriggerEvent.GuildId.String(),
+				ComponentID:    prevButtonId,
+				AuthorID:       cmd.TriggerEvent.AuthorId.String(),
+				ChannelID:      cmd.TriggerEvent.ChannelId.String(),
+				MessageID:      cmd.TriggerEvent.MessageId.String(),
+				Command:        "tabnews",
+				State:          []interface{}{page - 1},
+				Ttl:            time.Now(),
+				EventTimestamp: cmd.TriggerEvent.EventTimestamp,
+			})
+
 			return &msg
 		},
-	})
-}
-
-func createComponentState(nextPage int, cmd ctx.Context) ctx.Component {
-	return ctx.Component{
-		State: ctx.ComponentState{
-			TriggerEvent: cmd.TriggerEvent,
-			Client:       cmd.Client,
-			State:        []interface{}{nextPage},
-		},
-		Handler: func(event *events.ComponentInteractionCreate, state *ctx.ComponentState) {
-			page := state.State[0].(int)
+		ComponentHandler: func(event *events.ComponentInteractionCreate, ctx *ctx.ComponentState) {
+			page := ctx.State[0].(int)
 			fields, _ := fetchNews(page)
 
 			embedBuilder := discord.NewEmbedBuilder().
@@ -97,14 +111,17 @@ func createComponentState(nextPage int, cmd ctx.Context) ctx.Component {
 			embed := embedBuilder.Build()
 			embeds := []discord.Embed{embed}
 
-			actionButtonId := fmt.Sprintf("tabnews-next-%d", cmd.TriggerEvent.MessageId)
-			prevButtonId := fmt.Sprintf("tabnews-prev-%d", cmd.TriggerEvent.MessageId)
+			actionButtonId := fmt.Sprintf("tabnews-next-%d", ctx.TriggerEvent.MessageId)
+			prevButtonId := fmt.Sprintf("tabnews-prev-%d", ctx.TriggerEvent.MessageId)
 
-			ctx.UpdateComponentState(actionButtonId, []interface{}{page + 1})
-			ctx.UpdateComponentState(prevButtonId, []interface{}{page - 1})
+			providers.Services.GuildState.UpdateComponentState(actionButtonId, []interface{}{page + 1})
+			providers.Services.GuildState.UpdateComponentState(prevButtonId, []interface{}{page - 1})
 
 			newActionRow := discord.NewActionRow()
-			newActionRow.AddComponents(discord.NewSecondaryButton("⬅️", prevButtonId), discord.NewSecondaryButton("➡️", actionButtonId))
+			newActionRow.AddComponents(
+				discord.NewSecondaryButton("⬅️", prevButtonId),
+				discord.NewSecondaryButton("➡️", actionButtonId),
+			)
 
 			components := discord.ActionRowComponent{
 				discord.NewSecondaryButton("➡️", actionButtonId),
@@ -121,8 +138,8 @@ func createComponentState(nextPage int, cmd ctx.Context) ctx.Component {
 				Embeds:     &embeds,
 				Components: &[]discord.ContainerComponent{components},
 			})
-
-		}}
+		},
+	})
 }
 
 func fetchNews(page int) ([]discord.EmbedField, error) {

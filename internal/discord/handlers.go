@@ -9,6 +9,7 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	disgo "github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
+	"github.com/disgoorg/snowflake/v2"
 	"github.com/mauriciofsnts/bot/internal/config"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 	customEvents "github.com/mauriciofsnts/bot/internal/discord/events"
@@ -16,65 +17,34 @@ import (
 )
 
 func OnMessageCreatedEvent(event *events.MessageCreate, client bot.Client, cfg config.Config) {
-	// TODO: Separate this function in guild and direct message
-
 	message := event.Message
-	guildId := message.GuildID
 
 	if message.Author.Bot {
 		return
 	}
 
-	if guildId != nil {
-		err := providers.Services.GuildMember.EnsureMemberValidity(event.GuildID.String(), message.Author.ID.String())
+	if message.GuildID != nil {
+		message := event.Message
+		guildID := message.GuildID.String()
+		authorID := message.Author.ID.String()
 
+		err := providers.Services.GuildMember.EnsureMemberValidity(guildID, authorID)
 		if err != nil {
 			slog.Error("Error ensuring member validity: ", err)
 		}
-	}
 
-	if !strings.HasPrefix(message.Content, cfg.Discord.Prefix) {
-
-		if guildId != nil {
-			providers.Services.GuildMember.IncrementMessageCount(message.GuildID.String(), message.Author.ID.String())
+		if !strings.HasPrefix(message.Content, cfg.Discord.Prefix) {
+			providers.Services.GuildMember.IncrementMessageCount(guildID, authorID)
+			return
 		}
 
-		return
-	}
-
-	inputMessage := strings.Split(message.Content, " ")
-	commandName := strings.TrimPrefix(inputMessage[0], cfg.Discord.Prefix)
-	found, cmd := ctx.GetCommandByAlias(commandName)
-
-	if !found {
-		// in this case is possible because is the user that is sending the message
-		return
-	}
-
-	args := inputMessage[1:]
-
-	trigger := ctx.TriggerEvent{
-		AuthorId:       message.Author.ID,
-		ChannelId:      message.ChannelID,
-		MessageId:      message.ID,
-		EventTimestamp: message.CreatedAt,
-	}
-
-	if guildId != nil {
-		trigger.GuildId = *guildId
-	}
-
-	slog.Info("Trigger event: ", slog.Any("trigger", trigger))
-
-	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, client)
-
-	if msg != nil {
-		msg.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
-		event.Client().Rest().CreateMessage(event.ChannelID, *msg)
-
-		if guildId != nil {
-			providers.Services.GuildMember.IncrementCommandCount(guildId.String(), message.Author.ID.String())
+		executeMessageCommand(event, client, cfg, true)
+	} else {
+		if !strings.HasPrefix(event.Message.Content, cfg.Discord.Prefix) {
+			return
 		}
+
+		executeMessageCommand(event, client, cfg, false)
 	}
 }
 
@@ -146,17 +116,72 @@ func OnMessageReactionAddedEvent(event *events.MessageReactionAdd, client bot.Cl
 
 func OnComponentInteractionEvent(event *events.ComponentInteractionCreate, client bot.Client) {
 	id := event.ComponentInteraction.Data.CustomID()
-	found, component := ctx.GetComponentState(id)
+	found, componentState := ctx.GetComponentStateInDatabase(id)
 
 	if !found {
 		slog.Error("Button state not found: ", slog.String("id", id))
 		return
 	}
 
-	component.Handler(event, &component.State)
+	trigger := ctx.TriggerEvent{
+		AuthorId:       snowflake.MustParse(componentState.AuthorID),
+		ChannelId:      snowflake.MustParse(componentState.ChannelID),
+		GuildId:        snowflake.MustParse(componentState.GuildID),
+		MessageId:      snowflake.MustParse(componentState.MessageID),
+		EventTimestamp: event.CreatedAt(),
+	}
+
+	state := ctx.ComponentState{
+		TriggerEvent: trigger,
+		Client:       client,
+		State:        componentState.State,
+	}
+
+	found, handler := ctx.GetComponentHandlerByName(componentState.Command)
+
+	if !found {
+		slog.Error("Component handler not found: ", slog.String("command", componentState.Command))
+		return
+	}
+
+	handler(event, &state)
 }
 
 func OnGuildReady(event *events.GuildReady) {
-	// ensure than guild is created, if is not create the guild on database
 	providers.Services.Guild.EnsureGuildExists(event.Guild)
+}
+
+func executeMessageCommand(event *events.MessageCreate, client bot.Client, cfg config.Config, isGuild bool) {
+	message := event.Message
+	inputMessage := strings.Split(message.Content, " ")
+	commandName := strings.TrimPrefix(inputMessage[0], cfg.Discord.Prefix)
+	found, cmd := ctx.GetCommandByAlias(commandName)
+
+	if !found {
+		return
+	}
+
+	args := inputMessage[1:]
+
+	trigger := ctx.TriggerEvent{
+		AuthorId:       message.Author.ID,
+		ChannelId:      message.ChannelID,
+		MessageId:      message.ID,
+		EventTimestamp: message.CreatedAt,
+	}
+
+	if isGuild {
+		trigger.GuildId = *message.GuildID
+	}
+
+	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, StartedAt, client)
+
+	if msg != nil {
+		msg.MessageReference = &disgo.MessageReference{MessageID: &message.ID}
+		event.Client().Rest().CreateMessage(event.ChannelID, *msg)
+
+		if isGuild {
+			providers.Services.GuildMember.IncrementCommandCount(message.GuildID.String(), message.Author.ID.String())
+		}
+	}
 }
