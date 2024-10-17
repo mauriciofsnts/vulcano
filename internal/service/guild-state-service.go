@@ -1,6 +1,8 @@
 package service
 
 import (
+	"log/slog"
+
 	"github.com/mauriciofsnts/bot/internal/models"
 	"github.com/mauriciofsnts/bot/internal/repository"
 	"gorm.io/gorm"
@@ -8,7 +10,7 @@ import (
 
 type IGuildStateService interface {
 	GetComponentStateById(id string) (*models.GuildState, error)
-	UpdateComponentState(id string, state []any) error
+	UpdateComponentState(id string, state map[string]any) error
 	CreateComponentState(guildState *models.GuildState) error
 }
 
@@ -29,7 +31,8 @@ func (r *GuildStateService) GetComponentStateById(id string) (*models.GuildState
 	return guildState, err
 }
 
-func (r *GuildStateService) UpdateComponentState(id string, state []any) error {
+func (r *GuildStateService) UpdateComponentState(id string, state map[string]any) error {
+	slog.Any("state", state)
 	return r.repository.UpdateComponentState(id, state)
 }
 

@@ -65,7 +65,7 @@ func SyncSlashCommands(client bot.Client) {
 type ComponentState struct {
 	TriggerEvent TriggerEvent
 	Client       bot.Client
-	State        []any
+	State        map[string]any
 }
 
 type ComponentHandler func(event *events.ComponentInteractionCreate, ctx *ComponentState)
@@ -81,7 +81,7 @@ func RegisterComponent(id string, component Component) {
 	buttonState[id] = component
 }
 
-func UpdateComponentState(id string, state []any) {
+func UpdateComponentState(id string, state map[string]any) {
 	if component, ok := buttonState[id]; ok {
 		component.State.State = state
 		buttonState[id] = component

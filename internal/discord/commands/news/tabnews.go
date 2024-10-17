@@ -79,7 +79,7 @@ func init() {
 				ChannelID:      cmd.TriggerEvent.ChannelId.String(),
 				MessageID:      cmd.TriggerEvent.MessageId.String(),
 				Command:        "tabnews",
-				State:          []interface{}{page + 1},
+				State:          map[string]any{"page": page + 1},
 				Ttl:            time.Now(),
 				EventTimestamp: cmd.TriggerEvent.EventTimestamp,
 			})
@@ -91,7 +91,7 @@ func init() {
 				ChannelID:      cmd.TriggerEvent.ChannelId.String(),
 				MessageID:      cmd.TriggerEvent.MessageId.String(),
 				Command:        "tabnews",
-				State:          []interface{}{page - 1},
+				State:          map[string]any{"page": page - 1},
 				Ttl:            time.Now(),
 				EventTimestamp: cmd.TriggerEvent.EventTimestamp,
 			})
@@ -99,7 +99,8 @@ func init() {
 			return &msg
 		},
 		ComponentHandler: func(event *events.ComponentInteractionCreate, ctx *ctx.ComponentState) {
-			page := ctx.State[0].(int)
+			slog.Info("ComponentHandler", "ctx", ctx.State)
+			page := int(ctx.State["page"].(float64))
 			fields, _ := fetchNews(page)
 
 			embedBuilder := discord.NewEmbedBuilder().
@@ -114,8 +115,8 @@ func init() {
 			actionButtonId := fmt.Sprintf("tabnews-next-%d", ctx.TriggerEvent.MessageId)
 			prevButtonId := fmt.Sprintf("tabnews-prev-%d", ctx.TriggerEvent.MessageId)
 
-			providers.Services.GuildState.UpdateComponentState(actionButtonId, []interface{}{page + 1})
-			providers.Services.GuildState.UpdateComponentState(prevButtonId, []interface{}{page - 1})
+			providers.Services.GuildState.UpdateComponentState(actionButtonId, map[string]any{"page": page + 1})
+			providers.Services.GuildState.UpdateComponentState(prevButtonId, map[string]any{"page": page - 1})
 
 			newActionRow := discord.NewActionRow()
 			newActionRow.AddComponents(
@@ -164,6 +165,7 @@ func fetchNews(page int) ([]discord.EmbedField, error) {
 			defer wg.Done()
 			shortenedUrl, err := providers.Shorten.ShortURL(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
 
+			// TODO! Add fallback if the shortening service fails
 			if err != nil {
 				slog.Error("Error shortening url: ", "err", err.Error())
 				return

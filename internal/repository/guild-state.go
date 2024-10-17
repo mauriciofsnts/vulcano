@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"encoding/json"
+
 	"github.com/mauriciofsnts/bot/internal/models"
 	"gorm.io/gorm"
 )
@@ -19,6 +21,13 @@ func (r *GuildStateRepository) GetComponentStateByID(id string, entity *models.G
 	return r.db.Where("component_id = ?", id).First(entity).Error
 }
 
-func (r *GuildStateRepository) UpdateComponentState(id string, state []interface{}) error {
-	return r.db.Model(&models.GuildState{}).Where("component_id = ?", id).Update("state", state).Error
+func (r *GuildStateRepository) UpdateComponentState(id string, state map[string]any) error {
+
+	data, err := json.Marshal(state)
+
+	if err != nil {
+		return err
+	}
+
+	return r.db.Model(&models.GuildState{}).Where("component_id = ?", id).Update("state", data).Error
 }
