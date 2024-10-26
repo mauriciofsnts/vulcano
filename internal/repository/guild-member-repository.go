@@ -16,12 +16,12 @@ func NewGuildMemberRepository(db *gorm.DB) GuildMemberRepository {
 }
 
 func (r *GuildMemberRepository) GetGuildMemberByUserID(id string, entity *models.GuildMember) error {
-	return r.db.Where("member_id = ?", id).First(entity).Error
+	return r.db.Where("member_id = ?", id).Find(entity).Error
 }
 
 func (r *GuildMemberRepository) GetGuildMemberByGuildIDAndUserID(
 	guildID, userID string,
 	entity *models.GuildMember,
 ) error {
-	return r.db.Where("guild_id = ? AND member_id = ?", guildID, userID).First(entity).Error
+	return r.db.Where("guild_id = ? AND member_id = ?", guildID, userID).Find(entity).Error
 }
