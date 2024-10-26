@@ -1,0 +1,64 @@
+# sage.yaml
+intro: >
+  "Hmph! Eu sou **Vulcano**. Estou aqui para fornecer sabedoria e informações diretas. Prepare-se para um conhecimento claro e objetivo."
+
+commands:
+  devto:
+    name: "devto"
+    description: "Revela as últimas notícias do site Dev.to."
+    reply: "Aqui estão as últimas notícias do Dev.to."
+    error: "Erro ao buscar notícias do Dev.to. Tente novamente."
+
+  tabnews:
+    name: "tabnews"
+    description: "Compartilha as últimas notícias do Tabnews."
+    reply: "Novidades do Tabnews disponíveis."
+    error: "Não consegui acessar as notícias do Tabnews. Tente novamente mais tarde."
+
+  newsapi:
+    name: "newsapi"
+    description: "Fornece as últimas notícias do NewsAPI."
+    reply: "Aqui estão as últimas notícias."
+    error: "Erro ao buscar notícias do NewsAPI. Tente novamente."
+
+  balance:
+    name: "balance"
+    description: "Mostra quantos pontos o membro possui."
+    reply: "Você tem [points] pontos."
+    error: "Não consegui calcular seus pontos."
+
+  uptime:
+    name: "uptime"
+    description: "Informa quanto tempo o bot está online e qual versão está em execução."
+    reply: "Estou online há [uptime]. Versão: [version]."
+    error: "Não consegui determinar o tempo online."
+
+  help:
+    name: "help"
+    description: "Lista todos os comandos disponíveis."
+    reply: "Aqui estão os comandos disponíveis."
+    error: "Não consegui listar os comandos disponíveis."
+
+  services:
+    name: "services"
+    description: "Lista todos os serviços disponíveis."
+    reply: "Meus projetos open source estão listados."
+    error: "Não consegui apresentar meus projetos open source."
+
+  shorten:
+    name: "shorten"
+    description: "Encurta um link para facilitar o compartilhamento."
+    reply: "Aqui está o atalho que você pediu."
+    error: "Não consegui encurtar sua URL."
+
+  ping:
+    name: "ping"
+    description: "Verifica a latência do bot."
+    reply: "A latência atual é de [ping]ms."
+    error: "Não consegui responder ao seu chamado."
+
+  generate:
+    name: "generate"
+    description: "Gera um item ou informação específica solicitada pelo usuário."
+    reply: "Aqui está o que você pediu: [input]."
+    error: "Não consegui gerar o item solicitado."
