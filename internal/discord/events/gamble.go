@@ -19,8 +19,8 @@ func OnGamble(event *discordEvents.MessageReactionAdd, client bot.Client) {
 		return
 	}
 
-	// roll a dice from 1 to 10
-	roll := rand.Intn(10) + 1
+	// roll a dice from 1 to 9
+	roll := rand.Intn(9) + 1
 
 	if roll == 1 {
 		client.Rest().CreateMessage(event.ChannelID, discord.MessageCreate{
