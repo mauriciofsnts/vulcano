@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"math/rand"
+	"time"
 
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
@@ -27,9 +28,7 @@ func OnGamble(event *discordEvents.MessageReactionAdd, client bot.Client) {
 			Content: "You rolled a 1, you win!",
 		})
 
-		_, err := client.Rest().UpdateMember(*event.GuildID, event.Member.User.ID, discord.MemberUpdate{
-			Mute: utils.PtrTo(false),
-		})
+		err := client.Rest().DeleteMessage(event.ChannelID, event.MessageID)
 
 		if err != nil {
 			slog.Error(err.Error())
@@ -42,6 +41,15 @@ func OnGamble(event *discordEvents.MessageReactionAdd, client bot.Client) {
 		_, err := client.Rest().UpdateMember(*event.GuildID, event.Member.User.ID, discord.MemberUpdate{
 			Mute: utils.PtrTo(true),
 		})
+
+		go func() {
+			time.Sleep(2 * time.Minute)
+
+			client.Rest().UpdateMember(*event.GuildID, event.Member.User.ID, discord.MemberUpdate{
+				Mute: utils.PtrTo(false),
+			})
+
+		}()
 
 		if err != nil {
 			slog.Error(err.Error())
