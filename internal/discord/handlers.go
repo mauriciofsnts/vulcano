@@ -115,11 +115,10 @@ func OnMessageReactionAddedEvent(event *events.MessageReactionAdd, client bot.Cl
 }
 
 func OnComponentInteractionEvent(event *events.ComponentInteractionCreate, client bot.Client) {
-	id := event.ComponentInteraction.Data.CustomID()
-	found, componentState := ctx.GetComponentStateInDatabase(id)
+	found, componentState := ctx.GetComponentStateInDatabase(event.Message.ID.String())
 
 	if !found {
-		slog.Error("Button state not found: ", slog.String("id", id))
+		slog.Error("Button state not found: ", slog.String("message id", event.Message.ID.String()))
 		return
 	}
 

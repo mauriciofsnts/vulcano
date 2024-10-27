@@ -72,51 +72,52 @@ func init() {
 
 			msg := messageBuilder.Build()
 
+			createdMessage, err := cmd.Client.Rest().CreateMessage(cmd.TriggerEvent.ChannelId, msg)
+
+			if err != nil {
+				slog.Error("Error creating message", "err", err.Error())
+				return nil
+			}
+
 			providers.Services.GuildState.CreateComponentState(&models.GuildState{
 				GuildID:        cmd.TriggerEvent.GuildId.String(),
 				ComponentID:    actionButtonId,
 				AuthorID:       cmd.TriggerEvent.AuthorId.String(),
 				ChannelID:      cmd.TriggerEvent.ChannelId.String(),
-				MessageID:      cmd.TriggerEvent.MessageId.String(),
+				MessageID:      createdMessage.ID.String(),
 				Command:        "tabnews",
-				State:          map[string]any{"page": page + 1},
+				State:          map[string]any{"page": page},
 				Ttl:            time.Now(),
 				EventTimestamp: cmd.TriggerEvent.EventTimestamp,
 			})
 
-			providers.Services.GuildState.CreateComponentState(&models.GuildState{
-				GuildID:        cmd.TriggerEvent.GuildId.String(),
-				ComponentID:    prevButtonId,
-				AuthorID:       cmd.TriggerEvent.AuthorId.String(),
-				ChannelID:      cmd.TriggerEvent.ChannelId.String(),
-				MessageID:      cmd.TriggerEvent.MessageId.String(),
-				Command:        "tabnews",
-				State:          map[string]any{"page": page - 1},
-				Ttl:            time.Now(),
-				EventTimestamp: cmd.TriggerEvent.EventTimestamp,
-			})
-
-			return &msg
+			return nil
 		},
 		ComponentHandler: func(event *events.ComponentInteractionCreate, ctx *ctx.ComponentState) {
-			slog.Info("ComponentHandler", "ctx", ctx.State)
+			actionButtonId := fmt.Sprintf("tabnews-next-%d", ctx.TriggerEvent.MessageId)
+			prevButtonId := fmt.Sprintf("tabnews-prev-%d", ctx.TriggerEvent.MessageId)
+
 			page := int(ctx.State["page"].(float64))
-			fields, _ := fetchNews(page)
+			nextPageState := page
+
+			if event.ComponentInteraction.Data.CustomID() == prevButtonId {
+				nextPageState = max(page-1, 1)
+			} else {
+				nextPageState = page + 1
+			}
+
+			fields, _ := fetchNews(nextPageState)
 
 			embedBuilder := discord.NewEmbedBuilder().
 				SetTitle("Latest news from Tabnews").
 				SetDescription("Here are the latest news from the tabnews website").
 				SetColor(0xffffff).
-				SetFooter(fmt.Sprintf("Page %d", page), "").
+				SetFooter(fmt.Sprintf("Page %d", nextPageState), "").
 				SetFields(fields...)
 			embed := embedBuilder.Build()
 			embeds := []discord.Embed{embed}
 
-			actionButtonId := fmt.Sprintf("tabnews-next-%d", ctx.TriggerEvent.MessageId)
-			prevButtonId := fmt.Sprintf("tabnews-prev-%d", ctx.TriggerEvent.MessageId)
-
-			providers.Services.GuildState.UpdateComponentState(actionButtonId, map[string]any{"page": page + 1})
-			providers.Services.GuildState.UpdateComponentState(prevButtonId, map[string]any{"page": page - 1})
+			providers.Services.GuildState.UpdateComponentState(ctx.TriggerEvent.MessageId.String(), map[string]any{"page": nextPageState})
 
 			newActionRow := discord.NewActionRow()
 			newActionRow.AddComponents(
@@ -128,7 +129,7 @@ func init() {
 				discord.NewSecondaryButton("➡️", actionButtonId),
 			}
 
-			if page > 1 {
+			if nextPageState > 1 {
 				components = discord.ActionRowComponent{
 					discord.NewSecondaryButton("⬅️", prevButtonId),
 					discord.NewSecondaryButton("➡️", actionButtonId),

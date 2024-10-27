@@ -21,7 +21,11 @@ func (r *GuildStateRepository) GetComponentStateByID(id string, entity *models.G
 	return r.db.Where("component_id = ?", id).First(entity).Error
 }
 
-func (r *GuildStateRepository) UpdateComponentState(id string, state map[string]any) error {
+func (r *GuildStateRepository) GetComponentStateByMessageID(id string, entity *models.GuildState) error {
+	return r.db.Where("message_id = ?", id).First(entity).Error
+}
+
+func (r *GuildStateRepository) UpdateComponentState(messageId string, state map[string]any) error {
 
 	data, err := json.Marshal(state)
 
@@ -29,5 +33,5 @@ func (r *GuildStateRepository) UpdateComponentState(id string, state map[string]
 		return err
 	}
 
-	return r.db.Model(&models.GuildState{}).Where("component_id = ?", id).Update("state", data).Error
+	return r.db.Model(&models.GuildState{}).Where("message_id = ?", messageId).Update("state", data).Error
 }

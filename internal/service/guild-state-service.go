@@ -10,6 +10,7 @@ import (
 
 type IGuildStateService interface {
 	GetComponentStateById(id string) (*models.GuildState, error)
+	GetComponentStateByMessageID(messageId string) (*models.GuildState, error)
 	UpdateComponentState(id string, state map[string]any) error
 	CreateComponentState(guildState *models.GuildState) error
 }
@@ -22,6 +23,13 @@ func NewGuildStateService(db *gorm.DB) IGuildStateService {
 	return &GuildStateService{
 		repository: repository.NewGuildStateRepository(db),
 	}
+}
+
+func (r *GuildStateService) GetComponentStateByMessageID(messageId string) (*models.GuildState, error) {
+	guildState := &models.GuildState{}
+
+	err := r.repository.GetComponentStateByMessageID(messageId, guildState)
+	return guildState, err
 }
 
 func (r *GuildStateService) GetComponentStateById(id string) (*models.GuildState, error) {
