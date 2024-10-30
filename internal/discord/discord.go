@@ -17,6 +17,8 @@ import (
 	"github.com/mauriciofsnts/bot/internal/config"
 	_ "github.com/mauriciofsnts/bot/internal/discord/commands"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+
+	eventHandler "github.com/mauriciofsnts/bot/internal/discord/events"
 )
 
 var StartedAt time.Time
@@ -39,7 +41,7 @@ func Init(cfg config.Config) {
 			),
 			gateway.WithPresenceOpts(gateway.WithListeningActivity("your bullshit", gateway.WithActivityState("lol")), gateway.WithOnlineStatus(discord.OnlineStatusDND)),
 		),
-		bot.WithEventListenerFunc(OnReadyEvent),
+		bot.WithEventListenerFunc(eventHandler.OnReadyEvent),
 	)
 
 	if err != nil {
@@ -49,25 +51,24 @@ func Init(cfg config.Config) {
 
 	client.AddEventListeners(&events.ListenerAdapter{
 		OnMessageCreate: func(event *events.MessageCreate) {
-			OnMessageCreatedEvent(event, client, cfg)
+			eventHandler.OnMessageCreatedEvent(event, client, cfg, StartedAt)
 		},
 		OnApplicationCommandInteraction: func(event *events.ApplicationCommandInteractionCreate) {
-			OnInteractionCreatedEvent(event, client)
+			eventHandler.OnInteractionCreatedEvent(event, client, StartedAt)
 		},
 		OnGuildChannelCreate: func(event *events.GuildChannelCreate) {
-			OnGuildChannelCreatedEvent(event, client)
+			eventHandler.OnGuildChannelCreatedEvent(event, client)
 		},
 		OnMessageReactionAdd: func(event *events.MessageReactionAdd) {
-			OnMessageReactionAddedEvent(event, client)
+			eventHandler.OnMessageReactionAddedEvent(event, client)
 		},
 		OnComponentInteraction: func(event *events.ComponentInteractionCreate) {
-			OnComponentInteractionEvent(event, client)
+			eventHandler.OnComponentInteractionEvent(event, client)
 		},
 		OnGuildVoiceJoin: func(event *events.GuildVoiceJoin) {
-			slog.Info("User joined voice channel", slog.Any("user", event.Member.User.ID), slog.Any("channel", event.VoiceState.ChannelID))
 		},
 		OnGuildReady: func(event *events.GuildReady) {
-			OnGuildReady(event)
+			eventHandler.OnGuildReady(event)
 		},
 	})
 

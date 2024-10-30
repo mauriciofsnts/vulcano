@@ -8,12 +8,15 @@ import (
 
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
+	disgoEvents "github.com/disgoorg/disgo/events"
 	"github.com/mauriciofsnts/bot/internal/utils"
-
-	discordEvents "github.com/disgoorg/disgo/events"
 )
 
-func OnGamble(event *discordEvents.MessageReactionAdd, client bot.Client) {
+func OnMessageReactionAddedEvent(event *disgoEvents.MessageReactionAdd, client bot.Client) {
+	onGamble(event, client)
+}
+
+func onGamble(event *disgoEvents.MessageReactionAdd, client bot.Client) {
 	if event.Member.User.Bot || *event.Emoji.Name != "🎲" || event.GuildID == nil {
 		return
 	}
