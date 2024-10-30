@@ -7,7 +7,6 @@ import (
 	"github.com/mauriciofsnts/bot/internal/providers"
 )
 
-// Componente
 type ComponentState struct {
 	TriggerEvent TriggerEvent
 	Client       bot.Client

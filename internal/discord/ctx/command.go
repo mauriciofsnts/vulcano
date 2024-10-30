@@ -8,6 +8,8 @@ import (
 	"github.com/disgoorg/disgo/events"
 )
 
+var commands = make(map[string]Command)
+
 type Command struct {
 	Name             string
 	Description      string
@@ -16,8 +18,6 @@ type Command struct {
 	Handler          func(ctx Context) *discord.MessageCreate
 	ComponentHandler func(event *events.ComponentInteractionCreate, ctx *ComponentState)
 }
-
-var commands = make(map[string]Command)
 
 func RegisterCommand(name string, cmd Command) {
 	commands[name] = cmd

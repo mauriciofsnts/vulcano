@@ -14,8 +14,6 @@ import (
 )
 
 func OnGamble(event *discordEvents.MessageReactionAdd, client bot.Client) {
-	// this command is only for users and not bots
-	// and the event must be in a guild
 	if event.Member.User.Bot || *event.Emoji.Name != "🎲" || event.GuildID == nil {
 		return
 	}
@@ -42,6 +40,10 @@ func OnGamble(event *discordEvents.MessageReactionAdd, client bot.Client) {
 			Mute: utils.PtrTo(true),
 		})
 
+		if err != nil {
+			slog.Error(err.Error())
+		}
+
 		go func() {
 			time.Sleep(2 * time.Minute)
 
@@ -50,9 +52,5 @@ func OnGamble(event *discordEvents.MessageReactionAdd, client bot.Client) {
 			})
 
 		}()
-
-		if err != nil {
-			slog.Error(err.Error())
-		}
 	}
 }
