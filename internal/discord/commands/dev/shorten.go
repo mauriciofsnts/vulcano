@@ -14,7 +14,7 @@ func init() {
 	ctx.RegisterCommand("shorten", ctx.Command{
 		Name:        "shorten",
 		Aliases:     []string{"sht", "st"},
-		Description: "Shorten a URL",
+		Description: ctx.Translate().Commands.Shorten.Description.Str(),
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionString{
 				Name:        "url",
@@ -27,22 +27,23 @@ func init() {
 				Required:    false,
 			},
 		},
-		Handler: func(ctx ctx.Context) *discord.MessageCreate {
-			args := ctx.Args
+		Handler: func(context ctx.Context) *discord.MessageCreate {
+			args := context.Args
 
 			if len(args) == 0 {
-				reply := ctx.Response.ReplyErr(errors.New("you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`"))
+				msg := ctx.Translate().Commands.Shorten.Error.Str()
+				reply := context.Response.ReplyErr(errors.New(msg))
 				return &reply
 			}
 
 			url, err := providers.Shorten.ShortURL(args[0], &shorten.Options{KeepAliveFor: utils.PtrTo(0)})
 
 			if err != nil {
-				reply := ctx.Response.ReplyErr(err)
+				reply := context.Response.ReplyErr(err)
 				return &reply
 			}
 
-			reply := ctx.Response.Reply("Shortened URL", url, nil)
+			reply := context.Response.Reply("Shortened URL", url, nil)
 			return &reply
 		},
 	})

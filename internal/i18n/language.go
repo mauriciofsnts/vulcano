@@ -18,6 +18,11 @@ type Command struct {
 	Error       LanguageEntry
 }
 
+type GenerateCommand struct {
+	Command
+	ParamError LanguageEntry
+}
+
 type Commands struct {
 	Devto    Command
 	Tabnews  Command
@@ -28,5 +33,5 @@ type Commands struct {
 	Services Command
 	Shorten  Command
 	Ping     Command
-	Generate Command
+	Generate GenerateCommand
 }

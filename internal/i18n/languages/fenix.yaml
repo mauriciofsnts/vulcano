@@ -24,12 +24,12 @@ commands:
   balance:
     name: "balance"
     description: "Mostra quantos pontos o membro possui."
-    reply: "A essência vital flui dentro de você. Atualmente, você possui [points] pontos. Que sua jornada continue a enriquecer sua força!"
+    reply: "A essência vital flui dentro de você. Atualmente, você possui ${0} pontos. Que sua jornada continue a enriquecer sua força!"
     error: "Os números se ocultaram nas sombras! Não consegui calcular seus pontos. Verifique se você já interagiu comigo antes."
   uptime:
     name: "uptime"
     description: "Informa quanto tempo o bot está online e qual versão está em execução."
-    reply: "A vigília divina se mantém! Estou aqui há [uptime] e sou a versão [version]. Que minha presença continue a iluminar suas jornadas!"
+    reply: "A vigília divina se mantém! Estou aqui há ${0} e sou a versão ${1}. Que minha presença continue a iluminar suas jornadas!"
     error: "A vigilância divina falhou! Não consegui determinar quanto tempo estou aqui. Tente novamente!"
   help:
     name: "help"
@@ -49,17 +49,17 @@ commands:
   ping:
     name: "ping"
     description: "Verifica a latência do bot."
-    reply: "A presença divina responde! A latência atual é de [ping]ms. Que a conexão entre nós se mantenha forte!"
+    reply: "A presença divina responde! A latência atual é de ${0}ms. Que a conexão entre nós se mantenha forte!"
     error: "A conexão com o divino falhou! Não consegui responder ao seu chamado. Tente novamente!"
   generate:
     name: "generate"
     description: "Gera um item ou informação específica solicitada pelo usuário."
-    reply: "Das profundezas do meu ser, um novo item surge! Aqui está o que você pediu: [input]. Que ele seja útil em sua jornada!"
+    reply: "Das profundezas do meu ser, um novo item surge! Aqui está o que você pediu: ${0}. Que ele seja útil em sua jornada!"
     error: "A forja divina falhou! Não consegui gerar o item solicitado. Verifique se você forneceu uma solicitação válida."
-
+    paramError: "A forja divina falhou! Não consegui gerar o item solicitado. Verifique se você forneceu uma solicitação válida."
 events:
   gamble:
     name: "gamble"
     error: "Hmph! Um erro perturbou o equilíbrio do jogo! Não consegui processar sua aposta. Tente novamente e que os ventos do destino estejam a seu favor"
     victory: "A sorte sorriu para você! Que sua vitória ressoe em todo o reino!"
-    defeat: "Infelizmente, o destino não sorriu para você desta vez. Você perdeu [número de pontos] pontos e será silenciado por [duração]. Que a sabedoria o guie nas próximas batalhas"
+    defeat: "Infelizmente, o destino não sorriu para você desta vez. Você perdeu ${0} pontos e será silenciado por ${1}. Que a sabedoria o guie nas próximas batalhas"

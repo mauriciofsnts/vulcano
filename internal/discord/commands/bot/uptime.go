@@ -7,17 +7,19 @@ import (
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/i18n"
 )
 
 func init() {
 	ctx.RegisterCommand("uptime", ctx.Command{
 		Name:        "uptime",
 		Aliases:     []string{"up"},
-		Description: "Shows how long the bot has been online",
+		Description: ctx.Translate().Commands.Uptime.Description.Str(),
 		Options:     []discord.ApplicationCommandOption{},
-		Handler: func(ctx ctx.Context) *discord.MessageCreate {
-			uptime := time.Since(ctx.BotStartAt)
-			reply := ctx.Response.Reply("🕒  Uptime", fmt.Sprintf("I've been online for %s", durationAsText(uptime)), nil)
+		Handler: func(context ctx.Context) *discord.MessageCreate {
+			uptime := time.Since(context.BotStartAt)
+			msg := i18n.Replace(ctx.Translate().Commands.Ping.Reply.Str(), durationAsText(uptime))
+			reply := context.Response.Reply("Uptime", msg, nil)
 			return &reply
 		},
 	})

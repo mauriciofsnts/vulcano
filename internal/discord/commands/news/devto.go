@@ -15,12 +15,12 @@ func init() {
 	ctx.RegisterCommand("devto", ctx.Command{
 		Name:        "devto",
 		Aliases:     []string{"devto"},
-		Description: "Get the latest news from the devto website",
-		Handler: func(ctx ctx.Context) *discord.MessageCreate {
+		Description: ctx.Translate().Commands.Devto.Description.Str(),
+		Handler: func(context ctx.Context) *discord.MessageCreate {
 			articles, err := providers.News.Devto(5)
 
 			if err != nil {
-				reply := ctx.Response.ReplyErr(err)
+				reply := context.Response.ReplyErr(err)
 				return &reply
 			}
 
@@ -34,11 +34,11 @@ func init() {
 					defer wg.Done()
 
 					shortenedUrl := ""
-
 					shortenedUrl, err := providers.Shorten.ShortURL(article.URL, nil)
 
 					if err != nil {
 						slog.Debug("Error shortening url: ", "error", err)
+						return
 					}
 
 					var value string
@@ -58,7 +58,7 @@ func init() {
 
 			wg.Wait()
 
-			reply := ctx.Response.Reply("Devto", "Here are the latest news from Devto", fields)
+			reply := context.Response.Reply("Devto", string(ctx.Translate().Commands.Devto.Reply.Str()), fields)
 			return &reply
 		},
 	})

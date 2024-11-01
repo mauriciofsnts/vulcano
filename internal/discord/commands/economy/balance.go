@@ -2,10 +2,10 @@ package economy
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/i18n"
 	"github.com/mauriciofsnts/bot/internal/providers"
 )
 
@@ -13,20 +13,22 @@ func init() {
 	ctx.RegisterCommand("balance", ctx.Command{
 		Name:        "balance",
 		Aliases:     []string{"balance"},
-		Description: "Check your balance",
+		Description: ctx.Translate().Commands.Balance.Description.Str(),
 		Options:     []discord.ApplicationCommandOption{},
-		Handler: func(ctx ctx.Context) *discord.MessageCreate {
-			author := ctx.TriggerEvent.AuthorId
-			guild := ctx.TriggerEvent.GuildId
+		Handler: func(context ctx.Context) *discord.MessageCreate {
+			author := context.TriggerEvent.AuthorId
+			guild := context.TriggerEvent.GuildId
 
 			balance, err := providers.Services.GuildMember.GetBalance(guild.String(), author.String())
 
 			if err != nil {
-				errorReply := ctx.Response.ReplyErr(errors.New("an error occurred while trying to get your balance"))
+				msg := ctx.Translate().Commands.Balance.Error.Str()
+				errorReply := context.Response.ReplyErr(errors.New(msg))
 				return &errorReply
 			}
 
-			reply := ctx.Response.Reply("Balance", "Your balance is: "+fmt.Sprint(balance), []discord.EmbedField{})
+			msg := i18n.Replace(ctx.Translate().Commands.Balance.Reply.Str(), balance)
+			reply := context.Response.Reply("Balance", msg, []discord.EmbedField{})
 
 			return &reply
 		},

@@ -20,7 +20,7 @@ func init() {
 	ctx.RegisterCommand("tabnews", ctx.Command{
 		Name:        "tabnews",
 		Aliases:     []string{"tn", "tabnews"},
-		Description: "Get the latest news from the tabnews website",
+		Description: ctx.Translate().Commands.Tabnews.Description.Str(),
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionInt{
 				Name:        "page",
@@ -50,8 +50,8 @@ func init() {
 
 			messageBuilder := discord.NewMessageCreateBuilder()
 			embedBuilder := discord.NewEmbedBuilder().
-				SetTitle("Latest news from Tabnews").
-				SetDescription("Here are the latest news from the tabnews website").
+				SetTitle("Tabnews").
+				SetDescription(ctx.Translate().Commands.Tabnews.Reply.Str()).
 				SetColor(0xffffff).
 				SetFields(fields...).
 				SetFooter(fmt.Sprintf("Page %d", page), "")
@@ -93,11 +93,11 @@ func init() {
 
 			return nil
 		},
-		ComponentHandler: func(event *events.ComponentInteractionCreate, ctx *ctx.ComponentState) {
-			actionButtonId := fmt.Sprintf("tabnews-next-%d", ctx.TriggerEvent.MessageId)
-			prevButtonId := fmt.Sprintf("tabnews-prev-%d", ctx.TriggerEvent.MessageId)
+		ComponentHandler: func(event *events.ComponentInteractionCreate, context *ctx.ComponentState) {
+			actionButtonId := fmt.Sprintf("tabnews-next-%d", context.TriggerEvent.MessageId)
+			prevButtonId := fmt.Sprintf("tabnews-prev-%d", context.TriggerEvent.MessageId)
 
-			page := int(ctx.State["page"].(float64))
+			page := int(context.State["page"].(float64))
 			nextPageState := page
 
 			if event.ComponentInteraction.Data.CustomID() == prevButtonId {
@@ -109,15 +109,15 @@ func init() {
 			fields, _ := fetchNews(nextPageState)
 
 			embedBuilder := discord.NewEmbedBuilder().
-				SetTitle("Latest news from Tabnews").
-				SetDescription("Here are the latest news from the tabnews website").
+				SetTitle("Tabnews").
+				SetDescription(ctx.Translate().Commands.Tabnews.Reply.Str()).
 				SetColor(0xffffff).
 				SetFooter(fmt.Sprintf("Page %d", nextPageState), "").
 				SetFields(fields...)
 			embed := embedBuilder.Build()
 			embeds := []discord.Embed{embed}
 
-			providers.Services.GuildState.UpdateComponentState(ctx.TriggerEvent.MessageId.String(), map[string]any{"page": nextPageState})
+			providers.Services.GuildState.UpdateComponentState(context.TriggerEvent.MessageId.String(), map[string]any{"page": nextPageState})
 
 			newActionRow := discord.NewActionRow()
 			newActionRow.AddComponents(

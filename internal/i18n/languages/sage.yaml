@@ -23,13 +23,13 @@ commands:
   balance:
     name: "balance"
     description: "Mostra quantos pontos o membro possui."
-    reply: "Você tem [points] pontos."
+    reply: "Você tem ${0} pontos."
     error: "Não consegui calcular seus pontos."
 
   uptime:
     name: "uptime"
     description: "Informa quanto tempo o bot está online e qual versão está em execução."
-    reply: "Estou online há [uptime]. Versão: [version]."
+    reply: "Estou online há ${0}. Versão: ${1}."
     error: "Não consegui determinar o tempo online."
 
   help:
@@ -53,11 +53,11 @@ commands:
   ping:
     name: "ping"
     description: "Verifica a latência do bot."
-    reply: "A latência atual é de [ping]ms."
+    reply: "A latência atual é de ${0}ms."
     error: "Não consegui responder ao seu chamado."
 
   generate:
     name: "generate"
     description: "Gera um item ou informação específica solicitada pelo usuário."
-    reply: "Aqui está o que você pediu: [input]."
+    reply: "Aqui está o que você pediu: ${0}."
     error: "Não consegui gerar o item solicitado."
