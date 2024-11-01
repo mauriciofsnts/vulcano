@@ -2,8 +2,8 @@ package service
 
 import (
 	"github.com/disgoorg/disgo/discord"
-	"github.com/mauriciofsnts/bot/internal/models"
-	"github.com/mauriciofsnts/bot/internal/repository"
+	"github.com/mauriciofsnts/bot/internal/database/models"
+	"github.com/mauriciofsnts/bot/internal/database/repository"
 	"gorm.io/gorm"
 )
 

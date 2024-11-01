@@ -9,8 +9,8 @@ import (
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
+	"github.com/mauriciofsnts/bot/internal/database/models"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
-	"github.com/mauriciofsnts/bot/internal/models"
 	"github.com/mauriciofsnts/bot/internal/providers"
 	"github.com/mauriciofsnts/bot/internal/providers/news"
 	"github.com/mauriciofsnts/bot/internal/utils"

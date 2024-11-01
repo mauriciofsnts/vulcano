@@ -2,9 +2,9 @@ package providers
 
 import (
 	"github.com/mauriciofsnts/bot/internal/config"
+	"github.com/mauriciofsnts/bot/internal/database/service"
 	"github.com/mauriciofsnts/bot/internal/providers/news"
 	"github.com/mauriciofsnts/bot/internal/providers/shorten"
-	"github.com/mauriciofsnts/bot/internal/service"
 	"gorm.io/gorm"
 )
 

@@ -3,8 +3,8 @@ package service
 import (
 	"log/slog"
 
-	"github.com/mauriciofsnts/bot/internal/models"
-	"github.com/mauriciofsnts/bot/internal/repository"
+	"github.com/mauriciofsnts/bot/internal/database/models"
+	"github.com/mauriciofsnts/bot/internal/database/repository"
 	"gorm.io/gorm"
 )
 

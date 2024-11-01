@@ -28,32 +28,30 @@ func init() {
 				},
 			},
 		},
-		Handler: handler,
+		Handler: func(ctx ctx.Context) *discord.MessageCreate {
+			args := ctx.Args
+
+			if len(args) == 0 {
+				return buildErrorResponse(ctx, "you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`")
+			}
+
+			var value string
+
+			switch args[0] {
+			case "cnpj":
+				value = generateCNPJ()
+			case "cpf":
+				value = generateCPF()
+			case "uuid":
+				value = generateUUID()
+			default:
+				return buildErrorResponse(ctx, "invalid type of information to generate. Available types: `cpf`, `uuid`, `cnpj`")
+			}
+
+			reply := ctx.Response.Reply(fmt.Sprintf("Generated %s", args[0]), value, nil)
+			return &reply
+		},
 	})
-}
-
-func handler(ctx ctx.Context) *discord.MessageCreate {
-	args := ctx.Args
-
-	if len(args) == 0 {
-		return buildErrorResponse(ctx, "you need to specify the type of information to generate. Available types: `cpf`, `uuid`, `cnpj`")
-	}
-
-	var value string
-
-	switch args[0] {
-	case "cnpj":
-		value = generateCNPJ()
-	case "cpf":
-		value = generateCPF()
-	case "uuid":
-		value = generateUUID()
-	default:
-		return buildErrorResponse(ctx, "invalid type of information to generate. Available types: `cpf`, `uuid`, `cnpj`")
-	}
-
-	reply := ctx.Response.Reply(fmt.Sprintf("Generated %s", args[0]), value, nil)
-	return &reply
 }
 
 func buildErrorResponse(ctx ctx.Context, message string) *discord.MessageCreate {

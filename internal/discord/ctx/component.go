@@ -3,7 +3,7 @@ package ctx
 import (
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/events"
-	"github.com/mauriciofsnts/bot/internal/models"
+	"github.com/mauriciofsnts/bot/internal/database/models"
 	"github.com/mauriciofsnts/bot/internal/providers"
 )
 
