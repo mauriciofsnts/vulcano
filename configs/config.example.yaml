@@ -30,3 +30,6 @@ shortener:
 
 news:
   newsapi_apikey: "your_newsapi_api_key_here"
+
+footballData:
+  apiKey: "your_football_data_api_key_here"

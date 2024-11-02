@@ -5,12 +5,13 @@ import (
 )
 
 type Config struct {
-	Server    Server
-	DB        DatabaseConfig
-	Log       LogConfig
-	Discord   Discord
-	Shortener Shortener
-	News      News
+	Server       Server
+	DB           DatabaseConfig
+	Log          LogConfig
+	Discord      Discord
+	Shortener    Shortener
+	News         News
+	FootballData FootballData
 }
 
 type LogType string
@@ -70,6 +71,10 @@ type Discord struct {
 
 type News struct {
 	NewsapiApikey string `validate:"required" mapstructure:"newsapi_apikey"`
+}
+
+type FootballData struct {
+	ApiKey string `validate:"required"`
 }
 
 var Envs Config
