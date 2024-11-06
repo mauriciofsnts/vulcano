@@ -1,63 +1,63 @@
 intro: >
-  "Hmph! Eu sou **Vulcano**. A sabedoria não é para ser desperdiçada. Estou aqui, mas só revelarei o que é necessário. Prepare-se para ouvir o que realmente importa."
+  "Bem-vindo! Eu sou o **Vulcano**, seu bot de ajuda neste servidor. Para utilizar meus comandos, use o prefixo **!** seguido do comando desejado. Por exemplo, para ver as últimas notícias, digite **!devto**. Para encurtar um link, use **!shorten**. Para listar todos os comandos disponíveis, digite __**!help**__.
+   **Alguns comandos podem exigir pontos para serem executados**. Esses pontos podem ser ganhos interagindo comigo e participando do servidor.
+   Para mais informações, acesse meu repositório no GitHub: [link do GitHub]. Boa sorte!"
 
 commands:
   devto:
     name: "devto"
-    description: "Revela as últimas notícias do site Dev.to."
-    reply: "Aqui estão as últimas notícias do Dev.to."
-    error: "Ocorreu um erro ao buscar as notícias do Dev.to. Tente novamente."
-
+    description: "Exibe as últimas notícias do site Dev.to."
+    reply: "Aqui estão as notícias mais recentes do Dev.to:"
+    error: "Ocorreu um erro ao buscar as notícias do Dev.to. Tente novamente mais tarde."
   tabnews:
     name: "tabnews"
     description: "Compartilha as últimas notícias do Tabnews."
-    reply: "Novidades do Tabnews surgiram."
+    reply: "Aqui estão as últimas notícias do Tabnews:"
     error: "Não consegui acessar as notícias do Tabnews. Tente novamente mais tarde."
-
   newsapi:
     name: "newsapi"
     description: "Fornece as últimas notícias do NewsAPI."
-    reply: "Aqui estão as últimas notícias."
-    error: "Um erro ocorreu ao buscar as últimas notícias do NewsAPI. Tente novamente."
-
+    reply: "Aqui estão as últimas notícias disponíveis:"
+    error: "Houve um problema ao buscar as notícias do NewsAPI. Tente novamente."
   balance:
     name: "balance"
     description: "Mostra quantos pontos o membro possui."
-    reply: "Você possui ${0} pontos."
-    error: "Não consegui calcular seus pontos."
-
+    reply: "Atualmente, você possui [points] pontos."
+    error: "Não foi possível verificar seus pontos. Verifique se você já interagiu comigo antes."
   uptime:
     name: "uptime"
     description: "Informa quanto tempo o bot está online e qual versão está em execução."
-    reply: "Estou online há ${0}. Versão: ${1}."
-    error: "Não consegui determinar quanto tempo estou aqui."
-
+    reply: "Estou online há [uptime] e estou rodando a versão [version]."
+    error: "Não foi possível determinar o tempo de atividade. Tente novamente."
   help:
     name: "help"
     description: "Lista todos os comandos disponíveis."
-    reply: "Aqui estão os comandos disponíveis."
-    error: "Não consegui listar os comandos disponíveis."
-
+    reply: "Aqui estão os comandos disponíveis:"
+    error: "Não consegui listar os comandos disponíveis. Tente novamente."
   services:
     name: "services"
     description: "Lista todos os serviços disponíveis."
-    reply: "Aqui estão meus projetos open source."
-    error: "Não consegui apresentar meus projetos open source."
-
+    reply: "Aqui estão alguns dos meus projetos open source:"
+    error: "Não consegui acessar meus projetos open source. Tente novamente."
   shorten:
     name: "shorten"
     description: "Encurta um link para facilitar o compartilhamento."
-    reply: "Aqui está o atalho que você pediu."
-    error: "Não consegui encurtar sua URL."
-
+    reply: "Aqui está o link encurtado:"
+    error: "Não consegui encurtar o link. Verifique se você forneceu um link válido."
   ping:
     name: "ping"
     description: "Verifica a latência do bot."
-    reply: "A latência atual é de ${0}ms."
-    error: "Não consegui responder ao seu chamado."
-
+    reply: "A latência atual é de [ping]ms."
+    error: "Não consegui responder ao seu ping. Tente novamente."
   generate:
     name: "generate"
     description: "Gera um item ou informação específica solicitada pelo usuário."
-    reply: "Aqui está o que você pediu: ${0}."
-    error: "Não consegui gerar o item solicitado."
+    reply: "Aqui está o item solicitado: [input]."
+    error: "Não consegui gerar o item solicitado. Verifique se você forneceu uma solicitação válida."
+
+events:
+  gamble:
+    name: "gamble"
+    error: "Ocorreu um erro ao processar sua aposta. Tente novamente."
+    victory: "Parabéns! Você venceu!"
+    defeat: "Você perdeu [número de pontos] pontos e será silenciado por [duração]. Boa sorte na próxima tentativa!"

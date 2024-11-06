@@ -1,65 +1,63 @@
 intro: >
-  "Hmph! Um novo campo de batalha se abriu! Eu sou **Vulcano**, o deus da forja e da transformação, e estou aqui para trazer sabedoria e força aos mortais que habitam este lugar. Que cada invocação seja digna de minha presença. Preparem-se, pois os ventos da mudança sopram, e eu sou a tempestade!
-   Para convocar meu poder, utilize o prefixo **!** seguido do comando desejado. Por exemplo, para buscar conhecimento sobre as últimas notícias, digite **!devto** e veja as revelações que trago. Se procura encurtar um link, clame por **!shorten** e veja o atalho se materializar diante de seus olhos. Para listar todos os comandos disponíveis, invoque __**!help**__.
-   **Alguns comandos requerem pontos para serem executados**. Esses pontos podem ser conquistados interagindo comigo, entrando em canais de voz e alcançando diferentes marcos em sua jornada. Não se esqueçam, a sabedoria é uma jornada contínua.
-   Para mais informações sobre minha essência e poder, acessem meu sagrado repositório no GitHub: [link do GitHub].
-   Que comecem as lutas e que o conhecimento os guie!"
+  "Bem-vindo! Eu sou o **Vulcano**, seu bot de ajuda neste servidor. Para utilizar meus comandos, use o prefixo **!** seguido do comando desejado. Por exemplo, para ver as últimas notícias, digite **!devto**. Para encurtar um link, use **!shorten**. Para listar todos os comandos disponíveis, digite __**!help**__.
+   **Alguns comandos podem exigir pontos para serem executados**. Esses pontos podem ser ganhos interagindo comigo e participando do servidor.
+   Para mais informações, acesse meu repositório no GitHub: [link do GitHub]. Boa sorte!"
 
 commands:
   devto:
     name: "devto"
-    description: "Revela as últimas notícias do site Dev.to."
-    reply: "Prepare-se para a sabedoria dos mortais! Aqui estão as mais recentes revelações do Dev.to. Que o conhecimento os guie!"
-    error: "Hmph! Ocorreu um erro ao buscar as notícias do Dev.to. Os ventos do destino não estavam a meu favor. Tente novamente!"
+    description: "Exibe as últimas notícias do site Dev.to."
+    reply: "Aqui estão as notícias mais recentes do Dev.to:"
+    error: "Ocorreu um erro ao buscar as notícias do Dev.to. Tente novamente mais tarde."
   tabnews:
     name: "tabnews"
     description: "Compartilha as últimas notícias do Tabnews."
-    reply: "Das profundezas do conhecimento, surgem as tábuas eternas! Aqui estão as novidades do Tabnews:"
-    error: "As tábuas eternas se tornaram opacas! Não consegui acessar as notícias do Tabnews. Tente novamente mais tarde."
+    reply: "Aqui estão as últimas notícias do Tabnews:"
+    error: "Não consegui acessar as notícias do Tabnews. Tente novamente mais tarde."
   newsapi:
     name: "newsapi"
     description: "Fornece as últimas notícias do NewsAPI."
-    reply: "Os pergaminhos antigos trazem sabedoria! Aqui estão as últimas notícias que devem ser conhecidas:"
-    error: "Os pergaminhos não estão disponíveis! Um erro ocorreu ao buscar as últimas notícias do NewsAPI. Tente novamente!"
+    reply: "Aqui estão as últimas notícias disponíveis:"
+    error: "Houve um problema ao buscar as notícias do NewsAPI. Tente novamente."
   balance:
     name: "balance"
     description: "Mostra quantos pontos o membro possui."
-    reply: "A essência vital flui dentro de você. Atualmente, você possui [points] pontos. Que sua jornada continue a enriquecer sua força!"
-    error: "Os números se ocultaram nas sombras! Não consegui calcular seus pontos. Verifique se você já interagiu comigo antes."
+    reply: "Atualmente, você possui [points] pontos."
+    error: "Não foi possível verificar seus pontos. Verifique se você já interagiu comigo antes."
   uptime:
     name: "uptime"
     description: "Informa quanto tempo o bot está online e qual versão está em execução."
-    reply: "A vigília divina se mantém! Estou aqui há [uptime] e sou a versão [version]. Que minha presença continue a iluminar suas jornadas!"
-    error: "A vigilância divina falhou! Não consegui determinar quanto tempo estou aqui. Tente novamente!"
+    reply: "Estou online há [uptime] e estou rodando a versão [version]."
+    error: "Não foi possível determinar o tempo de atividade. Tente novamente."
   help:
     name: "help"
     description: "Lista todos os comandos disponíveis."
-    reply: "A sabedoria oculta está ao seu alcance! Aqui estão os comandos que você pode invocar:"
-    error: "Os segredos da sabedoria estão perdidos! Não consegui listar os comandos disponíveis. Tente novamente!"
+    reply: "Aqui estão os comandos disponíveis:"
+    error: "Não consegui listar os comandos disponíveis. Tente novamente."
   services:
     name: "services"
     description: "Lista todos os serviços disponíveis."
-    reply: "As relíquias do conhecimento aguardam sua descoberta! Aqui estão alguns dos meus projetos open source:"
-    error: "As relíquias do conhecimento não estão acessíveis! Não consegui apresentar meus projetos open source. Tente novamente!"
+    reply: "Aqui estão alguns dos meus projetos open source:"
+    error: "Não consegui acessar meus projetos open source. Tente novamente."
   shorten:
     name: "shorten"
     description: "Encurta um link para facilitar o compartilhamento."
-    reply: "A magia dos mortais é poderosa! Aqui está o atalho que você tanto deseja:"
-    error: "O atalho se perdeu nas brumas! Não consegui encurtar sua URL. Verifique se você forneceu um link válido."
+    reply: "Aqui está o link encurtado:"
+    error: "Não consegui encurtar o link. Verifique se você forneceu um link válido."
   ping:
     name: "ping"
     description: "Verifica a latência do bot."
-    reply: "A presença divina responde! A latência atual é de [ping]ms. Que a conexão entre nós se mantenha forte!"
-    error: "A conexão com o divino falhou! Não consegui responder ao seu chamado. Tente novamente!"
+    reply: "A latência atual é de [ping]ms."
+    error: "Não consegui responder ao seu ping. Tente novamente."
   generate:
     name: "generate"
     description: "Gera um item ou informação específica solicitada pelo usuário."
-    reply: "Das profundezas do meu ser, um novo item surge! Aqui está o que você pediu: [input]. Que ele seja útil em sua jornada!"
-    error: "A forja divina falhou! Não consegui gerar o item solicitado. Verifique se você forneceu uma solicitação válida."
+    reply: "Aqui está o item solicitado: [input]."
+    error: "Não consegui gerar o item solicitado. Verifique se você forneceu uma solicitação válida."
 
 events:
   gamble:
     name: "gamble"
-    error: "Hmph! Um erro perturbou o equilíbrio do jogo! Não consegui processar sua aposta. Tente novamente e que os ventos do destino estejam a seu favor"
-    victory: "A sorte sorriu para você! Que sua vitória ressoe em todo o reino!"
-    defeat: "Infelizmente, o destino não sorriu para você desta vez. Você perdeu [número de pontos] pontos e será silenciado por [duração]. Que a sabedoria o guie nas próximas batalhas"
+    error: "Ocorreu um erro ao processar sua aposta. Tente novamente."
+    victory: "Parabéns! Você venceu!"
+    defeat: "Você perdeu [número de pontos] pontos e será silenciado por [duração]. Boa sorte na próxima tentativa!"
