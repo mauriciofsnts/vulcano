@@ -13,21 +13,23 @@ import (
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/disgoorg/disgo/gateway"
-	"github.com/mauriciofsnts/bot/internal/config"
 
+	"github.com/mauriciofsnts/bot/internal/config"
 	_ "github.com/mauriciofsnts/bot/internal/discord/commands"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+
+	eventHandler "github.com/mauriciofsnts/bot/internal/discord/events"
 )
 
 var StartedAt time.Time
 
-func Init() {
+func Init(cfg config.Config) {
 	slog.Debug("Initializing Bot...")
 	slog.Debug("Disgo version ", slog.String("version", disgo.Version))
-	slog.Debug("Commands prefix: ", slog.String("prefix", config.Envs.Discord.Prefix))
+	slog.Debug("Commands prefix: ", slog.String("prefix", cfg.Discord.Prefix))
 
 	// Initialize Discord
-	client, err := disgo.New(config.Envs.Discord.Token,
+	client, err := disgo.New(cfg.Discord.Token,
 		bot.WithGatewayConfigOpts(
 			gateway.WithIntents(
 				gateway.IntentGuilds,
@@ -39,7 +41,7 @@ func Init() {
 			),
 			gateway.WithPresenceOpts(gateway.WithListeningActivity("your bullshit", gateway.WithActivityState("lol")), gateway.WithOnlineStatus(discord.OnlineStatusDND)),
 		),
-		bot.WithEventListenerFunc(OnReadyEvent),
+		bot.WithEventListenerFunc(eventHandler.OnReadyEvent),
 	)
 
 	if err != nil {
@@ -49,25 +51,30 @@ func Init() {
 
 	client.AddEventListeners(&events.ListenerAdapter{
 		OnMessageCreate: func(event *events.MessageCreate) {
-			OnMessageCreatedEvent(event, client)
+			eventHandler.OnMessageCreatedEvent(event, client, cfg, StartedAt)
 		},
 		OnApplicationCommandInteraction: func(event *events.ApplicationCommandInteractionCreate) {
-			OnInteractionCreatedEvent(event, client)
+			eventHandler.OnInteractionCreatedEvent(event, client, StartedAt)
 		},
 		OnGuildChannelCreate: func(event *events.GuildChannelCreate) {
-			OnGuildChannelCreatedEvent(event, client)
+			eventHandler.OnGuildChannelCreatedEvent(event, client)
 		},
 		OnMessageReactionAdd: func(event *events.MessageReactionAdd) {
-			OnMessageReactionAddedEvent(event, client)
+			eventHandler.OnMessageReactionAddedEvent(event, client)
 		},
 		OnComponentInteraction: func(event *events.ComponentInteractionCreate) {
-			OnComponentInteractionEvent(event, client)
+			eventHandler.OnComponentInteractionEvent(event, client)
+		},
+		OnGuildVoiceJoin: func(event *events.GuildVoiceJoin) {
+		},
+		OnGuildReady: func(event *events.GuildReady) {
+			eventHandler.OnGuildReady(event)
 		},
 	})
 
 	defer client.Close(context.Background())
 
-	if config.Envs.Discord.SyncCommands {
+	if cfg.Discord.SyncCommands {
 		ctx.SyncSlashCommands(client)
 	}
 

@@ -30,15 +30,13 @@ var httpClient = &http.Client{
 	},
 }
 
-// Shortner takes a URL string and options for customizing the shortened URL,
+// Short takes a URL string and options for customizing the shortened URL,
 // sends a POST request to the endpoint with the URL and options as the payload,
 // and returns the shortened URL string and any error encountered.
 // The options parameter allows you to specify the keep alive duration in seconds and a custom slug for the shortened URL.
-func Shortner(url string, opts *Options) (string, error) {
+func Shortner(apiKey string, endpoint string, url string, opts *Options) (string, error) {
 	// thanks to pauloo27 for the shorten url service, give him a star
 	// https://github.com/pauloo27/shurl
-	endpoint := config.Envs.Shortener.Endpoint
-	apiKey := config.Envs.Shortener.ApiKey
 
 	payload := map[string]any{
 		"original_url": url,
@@ -92,4 +90,19 @@ func Shortner(url string, opts *Options) (string, error) {
 	}
 
 	return response.URL, nil
+}
+
+type URLShortener struct {
+	ShortURL func(url string, opts *Options) (string, error)
+}
+
+func New(cfg config.Config) URLShortener {
+	apiKey := cfg.Shortener.ApiKey
+	endpoint := cfg.Shortener.Endpoint
+
+	return URLShortener{
+		ShortURL: func(url string, opts *Options) (string, error) {
+			return Shortner(apiKey, endpoint, url, opts)
+		},
+	}
 }

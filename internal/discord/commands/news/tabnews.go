@@ -5,20 +5,22 @@ import (
 	"log/slog"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
+	"github.com/mauriciofsnts/bot/internal/database/models"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
+	"github.com/mauriciofsnts/bot/internal/providers"
 	"github.com/mauriciofsnts/bot/internal/providers/news"
-	"github.com/mauriciofsnts/bot/internal/providers/shorten"
-	"github.com/mauriciofsnts/bot/internal/providers/utils"
+	"github.com/mauriciofsnts/bot/internal/utils"
 )
 
 func init() {
 	ctx.RegisterCommand("tabnews", ctx.Command{
 		Name:        "tabnews",
 		Aliases:     []string{"tn", "tabnews"},
-		Description: "Get the latest news from the tabnews website",
+		Description: ctx.Translate().Commands.Tabnews.Description.Str(),
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionInt{
 				Name:        "page",
@@ -48,8 +50,8 @@ func init() {
 
 			messageBuilder := discord.NewMessageCreateBuilder()
 			embedBuilder := discord.NewEmbedBuilder().
-				SetTitle("Latest news from Tabnews").
-				SetDescription("Here are the latest news from the tabnews website").
+				SetTitle("Tabnews").
+				SetDescription(ctx.Translate().Commands.Tabnews.Reply.Str()).
 				SetColor(0xffffff).
 				SetFields(fields...).
 				SetFooter(fmt.Sprintf("Page %d", page), "")
@@ -70,57 +72,76 @@ func init() {
 
 			msg := messageBuilder.Build()
 
-			ctx.RegisterComponent(actionButtonId, createComponentState(page+1, cmd))
-			ctx.RegisterComponent(prevButtonId, createComponentState(page-1, cmd))
-			return &msg
+			createdMessage, err := cmd.Client.Rest().CreateMessage(cmd.TriggerEvent.ChannelId, msg)
+
+			if err != nil {
+				slog.Error("Error creating message", "err", err.Error())
+				return nil
+			}
+
+			providers.Services.GuildState.CreateComponentState(&models.GuildState{
+				GuildID:        cmd.TriggerEvent.GuildId.String(),
+				ComponentID:    actionButtonId,
+				AuthorID:       cmd.TriggerEvent.AuthorId.String(),
+				ChannelID:      cmd.TriggerEvent.ChannelId.String(),
+				MessageID:      createdMessage.ID.String(),
+				Command:        "tabnews",
+				State:          map[string]any{"page": page},
+				Ttl:            time.Now(),
+				EventTimestamp: cmd.TriggerEvent.EventTimestamp,
+			})
+
+			return nil
 		},
-	})
-}
+		ComponentHandler: func(event *events.ComponentInteractionCreate, context *ctx.ComponentState) {
+			actionButtonId := fmt.Sprintf("tabnews-next-%d", context.TriggerEvent.MessageId)
+			prevButtonId := fmt.Sprintf("tabnews-prev-%d", context.TriggerEvent.MessageId)
 
-func createComponentState(nextPage int, cmd ctx.Context) ctx.Component {
-	return ctx.Component{State: ctx.ComponentState{
-		TriggerEvent: cmd.TriggerEvent,
-		Client:       cmd.Client,
-		State:        []interface{}{nextPage},
-	}, Handler: func(event *events.ComponentInteractionCreate, state *ctx.ComponentState) {
-		page := state.State[0].(int)
-		fields, _ := fetchNews(page)
+			page := int(context.State["page"].(float64))
+			nextPageState := page
 
-		embedBuilder := discord.NewEmbedBuilder().
-			SetTitle("Latest news from Tabnews").
-			SetDescription("Here are the latest news from the tabnews website").
-			SetColor(0xffffff).
-			SetFooter(fmt.Sprintf("Page %d", page), "").
-			SetFields(fields...)
-		embed := embedBuilder.Build()
-		embeds := []discord.Embed{embed}
+			if event.ComponentInteraction.Data.CustomID() == prevButtonId {
+				nextPageState = max(page-1, 1)
+			} else {
+				nextPageState = page + 1
+			}
 
-		actionButtonId := fmt.Sprintf("tabnews-next-%d", cmd.TriggerEvent.MessageId)
-		prevButtonId := fmt.Sprintf("tabnews-prev-%d", cmd.TriggerEvent.MessageId)
+			fields, _ := fetchNews(nextPageState)
 
-		ctx.UpdateComponentState(actionButtonId, []interface{}{page + 1})
-		ctx.UpdateComponentState(prevButtonId, []interface{}{page - 1})
+			embedBuilder := discord.NewEmbedBuilder().
+				SetTitle("Tabnews").
+				SetDescription(ctx.Translate().Commands.Tabnews.Reply.Str()).
+				SetColor(0xffffff).
+				SetFooter(fmt.Sprintf("Page %d", nextPageState), "").
+				SetFields(fields...)
+			embed := embedBuilder.Build()
+			embeds := []discord.Embed{embed}
 
-		newActionRow := discord.NewActionRow()
-		newActionRow.AddComponents(discord.NewSecondaryButton("⬅️", prevButtonId), discord.NewSecondaryButton("➡️", actionButtonId))
+			providers.Services.GuildState.UpdateComponentState(context.TriggerEvent.MessageId.String(), map[string]any{"page": nextPageState})
 
-		components := discord.ActionRowComponent{
-			discord.NewSecondaryButton("➡️", actionButtonId),
-		}
-
-		if page > 1 {
-			components = discord.ActionRowComponent{
+			newActionRow := discord.NewActionRow()
+			newActionRow.AddComponents(
 				discord.NewSecondaryButton("⬅️", prevButtonId),
 				discord.NewSecondaryButton("➡️", actionButtonId),
+			)
+
+			components := discord.ActionRowComponent{
+				discord.NewSecondaryButton("➡️", actionButtonId),
 			}
-		}
 
-		event.UpdateMessage(discord.MessageUpdate{
-			Embeds:     &embeds,
-			Components: &[]discord.ContainerComponent{components},
-		})
+			if nextPageState > 1 {
+				components = discord.ActionRowComponent{
+					discord.NewSecondaryButton("⬅️", prevButtonId),
+					discord.NewSecondaryButton("➡️", actionButtonId),
+				}
+			}
 
-	}}
+			event.UpdateMessage(discord.MessageUpdate{
+				Embeds:     &embeds,
+				Components: &[]discord.ContainerComponent{components},
+			})
+		},
+	})
 }
 
 func fetchNews(page int) ([]discord.EmbedField, error) {
@@ -130,7 +151,7 @@ func fetchNews(page int) ([]discord.EmbedField, error) {
 		page = minPage
 	}
 
-	tnArticles, err := news.GetTnNews(page, 12)
+	tnArticles, err := providers.News.Tabnews(page, 12)
 
 	if err != nil {
 		return nil, err
@@ -141,11 +162,13 @@ func fetchNews(page int) ([]discord.EmbedField, error) {
 
 	for i, article := range tnArticles {
 		wg.Add(1)
-		go func(idx int, article news.TnArticle) {
+		go func(idx int, article news.TabnewsArticle) {
 			defer wg.Done()
-			shortenedUrl, err := shorten.Shortner(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
+			shortenedUrl, err := providers.Shorten.ShortURL(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
+
+			// TODO! Add fallback if the shortening service fails
 			if err != nil {
-				slog.Error("error shortening url: ", "err", err.Error())
+				slog.Error("Error shortening url: ", "err", err.Error())
 				return
 			}
 

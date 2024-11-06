@@ -9,16 +9,16 @@ func init() {
 	ctx.RegisterCommand("services", ctx.Command{
 		Name:        "services",
 		Aliases:     []string{"services"},
-		Description: "List of services available",
+		Description: ctx.Translate().Commands.Services.Description.Str(),
 		Options:     []discord.ApplicationCommandOption{},
-		Handler: func(ctx ctx.Context) *discord.MessageCreate {
+		Handler: func(context ctx.Context) *discord.MessageCreate {
 
 			fields := []discord.EmbedField{
 				{Name: "Squarefox", Value: "https://squarefox.digital/"},
 				{Name: "Website", Value: "https://mrtz.dev/"},
 			}
 
-			reply := ctx.Response.Reply("Services", "Here is a list of services available", fields)
+			reply := context.Response.Reply("Services", string(ctx.Translate().Commands.Services.Reply.Str()), fields)
 			return &reply
 		},
 	})
