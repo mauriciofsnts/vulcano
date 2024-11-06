@@ -29,7 +29,7 @@ var (
 
 func loadLanguage(lang EnumLanguage) error {
 
-	fileName := "internal/i18n/languages/" + string(lang) + ".yaml"
+	fileName := fmt.Sprintf("internal/i18n/languages/%s.yaml", lang)
 
 	data, err := os.ReadFile(fileName)
 
