@@ -24,14 +24,15 @@ type GenerateCommand struct {
 }
 
 type Commands struct {
-	Devto    Command
-	Tabnews  Command
-	Newsapi  Command
-	Balance  Command
-	Uptime   Command
-	Help     Command
-	Services Command
-	Shorten  Command
-	Ping     Command
-	Generate GenerateCommand
+	Devto       Command
+	Tabnews     Command
+	Newsapi     Command
+	Balance     Command
+	Uptime      Command
+	Help        Command
+	Services    Command
+	Shorten     Command
+	Ping        Command
+	Brasileirao Command
+	Generate    GenerateCommand
 }

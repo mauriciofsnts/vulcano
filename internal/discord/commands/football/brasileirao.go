@@ -14,7 +14,7 @@ func init() {
 	ctx.RegisterCommand("brasileirao", ctx.Command{
 		Name:        "brasileirao",
 		Aliases:     []string{"brasileirao", "br"},
-		Description: ctx.Translate().Commands.Ping.Description.Str(),
+		Description: ctx.Translate().Commands.Brasileirao.Description.Str(),
 		Options:     []discord.ApplicationCommandOption{},
 		Handler: func(context ctx.Context) *discord.MessageCreate {
 			today := time.Now().Format("2006-01-02")
@@ -40,7 +40,7 @@ func init() {
 			messageBuilder := discord.NewMessageCreateBuilder()
 			embedBuilder := discord.NewEmbedBuilder().
 				SetTitle(fmt.Sprintf("Brasileirão %s / %s", today, lastSundayOfTheWeek)).
-				SetDescription("Partidas da semana").
+				SetDescription(ctx.Translate().Commands.Brasileirao.Reply.Str()).
 				SetColor(0xffffff).
 				SetFields(fields...)
 			embed := embedBuilder.Build()

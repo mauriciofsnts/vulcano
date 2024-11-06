@@ -54,6 +54,11 @@ commands:
     description: "Gera um item ou informação específica solicitada pelo usuário."
     reply: "Aqui está o item solicitado: [input]."
     error: "Não consegui gerar o item solicitado. Verifique se você forneceu uma solicitação válida."
+  brasileirao:
+    name: "brasileirao"
+    description: "Exibe os jogos da semana do Campeonato Brasileiro."
+    reply: "Aqui estão os jogos da semana do Campeonato Brasileiro:"
+    error: "Não consegui acessar os jogos do Campeonato Brasileiro. Tente novamente mais tarde."
 
 events:
   gamble:
