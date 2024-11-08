@@ -9,6 +9,7 @@ COPY go.sum .
 COPY Makefile .
 
 COPY internal internal
+COPY assets assets
 COPY cmd cmd
 
 RUN make dist
