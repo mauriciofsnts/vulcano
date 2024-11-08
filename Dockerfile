@@ -3,25 +3,26 @@ FROM golang:1.22 as builder
 # STAGE: BUILD
 
 WORKDIR /app
- 
+
 COPY go.mod .
 COPY go.sum .
 COPY Makefile .
- 
+
 COPY internal internal
 COPY cmd cmd
- 
+
 RUN make dist
 
 # STAGE: TARGET
 
-FROM alpine:latest 
+FROM alpine:latest
 
 RUN addgroup -S user && adduser -S user -G user
 
 USER user
 
-WORKDIR /app 
+WORKDIR /app
 COPY --from=builder /app/bot /app/bot
+COPY --from=builder /app/assets /app/assets
 
 ENTRYPOINT ["/app/bot"]
