@@ -6,16 +6,16 @@ build:
 	go build -v -o $(BINARY_NAME) ./cmd/$(BINARY_NAME)
 
 .PHONY: dist
-dist: 
-	CGO_ENABLED=0 go build -gcflags=all=-l -v -ldflags="-w -s" -o $(BINARY_NAME) ./cmd/$(BINARY_NAME)
+dist:
+	CGO_ENABLED=1 go build -gcflags=all=-l -v -ldflags="-w -s" -o $(BINARY_NAME) ./cmd/$(BINARY_NAME)
 
 .PHONY: run
 run: build
-	./$(BINARY_NAME) 
+	./$(BINARY_NAME)
 
 .PHONY: test
-test: 
-	$(TEST_COMMAND) -cover -parallel 5 -failfast  ./... 
+test:
+	$(TEST_COMMAND) -cover -parallel 5 -failfast  ./...
 
 .PHONY: tidy
 tidy:
