@@ -7,7 +7,7 @@ build:
 
 .PHONY: dist
 dist:
-	CGO_ENABLED=1 go build -gcflags=all=-l -v -ldflags="-w -s" -o $(BINARY_NAME) ./cmd/$(BINARY_NAME)
+	CGO_ENABLED=0 go build -gcflags=all=-l -v -ldflags="-w -s" -o $(BINARY_NAME) ./cmd/$(BINARY_NAME)
 
 .PHONY: run
 run: build
