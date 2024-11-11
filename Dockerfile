@@ -3,7 +3,6 @@ FROM golang:1.23 AS builder
 
 WORKDIR /app
 
-
 COPY go.mod .
 COPY go.sum .
 COPY Makefile .
@@ -17,7 +16,7 @@ RUN go mod download
 RUN make dist
 
 # STAGE: TARGET
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 RUN addgroup --system bot && adduser --system --ingroup bot bot
 
