@@ -32,11 +32,9 @@ func (r *GuildMemberService) EnsureMemberValidity(guildID, userID string) error 
 	err := r.repository.GetGuildMemberByGuildIDAndUserID(guildID, userID, &member)
 
 	if err != nil {
-		if err := r.repository.GetGuildMemberByUserID(userID, &member); err != nil {
-			member.GuildID = guildID
-			member.MemberID = userID
-			return r.repository.Create(&member)
-		}
+		member.GuildID = guildID
+		member.MemberID = userID
+		return r.repository.Create(&member)
 	}
 
 	return nil

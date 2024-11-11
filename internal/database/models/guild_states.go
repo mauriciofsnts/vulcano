@@ -14,7 +14,7 @@ type GuildState struct {
 	ChannelID      string         `json:"channel_id"`
 	MessageID      string         `json:"message_id"`
 	EventTimestamp time.Time      `json:"event_timestamp"`
-	Command        string         `json:"command"` // Command name, e.g. "ping"
+	Command        string         `json:"command"`
 	State          map[string]any `json:"state" gorm:"serializer:json"`
 	Ttl            time.Time      `json:"ttl"`
 }

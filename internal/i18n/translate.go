@@ -2,7 +2,6 @@ package i18n
 
 import (
 	"fmt"
-	"log/slog"
 	"os"
 	"strings"
 
@@ -54,7 +53,7 @@ func init() {
 
 	for _, lang := range Languages {
 		if err := loadLanguage(lang); err != nil {
-			slog.Error("Failed to load languages: ", err)
+			panic(fmt.Errorf("error loading language %s: %v", lang, err))
 		}
 	}
 

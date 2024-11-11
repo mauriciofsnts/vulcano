@@ -9,7 +9,7 @@ db:
   #   port: 5432
   #   user: 'admin'
   #   password: 'admin'
-  #   dbname: 'test'
+  #   database: 'test'
   sqlite:
     path: './db.sqlite'
 

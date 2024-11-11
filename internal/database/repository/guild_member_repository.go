@@ -23,5 +23,5 @@ func (r *GuildMemberRepository) GetGuildMemberByGuildIDAndUserID(
 	guildID, userID string,
 	entity *models.GuildMember,
 ) error {
-	return r.db.Where("guild_id = ? AND member_id = ?", guildID, userID).Find(entity).Error
+	return r.db.Where(&models.GuildMember{GuildID: guildID, MemberID: userID}).First(entity).Error
 }
