@@ -18,6 +18,10 @@ RUN make dist
 # STAGE: TARGET
 FROM debian:bookworm-slim
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN addgroup --system bot && adduser --system --ingroup bot bot
 
 USER bot
