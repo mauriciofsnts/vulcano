@@ -17,8 +17,7 @@ RUN go mod download
 RUN make dist
 
 # STAGE: TARGET
-
-FROM alpine:3
+FROM debian:bullseye-slim
 
 RUN addgroup -S bot && adduser -S bot -G bot
 
