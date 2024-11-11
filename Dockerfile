@@ -19,7 +19,7 @@ RUN make dist
 # STAGE: TARGET
 FROM debian:bullseye-slim
 
-RUN addgroup -S bot && adduser -S bot -G bot
+RUN addgroup --system bot && adduser --system --ingroup bot bot
 
 USER bot
 
