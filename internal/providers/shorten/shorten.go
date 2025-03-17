@@ -3,6 +3,7 @@ package shorten
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"time"
@@ -81,6 +82,10 @@ func Shortner(apiKey string, endpoint string, url string, opts *Options) (string
 
 	if err != nil {
 		return "", err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return "", errors.New(string(body))
 	}
 
 	var response Response
