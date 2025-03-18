@@ -31,7 +31,7 @@ func Bootstrap(cfg config.Config) {
 		os.Exit(1)
 	}
 
-	providers.New(db, cfg)
+	providers.New(cfg, db)
 
 	go server.StartHttpServer()
 	discord.Init(cfg)

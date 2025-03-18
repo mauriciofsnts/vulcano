@@ -17,7 +17,7 @@ var (
 	Football footballdata.FootballDataProvider
 )
 
-func New(db *gorm.DB, cfg config.Config) {
+func New(cfg config.Config, db *gorm.DB) {
 	DB = db
 	Shorten = shorten.New(cfg)
 	News = news.New(cfg)

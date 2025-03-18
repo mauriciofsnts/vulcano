@@ -28,14 +28,14 @@ func GetNextHoliday() (string, error) {
 	bytes, err := io.ReadAll(holidayList)
 
 	if err != nil {
-		slog.Error("Error reading holidays file", err)
+		slog.Error("Error reading holidays file", "error", err)
 		return "", err
 	}
 
 	var holidays []Holiday
 
 	if err := json.Unmarshal(bytes, &holidays); err != nil {
-		slog.Error("Error parsing holidays file", err)
+		slog.Error("Error parsing holidays file", "error", err)
 		return "", err
 	}
 
@@ -45,7 +45,7 @@ func GetNextHoliday() (string, error) {
 		date, err := time.Parse("02/01", holiday.Date)
 
 		if err != nil {
-			slog.Error("Error parsing date", err)
+			slog.Error("Error parsing date", "error", err)
 			return "", err
 		}
 

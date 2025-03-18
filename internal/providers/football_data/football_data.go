@@ -1,12 +1,11 @@
 package footballdata
 
 import (
-	"encoding/json"
 	"fmt"
 	"log/slog"
-	"net/http"
 	"time"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/mauriciofsnts/bot/internal/config"
 )
 
@@ -87,41 +86,20 @@ type MatchesResponse struct {
 	Matches []Matches `json:"matches"`
 }
 
-// Helper function to make HTTP requests and parse the response
-func fetchAndDecode(url string, target interface{}, apiKey string) error {
-	req, err := http.NewRequest("GET", url, nil)
-
-	if err != nil {
-		return err
-	}
-
-	req.Header.Set("X-Auth-Token", apiKey)
-	res, err := http.DefaultClient.Do(req)
-
-	if err != nil {
-		return err
-	}
-
-	defer res.Body.Close()
-
-	if res.StatusCode != http.StatusOK {
-		return fmt.Errorf("unexpected status code: %d", res.StatusCode)
-	}
-
-	return json.NewDecoder(res.Body).Decode(target)
-}
-
-func GetMatches(dateFrom string, dateTo string, competitions int, apiKey string) ([]Matches, error) {
+func GetMatches(dateFrom, dateTo string, competitions int, apiKey string) ([]Matches, error) {
 	url := fmt.Sprintf("https://api.football-data.org/v4/matches/?dateFrom=%s&dateTo=%s&competitions=%d", dateFrom, dateTo, competitions)
-	// /v4/matches/?dateFrom=2024-11-03&dateTo=2024-11-09&competitions=2013
 	slog.Info("Fetching matches", "url", url)
 
-	var response MatchesResponse
+	client := resty.New()
 
-	err := fetchAndDecode(url, &response, apiKey)
+	var response MatchesResponse
+	_, err := client.R().
+		SetHeader("X-Auth-Token", apiKey).
+		SetResult(&response).
+		Get(url)
 
 	if err != nil {
-		slog.Info("Error fetching matches", "error", err.Error())
+		slog.Error("Error fetching matches", "error", err.Error())
 		return nil, err
 	}
 
