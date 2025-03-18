@@ -1,0 +1,91 @@
+name: vulcano
+
+repos:
+  - name: dbcafe-base
+    url: https://code.db.cafe/api/packages/dbcafe/helm
+
+installs:
+  - name: vulcano
+    chart: dbcafe-base/public-app
+    values:
+      image:
+        repository: ghcr.io/mauriciofsnts/vulcano
+        pullPolicy: IfNotPresent
+        tag: { { .Data.Tag | orDefault .Ref } }
+
+      secrets:
+        - name: vulcano-config-secret
+          type: Opaque
+          data:
+            config.yaml: |
+              server:
+                port: '8080'
+
+              db:
+                type: postgres
+                migrate: true
+                postgres:
+                  host: {{ .Project.Secrets.POSTGRES_HOST }}
+                  user: {{ .Project.Secrets.POSTGRES_USER }}
+                  password: {{ .Project.Secrets.POSTGRES_PASSWORD }}
+                  port: 5432
+                  database: 'vulcano'
+
+              discord:
+                token: {{ .Project.Secrets.DISCORD_TOKEN }}
+                guildID: {{ .Project.Secrets.DISCORD_GUILDID }}
+                syncCommands: true
+                prefix: '.'
+
+              shortener:
+                endpoint: 'https://url.db.cafe/api/v1/links'
+                apiKey: {{ .Project.Secrets.SHORTENER_APIKEY }}
+
+              news:
+                apiKey: {{ .Project.Secrets.NEWSAPI_APIKEY }}
+
+              footballData:
+                apiKey: {{ .Project.Secrets.FOOTBALLDATA_APIKEY }}
+
+
+      volumes:
+        - name: vulcano-config-volume
+          secret:
+            secretName: vulcano-config-secret
+            defaultMode: 420
+
+      volumeMounts:
+        - name: vulcano-config-volume
+          mountPath: /app/configs/config.yaml
+          subPath: config.yaml
+          readOnly: true
+
+      podAnnotations:
+        # to ensure the pod is restarted even if only the config was changed
+        rollme: "{{ randomUUID }}"
+
+      service:
+        type: ClusterIP
+        port: 8080
+
+      ingress:
+        enabled: true
+        host: vulcano.mrzt.dev
+
+      livenessProbe:
+        httpGet:
+          path: /health
+          port: 8080
+        initialDelaySeconds: 10
+        periodSeconds: 30
+      readinessProbe:
+        httpGet:
+          path: /health
+          port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 5
+
+envs:
+  - name: master
+    namespace: vulcano
+    branch: master

@@ -31,6 +31,11 @@ jobs:
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
 
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          echo "COMMIT_SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -39,9 +44,12 @@ jobs:
           push: true
           tags: ghcr.io/mauriciofsnts/vulcano:${{ github.ref_name }}
 
-      - name: Rollout deployment using k7z
-        uses: pauloo27/k7z-rollout@master
+      - name: Upgrade install
+        uses: pauloo27/k7z-upgrade@v1.1.0
         with:
-          base_url: ${{ secrets.KZ7_BASE_URL }}
-          project_id: vulcano
-          secret: ${{ secrets.K7Z_SECRET }}
+          base_url: https://k7z.mrzt.dev/api/v0
+          team_name: main
+          project_name: itsme
+          api_key: ${{ secrets.K7Z_SECRET }}
+          ref: ${{ github.ref_name }}
+          data: '{"Tag":"${{ env.COMMIT_SHORT_SHA }}"}'

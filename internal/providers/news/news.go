@@ -127,7 +127,7 @@ type NewsProvider struct {
 func New(cfg config.Config) NewsProvider {
 	return NewsProvider{
 		NewsApi: func(page int) ([]NewsApiArticle, error) {
-			return GetFromNewsAPI(cfg.News.NewsapiApikey, page)
+			return GetFromNewsAPI(cfg.News.ApiKey, page)
 		},
 		Tabnews: GetFromTabnews,
 		Devto:   GetFromDevto,

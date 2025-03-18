@@ -1,6 +1,6 @@
 # Server Configuration
 server:
-  port: ":8080"  # Port the server will listen on (e.g., ":8080", ":3000")
+  port: "8080"  # Port the server will listen on (e.g., "8080", "3000")
 
 # Database Configuration
 db:
@@ -40,7 +40,7 @@ shortener:
 
 # News API Configuration
 news:
-  newsapi_apikey: "YOUR_NEWSAPI_API_KEY"
+  apiKey: "YOUR_NEWSAPI_API_KEY"
 
 # Football Data API Configuration
 footballData:

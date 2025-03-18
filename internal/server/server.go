@@ -39,7 +39,7 @@ func StartHttpServer() {
 	err := run()
 
 	if err != nil {
-		slog.Error("Failed to start HTTP server: ", err)
+		slog.Error("Failed to start HTTP server: ", "error", err)
 		panic(err)
 	}
 }

@@ -45,6 +45,7 @@ func init() {
 				value = generateCPF(ctx.Translate())
 			case "uuid":
 				value = generateUUID()
+
 			default:
 				return buildErrorResponse(data, string(ctx.Translate().Commands.Generate.ParamError))
 			}

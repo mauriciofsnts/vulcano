@@ -70,7 +70,7 @@ type Discord struct {
 }
 
 type News struct {
-	NewsapiApikey string `validate:"required" mapstructure:"newsapi_apikey"`
+	ApiKey string `validate:"required" mapstructure:"newsapi_apikey"`
 }
 
 type FootballData struct {
