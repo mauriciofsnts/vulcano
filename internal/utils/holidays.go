@@ -19,7 +19,7 @@ func GetNextHoliday() (string, error) {
 	holidayList, err := os.Open("./internal/providers/utils/holidays.json")
 
 	if err != nil {
-		slog.Error("Error opening holidays file", err)
+		slog.Error("Error opening holidays file", "error", err)
 		return "", err
 	}
 

@@ -44,13 +44,13 @@ func (r *GuildMemberService) IncrementMessageCount(guildID, userID string) {
 	var member models.GuildMember
 
 	if err := r.repository.GetGuildMemberByGuildIDAndUserID(guildID, userID, &member); err != nil {
-		slog.Error("Error getting member: %v", err)
+		slog.Error("Error getting member: %v", "error", err)
 		return
 	}
 
 	member.MessageCount++
 	if err := r.repository.Update(&member); err != nil {
-		slog.Error("Error updating member: %v", err)
+		slog.Error("Error updating member: %v", "error", err)
 	}
 }
 
@@ -58,13 +58,13 @@ func (r *GuildMemberService) IncrementCommandCount(guildID, userID string) {
 	var member models.GuildMember
 
 	if err := r.repository.GetGuildMemberByGuildIDAndUserID(guildID, userID, &member); err != nil {
-		slog.Error("Error getting member: %v", err)
+		slog.Error("Error getting member: %v", "error", err)
 		return
 	}
 
 	member.CommandCount++
 	if err := r.repository.Update(&member); err != nil {
-		slog.Error("Error updating member: %v", err)
+		slog.Error("Error updating member: %v", "error", err)
 	}
 }
 
