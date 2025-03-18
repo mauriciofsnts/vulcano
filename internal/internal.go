@@ -33,6 +33,6 @@ func Bootstrap(cfg config.Config) {
 
 	providers.New(cfg, db)
 
-	go server.StartHttpServer()
+	go server.StartHttpServer(cfg)
 	discord.Init(cfg)
 }

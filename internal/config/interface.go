@@ -28,7 +28,7 @@ type LogConfig struct {
 	ShowSource bool
 }
 type Server struct {
-	Port string `validate:"required"`
+	Port int16 `validate:"required"`
 }
 
 type DatabaseType string

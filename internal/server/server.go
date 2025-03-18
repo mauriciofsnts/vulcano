@@ -11,7 +11,7 @@ import (
 	"github.com/mauriciofsnts/bot/internal/config"
 )
 
-func run() error {
+func run(port int16) error {
 	slog.Info("Starting HTTP server...")
 
 	r := chi.NewRouter()
@@ -27,16 +27,16 @@ func run() error {
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		Handler:      r,
-		Addr:         fmt.Sprintf(":%s", config.Envs.Server.Port),
+		Addr:         fmt.Sprintf(":%d", port),
 	}
 
-	slog.Info("HTTP server started on port " + config.Envs.Server.Port)
+	slog.Info("HTTP server started on port ", "port", port)
 
 	return server.ListenAndServe()
 }
 
-func StartHttpServer() {
-	err := run()
+func StartHttpServer(cfg config.Config) {
+	err := run(cfg.Server.Port)
 
 	if err != nil {
 		slog.Error("Failed to start HTTP server: ", "error", err)
