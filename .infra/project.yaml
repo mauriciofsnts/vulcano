@@ -22,7 +22,7 @@ installs:
                 port: '8080'
 
               db:
-                type: postgres
+                type: 'postgres'
                 migrate: true
                 postgres:
                   host: {{ .Project.Secrets.POSTGRES_HOST }}
