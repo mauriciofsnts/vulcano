@@ -1,7 +1,7 @@
 intro: >
-  "Bem-vindo! Eu sou o **Vulcano**, seu bot de ajuda neste servidor. Para utilizar meus comandos, use o prefixo **!** seguido do comando desejado. Por exemplo, para ver as últimas notícias, digite **!devto**. Para encurtar um link, use **!shorten**. Para listar todos os comandos disponíveis, digite __**!help**__.
+  "Bem-vindo! Eu sou o **Vulcano**, seu bot de ajuda neste servidor. Para utilizar meus comandos, use o prefixo **.** seguido do comando desejado. Por exemplo, para ver as últimas notícias, digite **.devto**. Para encurtar um link, use **.shorten**. Para listar todos os comandos disponíveis, digite __**.help**__.
    **Alguns comandos podem exigir pontos para serem executados**. Esses pontos podem ser ganhos interagindo comigo e participando do servidor.
-   Para mais informações, acesse meu repositório no GitHub: [link do GitHub]. Boa sorte!"
+   Para mais informações, acesse meu repositório no GitHub: https://github.com/mauriciofsnts/vulcano. Boa sorte!"
 
 commands:
   devto:
@@ -22,12 +22,12 @@ commands:
   balance:
     name: "balance"
     description: "Mostra quantos pontos o membro possui."
-    reply: "Atualmente, você possui [points] pontos."
+    reply: "Atualmente, você possui ${0} pontos."
     error: "Não foi possível verificar seus pontos. Verifique se você já interagiu comigo antes."
   uptime:
     name: "uptime"
     description: "Informa quanto tempo o bot está online e qual versão está em execução."
-    reply: "Estou online há [uptime] e estou rodando a versão [version]."
+    reply: "Estou online há ${0} e estou rodando a versão ${1}."
     error: "Não foi possível determinar o tempo de atividade. Tente novamente."
   help:
     name: "help"
@@ -47,13 +47,16 @@ commands:
   ping:
     name: "ping"
     description: "Verifica a latência do bot."
-    reply: "A latência atual é de [ping]ms."
+    reply: "A latência atual é de ${0}ms."
     error: "Não consegui responder ao seu ping. Tente novamente."
   generate:
     name: "generate"
     description: "Gera um item ou informação específica solicitada pelo usuário."
-    reply: "Aqui está o item solicitado: [input]."
+    reply: "Aqui está o item solicitado: ${0}."
     error: "Não consegui gerar o item solicitado. Verifique se você forneceu uma solicitação válida."
+    paramError: "Você deve fornecer um tipo válido para gerar um item. Por exemplo, para gerar um rg aleatório, digite **.generate rg**."
+    withMask: "Com máscara: ```${0}```\nSem Máscara: ```${1}```"
+    options: "Tipos disponíveis: `cpf`, `uuid`, `cnpj`"
   brasileirao:
     name: "brasileirao"
     description: "Exibe os jogos da semana do Campeonato Brasileiro."
@@ -65,4 +68,7 @@ events:
     name: "gamble"
     error: "Ocorreu um erro ao processar sua aposta. Tente novamente."
     victory: "Parabéns! Você venceu!"
-    defeat: "Você perdeu [número de pontos] pontos e será silenciado por [duração]. Boa sorte na próxima tentativa!"
+    defeat: "Você perdeu ${0} pontos e será silenciado por ${1}. Boa sorte na próxima tentativa!"
+
+global:
+  lessThatAMinute: "Menos de um minuto"

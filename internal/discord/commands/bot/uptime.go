@@ -18,7 +18,7 @@ func init() {
 		Options:     []discord.ApplicationCommandOption{},
 		Handler: func(context ctx.Context) *discord.MessageCreate {
 			uptime := time.Since(context.BotStartAt)
-			msg := i18n.Replace(ctx.Translate().Commands.Ping.Reply.Str(), durationAsText(uptime))
+			msg := i18n.Replace(ctx.Translate().Commands.Uptime.Reply.Str(), durationAsText(uptime), "v0")
 			reply := context.Response.Reply("Uptime", msg, nil)
 			return &reply
 		},
@@ -27,8 +27,9 @@ func init() {
 
 func durationAsText(duration time.Duration) string {
 	seconds := int(duration.Seconds())
+
 	if seconds < 60 {
-		return "less than a minute"
+		return strings.ToLower(ctx.Translate().Global.LessThatAMinute.Str())
 	}
 
 	days := seconds / 86400

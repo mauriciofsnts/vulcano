@@ -28,7 +28,7 @@ func ReplyErr(
 
 	embedBuilder := discord.NewEmbedBuilder()
 	embedBuilder.
-		SetTitle("An error occurred").
+		SetTitle("Error").
 		SetDescription(err.Error()).
 		SetColor(0xff0000)
 

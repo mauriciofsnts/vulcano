@@ -20,7 +20,7 @@ func init() {
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionString{
 				Name:        "option",
-				Description: "Available types: `cpf`, `uuid`, `cnpj`",
+				Description: ctx.Translate().Commands.Generate.Options.Str(),
 				Required:    true,
 				Choices: []discord.ApplicationCommandOptionChoiceString{
 					{Name: "CPF", Value: "cpf"},
@@ -40,9 +40,9 @@ func init() {
 
 			switch args[0] {
 			case "cnpj":
-				value = generateCNPJ()
+				value = generateCNPJ(ctx.Translate())
 			case "cpf":
-				value = generateCPF()
+				value = generateCPF(ctx.Translate())
 			case "uuid":
 				value = generateUUID()
 			default:
@@ -62,7 +62,7 @@ func buildErrorResponse(ctx ctx.Context, message string) *discord.MessageCreate 
 	return &reply
 }
 
-func generateCNPJ() string {
+func generateCNPJ(t i18n.Language) string {
 	cnpj := utils.GenerateCNPJ()
 	cnpjMaskRe := regexp.MustCompile(`^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$`)
 	components := cnpjMaskRe.FindStringSubmatch(cnpj)
@@ -70,10 +70,10 @@ func generateCNPJ() string {
 		"%s.%s.%s/%s-%s",
 		components[1], components[2], components[3], components[4], components[5],
 	)
-	return fmt.Sprintf("With mask: ```%s```\nWithout mask: ```%s```", cnpj, maskedCNPJ)
+	return i18n.Replace(t.Commands.Generate.WithMask.Str(), cnpj, maskedCNPJ)
 }
 
-func generateCPF() string {
+func generateCPF(t i18n.Language) string {
 	cpf := utils.GenerateCPF()
 	cpfMaskRe := regexp.MustCompile(`^(\d{3})(\d{3})(\d{3})(\d{2})$`)
 	components := cpfMaskRe.FindStringSubmatch(cpf)
@@ -81,7 +81,7 @@ func generateCPF() string {
 		"%s.%s.%s-%s",
 		components[1], components[2], components[3], components[4],
 	)
-	return fmt.Sprintf("With mask: ```%s```\nWithout mask: ```%s```", cpf, maskedCPF)
+	return i18n.Replace(t.Commands.Generate.WithMask.Str(), cpf, maskedCPF)
 }
 
 func generateUUID() string {

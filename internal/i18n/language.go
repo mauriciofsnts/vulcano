@@ -9,6 +9,7 @@ func (l LanguageEntry) Str(args ...interface{}) string {
 type Language struct {
 	Commands Commands
 	Intro    string
+	Global   Global
 }
 
 type Command struct {
@@ -18,9 +19,18 @@ type Command struct {
 	Error       LanguageEntry
 }
 
+type Event struct {
+	Name    LanguageEntry
+	Error   LanguageEntry
+	Victory LanguageEntry
+	Defeat  LanguageEntry
+}
+
 type GenerateCommand struct {
 	Command
-	ParamError LanguageEntry
+	ParamError LanguageEntry `yaml:"paramError"`
+	WithMask   LanguageEntry `yaml:"withMask"`
+	Options    LanguageEntry `yaml:"options"`
 }
 
 type Commands struct {
@@ -35,4 +45,8 @@ type Commands struct {
 	Ping        Command
 	Brasileirao Command
 	Generate    GenerateCommand
+}
+
+type Global struct {
+	LessThatAMinute LanguageEntry `yaml:"less_than_a_minute"`
 }

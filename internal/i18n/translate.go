@@ -21,14 +21,12 @@ func newLanguageEnum(key EnumLanguage) EnumLanguage {
 }
 
 var (
-	LanguageBanshee = newLanguageEnum("banshee")
-	LanguageSage    = newLanguageEnum("sage")
-	LanguageFenix   = newLanguageEnum("fenix")
+	LanguagePortuguese = newLanguageEnum("default")
 )
 
 func loadLanguage(lang EnumLanguage) error {
 
-	fileName := fmt.Sprintf("assets/languages/%s.yaml", lang)
+	fileName := "assets/lang.yaml"
 
 	data, err := os.ReadFile(fileName)
 
@@ -63,7 +61,7 @@ func GetLanguage(lang EnumLanguage) *Language {
 	language, found := languageMap[lang]
 
 	if !found {
-		language = languageMap[LanguageFenix]
+		language = languageMap[LanguagePortuguese]
 	}
 
 	return language
