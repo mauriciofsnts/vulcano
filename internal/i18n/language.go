@@ -52,4 +52,5 @@ type Global struct {
 	Uptime          LanguageEntry
 	Latency         LanguageEntry
 	Database        LanguageEntry
+	Shortener       LanguageEntry
 }

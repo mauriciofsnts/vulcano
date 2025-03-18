@@ -54,7 +54,7 @@ commands:
     description: "Gera um item ou informação específica solicitada pelo usuário."
     reply: "Aqui está o item solicitado: ${0}."
     error: "Não consegui gerar o item solicitado. Verifique se você forneceu uma solicitação válida."
-    paramError: "Você deve fornecer um tipo válido para gerar um item. Por exemplo, para gerar um rg aleatório, digite **.generate rg**."
+    paramError: "Você deve fornecer um tipo válido para gerar um item. Tipos permitidos: CPF, RG, UUID. Por exemplo, para gerar um RG aleatório, digite **.generate rg**."
     withMask: "Com máscara: ```${0}```\nSem Máscara: ```${1}```"
     options: "Tipos disponíveis: `cpf`, `uuid`, `cnpj`"
   brasileirao:

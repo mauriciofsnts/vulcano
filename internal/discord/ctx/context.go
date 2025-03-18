@@ -36,8 +36,8 @@ type CommandExecutionContext struct {
 }
 
 type Response struct {
-	Reply    func(title string, description string, fields []discord.EmbedField) discord.MessageCreate
-	ReplyErr func(err error) discord.MessageCreate
+	BuildDefaultEmbedMessage func(title string, description string, fields []discord.EmbedField) discord.MessageCreate
+	BuildDefaultErrorMessage func(err error) discord.MessageCreate
 }
 
 func Execute(
@@ -56,7 +56,7 @@ func Execute(
 		Args:         args,
 		BotStartAt:   botStartAt,
 		Client:       client,
-		Response:     Response{Reply: Reply, ReplyErr: ReplyErr},
+		Response:     Response{BuildDefaultEmbedMessage: BuildDefaultEmbedMessage, BuildDefaultErrorMessage: BuildDefaultErrorMessage},
 		Config:       cfg,
 	}
 

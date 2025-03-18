@@ -2,6 +2,7 @@ package bot
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 	"time"
 
@@ -19,6 +20,11 @@ func init() {
 		Options:     []discord.ApplicationCommandOption{},
 		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
 			databaseType := data.Config.DB.Type
+			shortner, err := url.Parse(data.Config.Shortener.Endpoint)
+
+			if err != nil {
+				shortner = &url.URL{}
+			}
 
 			latency := data.Client.Gateway().Latency()
 			latencyMsg := i18n.Replace(ctx.Translate().Commands.Ping.Reply.Str(), formatAPILatency(latency))
@@ -26,13 +32,14 @@ func init() {
 			uptime := time.Since(data.BotStartAt)
 			uptimeMsg := i18n.Replace(ctx.Translate().Commands.Uptime.Reply.Str(), durationAsText(uptime))
 
-			reply := data.Response.Reply(
+			reply := data.Response.BuildDefaultEmbedMessage(
 				"🏓 Pong",
 				"",
 				[]discord.EmbedField{
 					{Name: ctx.Translate().Global.Latency.Str(), Value: latencyMsg, Inline: utils.PtrTo(false)},
 					{Name: ctx.Translate().Global.Uptime.Str(), Value: uptimeMsg, Inline: utils.PtrTo(false)},
 					{Name: ctx.Translate().Global.Database.Str(), Value: string(databaseType), Inline: utils.PtrTo(false)},
+					{Name: ctx.Translate().Global.Shortener.Str(), Value: string(shortner.Hostname()), Inline: utils.PtrTo(false)},
 				},
 			)
 

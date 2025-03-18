@@ -23,12 +23,12 @@ func init() {
 
 			if err != nil {
 				msg := ctx.Translate().Commands.Balance.Error.Str()
-				errorReply := data.Response.ReplyErr(errors.New(msg))
+				errorReply := data.Response.BuildDefaultErrorMessage(errors.New(msg))
 				return &errorReply
 			}
 
 			msg := i18n.Replace(ctx.Translate().Commands.Balance.Reply.Str(), balance)
-			reply := data.Response.Reply("Balance", msg, []discord.EmbedField{})
+			reply := data.Response.BuildDefaultEmbedMessage("Balance", msg, []discord.EmbedField{})
 
 			return &reply
 		},

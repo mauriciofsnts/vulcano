@@ -7,12 +7,12 @@ import (
 	"github.com/mauriciofsnts/bot/internal/config"
 )
 
-type Options struct {
+type ShurlOptions struct {
 	KeepAliveFor *int
 	Slug         string
 }
 
-type Response struct {
+type ShurlResponse struct {
 	Slug        string `json:"slug"`
 	Domain      string `json:"domain"`
 	URL         string `json:"url"`
@@ -20,14 +20,12 @@ type Response struct {
 	TTL         int    `json:"ttl"`
 }
 
-// Short takes a URL string and options for customizing the shortened URL,
-// sends a POST request to the endpoint with the URL and options as the payload,
-// and returns the shortened URL string and any error encountered.
-// The options parameter allows you to specify the keep alive duration in seconds and a custom slug for the shortened URL.
+// ShurlShortner attempts to generate a shortened URL for the provided 'url' using the Shurl service.
+// It returns the shortened URL if successful, or an error if a critical issue occurs.
+// If the Shurl service fails to shorten the URL (e.g., due to an invalid request or service error), it returns an error.
 
-func Shortner(apiKey string, endpoint string, url string, opts *Options) (string, error) {
-	// thanks to pauloo27 for the shorten url service, give him a star
-	// https://github.com/pauloo27/shurl
+// https://github.com/pauloo27/shurl
+func ShurlShortner(apiKey string, endpoint string, url string, options *ShurlOptions) (string, error) {
 	client := resty.New()
 
 	payload := map[string]any{
@@ -35,16 +33,16 @@ func Shortner(apiKey string, endpoint string, url string, opts *Options) (string
 		"ttl":          5259600,
 	}
 
-	if opts != nil {
-		if opts.KeepAliveFor != nil {
-			payload["ttl"] = *opts.KeepAliveFor
+	if options != nil {
+		if options.KeepAliveFor != nil {
+			payload["ttl"] = *options.KeepAliveFor
 		}
-		if opts.Slug != "" {
-			payload["slug"] = opts.Slug
+		if options.Slug != "" {
+			payload["slug"] = options.Slug
 		}
 	}
 
-	var response Response
+	var response ShurlResponse
 
 	resp, err := client.R().
 		SetHeader("Content-Type", "application/json").
@@ -65,7 +63,28 @@ func Shortner(apiKey string, endpoint string, url string, opts *Options) (string
 }
 
 type URLShortener struct {
-	ShortURL func(url string, opts *Options) (string, error)
+	// ShortenLink attempts to generate a shortened URL for the provided 'url'.
+	//
+	// If the shortener service is unable to generate a shortened URL (e.g., due to an error or service unavailability),
+	// it should gracefully return the original 'url' without throwing an error.
+	//
+	// Parameters:
+	//   - url: The original URL to be shortened.
+	//   - opts: Optional parameters for the shortening process (e.g., custom aliases, expiration).
+	//
+	// Returns:
+	//   - string: The shortened URL, or the original URL if shortening fails.
+	//   - error: An error if a critical issue occurs during the shortening process (e.g., network error, invalid input).
+	//            A nil error indicates successful processing, even if the original URL was returned.
+	//
+	// Example:
+	//   shortenedURL, err := shortener.ShortenLink("https://www.example.com", nil)
+	//   if err != nil {
+	//       // Handle critical errors, but not cases where the original URL was returned.
+	//       log.Println("Error shortening URL:", err)
+	//   }
+	//   log.Println("Shortened URL:", shortenedURL)
+	ShortenLink func(url string, opts *ShurlOptions) (string, error)
 }
 
 func New(cfg config.Config) URLShortener {
@@ -73,8 +92,16 @@ func New(cfg config.Config) URLShortener {
 	endpoint := cfg.Shortener.Endpoint
 
 	return URLShortener{
-		ShortURL: func(url string, opts *Options) (string, error) {
-			return Shortner(apiKey, endpoint, url, opts)
+		ShortenLink: func(url string, opts *ShurlOptions) (string, error) {
+			shortenedURL, err := ShurlShortner(apiKey, endpoint, url, opts)
+
+			if err != nil {
+				return url, err
+			}
+			if shortenedURL == "" {
+				return url, nil
+			}
+			return shortenedURL, nil
 		},
 	}
 }

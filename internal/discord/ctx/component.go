@@ -20,7 +20,7 @@ type Component struct {
 	Handler ComponentHandler
 }
 
-func GetComponentStateInDatabase(messageId string) (bool, models.GuildState) {
+func LoadComponentStateFromDB(messageId string) (bool, models.GuildState) {
 	state, err := providers.Services.GuildState.GetComponentStateByMessageID(messageId)
 
 	if err != nil {

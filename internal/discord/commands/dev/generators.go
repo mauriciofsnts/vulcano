@@ -50,7 +50,7 @@ func init() {
 			}
 
 			msg := i18n.Replace(ctx.Translate().Commands.Generate.Reply.Str(), args[0])
-			reply := data.Response.Reply(msg, value, nil)
+			reply := data.Response.BuildDefaultEmbedMessage(msg, value, nil)
 
 			return &reply
 		},
@@ -58,7 +58,7 @@ func init() {
 }
 
 func buildErrorResponse(data ctx.CommandExecutionContext, message string) *discord.MessageCreate {
-	reply := data.Response.ReplyErr(errors.New(message))
+	reply := data.Response.BuildDefaultErrorMessage(errors.New(message))
 	return &reply
 }
 

@@ -18,7 +18,7 @@ func init() {
 				{Name: "Website", Value: "https://mrtz.dev/"},
 			}
 
-			reply := data.Response.Reply("Services", string(ctx.Translate().Commands.Services.Reply.Str()), fields)
+			reply := data.Response.BuildDefaultEmbedMessage("Services", string(ctx.Translate().Commands.Services.Reply.Str()), fields)
 			return &reply
 		},
 	})

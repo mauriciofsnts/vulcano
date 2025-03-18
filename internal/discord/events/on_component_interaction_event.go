@@ -10,7 +10,7 @@ import (
 )
 
 func OnComponentInteractionEvent(event *disgoEvents.ComponentInteractionCreate, client bot.Client) {
-	found, componentState := ctx.GetComponentStateInDatabase(event.Message.ID.String())
+	found, componentState := ctx.LoadComponentStateFromDB(event.Message.ID.String())
 
 	if !found {
 		slog.Error("Button state not found: ", slog.String("message id", event.Message.ID.String()))

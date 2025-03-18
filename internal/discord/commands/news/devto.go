@@ -2,7 +2,6 @@ package news
 
 import (
 	"fmt"
-	"log/slog"
 	"sync"
 
 	"github.com/disgoorg/disgo/discord"
@@ -20,7 +19,7 @@ func init() {
 			articles, err := providers.News.Devto(5)
 
 			if err != nil {
-				reply := data.Response.ReplyErr(err)
+				reply := data.Response.BuildDefaultErrorMessage(err)
 				return &reply
 			}
 
@@ -33,20 +32,14 @@ func init() {
 				go func(idx int, article news.DevtoArticle) {
 					defer wg.Done()
 
-					shortenedUrl := ""
-					shortenedUrl, err := providers.Shorten.ShortURL(article.URL, nil)
-
-					if err != nil {
-						slog.Error("Error shortening url: ", "error", err)
-						return
-					}
+					url, _ := providers.Shorten.ShortenLink(article.URL, nil)
 
 					var value string
 
 					if len(article.Description) > 0 {
-						value = fmt.Sprintf("%s\n%s", article.Description, shortenedUrl)
+						value = fmt.Sprintf("%s\n%s", article.Description, url)
 					} else {
-						value = shortenedUrl
+						value = url
 					}
 
 					fields[idx] = discord.EmbedField{
@@ -58,7 +51,7 @@ func init() {
 
 			wg.Wait()
 
-			reply := data.Response.Reply("Devto", string(ctx.Translate().Commands.Devto.Reply.Str()), fields)
+			reply := data.Response.BuildDefaultEmbedMessage("Devto", string(ctx.Translate().Commands.Devto.Reply.Str()), fields)
 			return &reply
 		},
 	})

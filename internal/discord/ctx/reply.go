@@ -2,7 +2,7 @@ package ctx
 
 import "github.com/disgoorg/disgo/discord"
 
-func Reply(
+func BuildDefaultEmbedMessage(
 	title string,
 	description string,
 	fields []discord.EmbedField,
@@ -21,7 +21,7 @@ func Reply(
 	return builder.Build()
 }
 
-func ReplyErr(
+func BuildDefaultErrorMessage(
 	err error,
 ) discord.MessageCreate {
 	builder := discord.NewMessageCreateBuilder()

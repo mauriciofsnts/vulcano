@@ -32,18 +32,13 @@ func init() {
 
 			if len(args) == 0 {
 				msg := ctx.Translate().Commands.Shorten.Error.Str()
-				reply := data.Response.ReplyErr(errors.New(msg))
+				reply := data.Response.BuildDefaultErrorMessage(errors.New(msg))
 				return &reply
 			}
 
-			url, err := providers.Shorten.ShortURL(args[0], &shorten.Options{KeepAliveFor: utils.PtrTo(0)})
+			url, _ := providers.Shorten.ShortenLink(args[0], &shorten.ShurlOptions{KeepAliveFor: utils.PtrTo(0)})
 
-			if err != nil {
-				reply := data.Response.ReplyErr(err)
-				return &reply
-			}
-
-			reply := data.Response.Reply("Shortened URL", url, nil)
+			reply := data.Response.BuildDefaultEmbedMessage("Shortened URL", url, nil)
 			return &reply
 		},
 	})
