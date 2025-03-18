@@ -19,7 +19,7 @@ installs:
           data:
             config.yaml: |
               server:
-                port: '8080'
+                port: 8080
 
               db:
                 type: 'postgres'
