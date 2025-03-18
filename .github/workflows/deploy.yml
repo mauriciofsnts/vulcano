@@ -42,7 +42,7 @@ jobs:
           file: Dockerfile
           context: .
           push: true
-          tags: ghcr.io/mauriciofsnts/vulcano:${{ github.ref_name }}
+          tags: ghcr.io/mauriciofsnts/vulcano:${{ env.COMMIT_SHORT_SHA }},ghcr.io/mauriciofsnts/vulcano:${{ github.ref_name }}
 
       - name: Upgrade install
         uses: pauloo27/k7z-upgrade@v1.1.0

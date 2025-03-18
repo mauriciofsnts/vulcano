@@ -11,7 +11,7 @@ installs:
       image:
         repository: ghcr.io/mauriciofsnts/vulcano
         pullPolicy: IfNotPresent
-        tag: { { .Data.Tag | orDefault .Ref } }
+        tag: {{ .Data.Tag | orDefault .Ref }}
 
       secrets:
         - name: vulcano-config-secret
