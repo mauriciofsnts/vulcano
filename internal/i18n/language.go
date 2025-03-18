@@ -49,4 +49,7 @@ type Commands struct {
 
 type Global struct {
 	LessThatAMinute LanguageEntry `yaml:"less_than_a_minute"`
+	Uptime          LanguageEntry
+	Latency         LanguageEntry
+	Database        LanguageEntry
 }

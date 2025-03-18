@@ -54,7 +54,7 @@ func Init(cfg config.Config) {
 			eventHandler.OnMessageCreatedEvent(event, client, cfg, StartedAt)
 		},
 		OnApplicationCommandInteraction: func(event *events.ApplicationCommandInteractionCreate) {
-			eventHandler.OnInteractionCreatedEvent(event, client, StartedAt)
+			eventHandler.OnInteractionCreatedEvent(event, client, cfg, StartedAt)
 		},
 		OnGuildChannelCreate: func(event *events.GuildChannelCreate) {
 			eventHandler.OnGuildChannelCreatedEvent(event, client)

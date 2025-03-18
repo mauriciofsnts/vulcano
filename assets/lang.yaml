@@ -27,7 +27,7 @@ commands:
   uptime:
     name: "uptime"
     description: "Informa quanto tempo o bot está online e qual versão está em execução."
-    reply: "Estou online há ${0} e estou rodando a versão ${1}."
+    reply: "Estou online há ${0}"
     error: "Não foi possível determinar o tempo de atividade. Tente novamente."
   help:
     name: "help"
@@ -72,3 +72,7 @@ events:
 
 global:
   lessThatAMinute: "Menos de um minuto"
+  latency: "⏳ Latência"
+  uptime: "🌐 Uptime"
+  database: "🛢️ Banco de dados"
+  shortener: "🔗 Provedor de encurtador"

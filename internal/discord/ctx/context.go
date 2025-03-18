@@ -6,6 +6,7 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/snowflake/v2"
+	"github.com/mauriciofsnts/bot/internal/config"
 )
 
 type EventType string
@@ -31,6 +32,7 @@ type Context struct {
 	Type         EventType
 	Args         []string
 	Response     Response
+	Config       config.Config
 }
 
 type Response struct {
@@ -45,6 +47,7 @@ func Execute(
 	eventType EventType,
 	botStartAt time.Time,
 	client bot.Client,
+	cfg config.Config,
 ) *discord.MessageCreate {
 
 	ctx := Context{
@@ -54,6 +57,7 @@ func Execute(
 		BotStartAt:   botStartAt,
 		Client:       client,
 		Response:     Response{Reply: Reply, ReplyErr: ReplyErr},
+		Config:       cfg,
 	}
 
 	return command.Handler(ctx)

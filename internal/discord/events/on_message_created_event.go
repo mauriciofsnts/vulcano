@@ -68,7 +68,7 @@ func executeMessageCommand(event *disgoEvents.MessageCreate, client bot.Client, 
 		trigger.GuildId = *message.GuildID
 	}
 
-	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, BotStartedAt, client)
+	msg := ctx.Execute(args, cmd, trigger, ctx.MESSAGE, BotStartedAt, client, cfg)
 
 	if msg != nil {
 		msg.MessageReference = &disgo.MessageReference{MessageID: &message.ID}

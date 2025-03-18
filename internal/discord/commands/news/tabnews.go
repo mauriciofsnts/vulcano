@@ -168,7 +168,6 @@ func fetchNews(page int) ([]discord.EmbedField, error) {
 
 			shortenedUrl, err := providers.Shorten.ShortURL(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
 
-			// TODO! Add fallback if the shortening service fails
 			if err != nil {
 				slog.Error("Error shortening url: ", "err", err.Error())
 				url = fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug)

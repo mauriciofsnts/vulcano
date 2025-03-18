@@ -8,11 +8,12 @@ import (
 
 	"github.com/disgoorg/disgo/bot"
 	disgoEvents "github.com/disgoorg/disgo/events"
+	"github.com/mauriciofsnts/bot/internal/config"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 	"github.com/mauriciofsnts/bot/internal/providers"
 )
 
-func OnInteractionCreatedEvent(event *disgoEvents.ApplicationCommandInteractionCreate, client bot.Client, BotStartedAt time.Time) {
+func OnInteractionCreatedEvent(event *disgoEvents.ApplicationCommandInteractionCreate, client bot.Client, cfg config.Config, BotStartedAt time.Time) {
 	data := event.SlashCommandInteractionData()
 
 	commandName := data.CommandName()
@@ -56,7 +57,7 @@ func OnInteractionCreatedEvent(event *disgoEvents.ApplicationCommandInteractionC
 		args = append(args, fmt.Sprintf("%v", value))
 	}
 
-	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, BotStartedAt, client)
+	msg := ctx.Execute(args, cmd, trigger, ctx.SLASH_COMMAND, BotStartedAt, client, cfg)
 
 	if msg != nil {
 		event.CreateMessage(*msg)
