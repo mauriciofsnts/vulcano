@@ -17,16 +17,16 @@ func init() {
 		Aliases:     []string{"pong"},
 		Description: ctx.Translate().Commands.Ping.Description.Str(),
 		Options:     []discord.ApplicationCommandOption{},
-		Handler: func(context ctx.Context) *discord.MessageCreate {
-			databaseType := context.Config.DB.Type
+		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
+			databaseType := data.Config.DB.Type
 
-			latency := context.Client.Gateway().Latency()
+			latency := data.Client.Gateway().Latency()
 			latencyMsg := i18n.Replace(ctx.Translate().Commands.Ping.Reply.Str(), formatAPILatency(latency))
 
-			uptime := time.Since(context.BotStartAt)
+			uptime := time.Since(data.BotStartAt)
 			uptimeMsg := i18n.Replace(ctx.Translate().Commands.Uptime.Reply.Str(), durationAsText(uptime))
 
-			reply := context.Response.Reply(
+			reply := data.Response.Reply(
 				"🏓 Pong",
 				"",
 				[]discord.EmbedField{

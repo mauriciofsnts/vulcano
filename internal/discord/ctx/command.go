@@ -15,8 +15,8 @@ type Command struct {
 	Description      string
 	Aliases          []string
 	Options          []discord.ApplicationCommandOption
-	Handler          func(context Context) *discord.MessageCreate
-	ComponentHandler func(event *events.ComponentInteractionCreate, ctx *ComponentState)
+	Handler          func(context CommandExecutionContext) *discord.MessageCreate
+	ComponentHandler func(event *events.ComponentInteractionCreate, ctx *DiscordComponentContext)
 }
 
 func RegisterCommand(name string, cmd Command) {

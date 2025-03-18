@@ -30,11 +30,11 @@ func init() {
 				MaxValue:    utils.PtrTo(99),
 			},
 		},
-		Handler: func(cmd ctx.Context) *discord.MessageCreate {
+		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
 			page := 1
 
-			if len(cmd.Args) > 0 {
-				parsedPage, err := strconv.Atoi(cmd.Args[0])
+			if len(data.Args) > 0 {
+				parsedPage, err := strconv.Atoi(data.Args[0])
 				if err != nil {
 					page = 1
 				}
@@ -44,7 +44,7 @@ func init() {
 			fields, err := fetchNews(page)
 
 			if err != nil {
-				reply := cmd.Response.ReplyErr(err)
+				reply := data.Response.ReplyErr(err)
 				return &reply
 			}
 
@@ -58,8 +58,8 @@ func init() {
 			embed := embedBuilder.Build()
 			messageBuilder.SetEmbeds(embed)
 
-			actionButtonId := fmt.Sprintf("tabnews-next-%d", cmd.TriggerEvent.MessageId)
-			prevButtonId := fmt.Sprintf("tabnews-prev-%d", cmd.TriggerEvent.MessageId)
+			actionButtonId := fmt.Sprintf("tabnews-next-%d", data.TriggerEvent.MessageId)
+			prevButtonId := fmt.Sprintf("tabnews-prev-%d", data.TriggerEvent.MessageId)
 
 			if page > 1 {
 				messageBuilder.AddActionRow(
@@ -72,7 +72,7 @@ func init() {
 
 			msg := messageBuilder.Build()
 
-			createdMessage, err := cmd.Client.Rest().CreateMessage(cmd.TriggerEvent.ChannelId, msg)
+			createdMessage, err := data.Client.Rest().CreateMessage(data.TriggerEvent.ChannelId, msg)
 
 			if err != nil {
 				slog.Error("Error creating message", "err", err.Error())
@@ -80,24 +80,24 @@ func init() {
 			}
 
 			providers.Services.GuildState.CreateComponentState(&models.GuildState{
-				GuildID:        cmd.TriggerEvent.GuildId.String(),
+				GuildID:        data.TriggerEvent.GuildId.String(),
 				ComponentID:    actionButtonId,
-				AuthorID:       cmd.TriggerEvent.AuthorId.String(),
-				ChannelID:      cmd.TriggerEvent.ChannelId.String(),
+				AuthorID:       data.TriggerEvent.AuthorId.String(),
+				ChannelID:      data.TriggerEvent.ChannelId.String(),
 				MessageID:      createdMessage.ID.String(),
 				Command:        "tabnews",
 				State:          map[string]any{"page": page},
 				Ttl:            time.Now(),
-				EventTimestamp: cmd.TriggerEvent.EventTimestamp,
+				EventTimestamp: data.TriggerEvent.EventTimestamp,
 			})
 
 			return nil
 		},
-		ComponentHandler: func(event *events.ComponentInteractionCreate, context *ctx.ComponentState) {
-			actionButtonId := fmt.Sprintf("tabnews-next-%d", context.TriggerEvent.MessageId)
-			prevButtonId := fmt.Sprintf("tabnews-prev-%d", context.TriggerEvent.MessageId)
+		ComponentHandler: func(event *events.ComponentInteractionCreate, data *ctx.DiscordComponentContext) {
+			actionButtonId := fmt.Sprintf("tabnews-next-%d", data.TriggerEvent.MessageId)
+			prevButtonId := fmt.Sprintf("tabnews-prev-%d", data.TriggerEvent.MessageId)
 
-			page := int(context.State["page"].(float64))
+			page := int(data.State["page"].(float64))
 			nextPageState := page
 
 			if event.ComponentInteraction.Data.CustomID() == prevButtonId {
@@ -117,7 +117,7 @@ func init() {
 			embed := embedBuilder.Build()
 			embeds := []discord.Embed{embed}
 
-			providers.Services.GuildState.UpdateComponentState(context.TriggerEvent.MessageId.String(), map[string]any{"page": nextPageState})
+			providers.Services.GuildState.UpdateComponentState(data.TriggerEvent.MessageId.String(), map[string]any{"page": nextPageState})
 
 			newActionRow := discord.NewActionRow()
 			newActionRow.AddComponents(

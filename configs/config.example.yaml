@@ -1,35 +1,47 @@
+# Server Configuration
 server:
-  port: 8080
+  port: ":8080"  # Port the server will listen on (e.g., ":8080", ":3000")
 
+# Database Configuration
 db:
-  type: 'sqlite'
-  migrate: true
-  # postgres:
-  #   host: 'localhost'
-  #   port: 5432
-  #   user: 'admin'
-  #   password: 'admin'
-  #   database: 'test'
+  type: "postgres" # Database type: "postgres" or "sqlite"
+
+  # Postgres Configuration (used if type: postgres)
+  postgres:
+    host: "localhost"
+    port: 5432
+    user: "postgres"
+    password: "password"
+    database: "mydb"
+
+  # SQLite Configuration (used if type: sqlite)
   sqlite:
-    path: './db.sqlite'
+    path: "./mydb.db"
 
-# The possible log levels are: DEBUG, INFO and ERROR
-loglevel: DEBUG
+  migrate: true  # Run database migrations on startup (true/false)
 
-# Discord bot configuration
+# Logging Configuration
+log:
+  level: "INFO"       # Log level: "DEBUG", "INFO", "WARN", "ERROR"
+  type: "text"        # Log format: "text", "json", "colored"
+  showSource: true    # Show log source (file and line) (true/false)
+
+# Discord Configuration
 discord:
-  token: "your_token_here"
-  prefix: "!"
-  guildId: "your_guild_id_here"
-  syncCommands: false
+  token: "YOUR_DISCORD_BOT_TOKEN"
+  prefix: "!"           # Prefix for bot commands
+  guildID: "YOUR_GUILD_ID"
+  syncCommands: true    # Sync bot commands with Discord on startup (true/false)
 
-# shortener configuration
+# URL Shortener Configuration
 shortener:
-  endpoint: "https://url.db.cafe/api/v1/links"
-  apiKey: "your_api_key_here"
+  endpoint: "https://your-shortener-api.com"
+  apiKey: "YOUR_SHORTENER_API_KEY"
 
+# News API Configuration
 news:
-  newsapi_apikey: "your_newsapi_api_key_here"
+  newsapi_apikey: "YOUR_NEWSAPI_API_KEY"
 
+# Football Data API Configuration
 footballData:
-  apiKey: "your_football_data_api_key_here"
+  apiKey: "YOUR_FOOTBALL_DATA_API_KEY"

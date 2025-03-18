@@ -7,16 +7,16 @@ import (
 	"github.com/mauriciofsnts/bot/internal/providers"
 )
 
-type ComponentState struct {
+type DiscordComponentContext struct {
 	TriggerEvent TriggerEvent
 	Client       bot.Client
 	State        map[string]any
 }
 
-type ComponentHandler func(event *events.ComponentInteractionCreate, ctx *ComponentState)
+type ComponentHandler func(event *events.ComponentInteractionCreate, ctx *DiscordComponentContext)
 
 type Component struct {
-	State   ComponentState
+	State   DiscordComponentContext
 	Handler ComponentHandler
 }
 

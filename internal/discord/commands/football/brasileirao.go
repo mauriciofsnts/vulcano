@@ -16,7 +16,7 @@ func init() {
 		Aliases:     []string{"brasileirao", "br"},
 		Description: ctx.Translate().Commands.Brasileirao.Description.Str(),
 		Options:     []discord.ApplicationCommandOption{},
-		Handler: func(context ctx.Context) *discord.MessageCreate {
+		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
 			today := time.Now().Format("2006-01-02")
 			lastSundayOfTheWeek := time.Now().AddDate(0, 0, +6).Format("2006-01-02")
 
@@ -47,7 +47,7 @@ func init() {
 			messageBuilder.SetEmbeds(embed)
 			msg := messageBuilder.Build()
 
-			_, err = context.Client.Rest().CreateMessage(context.TriggerEvent.ChannelId, msg)
+			_, err = data.Client.Rest().CreateMessage(data.TriggerEvent.ChannelId, msg)
 
 			if err != nil {
 				slog.Error("Error creating message", "err", err.Error())

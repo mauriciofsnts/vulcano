@@ -25,7 +25,7 @@ func OnComponentInteractionEvent(event *disgoEvents.ComponentInteractionCreate, 
 		EventTimestamp: event.CreatedAt(),
 	}
 
-	state := ctx.ComponentState{
+	state := ctx.DiscordComponentContext{
 		TriggerEvent: trigger,
 		Client:       client,
 		State:        componentState.State,

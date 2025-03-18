@@ -25,7 +25,7 @@ type TriggerEvent struct {
 	EventTimestamp time.Time
 }
 
-type Context struct {
+type CommandExecutionContext struct {
 	BotStartAt   time.Time
 	TriggerEvent TriggerEvent
 	Client       bot.Client
@@ -50,7 +50,7 @@ func Execute(
 	cfg config.Config,
 ) *discord.MessageCreate {
 
-	ctx := Context{
+	ctx := CommandExecutionContext{
 		TriggerEvent: trigger,
 		Type:         eventType,
 		Args:         args,

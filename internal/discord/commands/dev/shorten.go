@@ -27,23 +27,23 @@ func init() {
 				Required:    false,
 			},
 		},
-		Handler: func(context ctx.Context) *discord.MessageCreate {
-			args := context.Args
+		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
+			args := data.Args
 
 			if len(args) == 0 {
 				msg := ctx.Translate().Commands.Shorten.Error.Str()
-				reply := context.Response.ReplyErr(errors.New(msg))
+				reply := data.Response.ReplyErr(errors.New(msg))
 				return &reply
 			}
 
 			url, err := providers.Shorten.ShortURL(args[0], &shorten.Options{KeepAliveFor: utils.PtrTo(0)})
 
 			if err != nil {
-				reply := context.Response.ReplyErr(err)
+				reply := data.Response.ReplyErr(err)
 				return &reply
 			}
 
-			reply := context.Response.Reply("Shortened URL", url, nil)
+			reply := data.Response.Reply("Shortened URL", url, nil)
 			return &reply
 		},
 	})

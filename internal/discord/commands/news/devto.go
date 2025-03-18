@@ -16,11 +16,11 @@ func init() {
 		Name:        "devto",
 		Aliases:     []string{"devto"},
 		Description: ctx.Translate().Commands.Devto.Description.Str(),
-		Handler: func(context ctx.Context) *discord.MessageCreate {
+		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
 			articles, err := providers.News.Devto(5)
 
 			if err != nil {
-				reply := context.Response.ReplyErr(err)
+				reply := data.Response.ReplyErr(err)
 				return &reply
 			}
 
@@ -58,7 +58,7 @@ func init() {
 
 			wg.Wait()
 
-			reply := context.Response.Reply("Devto", string(ctx.Translate().Commands.Devto.Reply.Str()), fields)
+			reply := data.Response.Reply("Devto", string(ctx.Translate().Commands.Devto.Reply.Str()), fields)
 			return &reply
 		},
 	})

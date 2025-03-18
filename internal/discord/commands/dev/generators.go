@@ -29,11 +29,11 @@ func init() {
 				},
 			},
 		},
-		Handler: func(context ctx.Context) *discord.MessageCreate {
-			args := context.Args
+		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
+			args := data.Args
 
 			if len(args) == 0 {
-				return buildErrorResponse(context, string(ctx.Translate().Commands.Generate.ParamError))
+				return buildErrorResponse(data, string(ctx.Translate().Commands.Generate.ParamError))
 			}
 
 			var value string
@@ -46,19 +46,19 @@ func init() {
 			case "uuid":
 				value = generateUUID()
 			default:
-				return buildErrorResponse(context, string(ctx.Translate().Commands.Generate.ParamError))
+				return buildErrorResponse(data, string(ctx.Translate().Commands.Generate.ParamError))
 			}
 
 			msg := i18n.Replace(ctx.Translate().Commands.Generate.Reply.Str(), args[0])
-			reply := context.Response.Reply(msg, value, nil)
+			reply := data.Response.Reply(msg, value, nil)
 
 			return &reply
 		},
 	})
 }
 
-func buildErrorResponse(ctx ctx.Context, message string) *discord.MessageCreate {
-	reply := ctx.Response.ReplyErr(errors.New(message))
+func buildErrorResponse(data ctx.CommandExecutionContext, message string) *discord.MessageCreate {
+	reply := data.Response.ReplyErr(errors.New(message))
 	return &reply
 }
 
