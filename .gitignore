@@ -21,12 +21,11 @@
 # Go workspace file
 go.work
 
-/bot
 /tmp
 /configs/config.yaml
 
 .vscode
 
-bot
+/bot
 
 db.sqlite

@@ -9,7 +9,7 @@ func init() {
 	ctx.RegisterCommand("services", ctx.Command{
 		Name:        "services",
 		Aliases:     []string{"services"},
-		Description: ctx.Translate().Commands.Services.Description.Str(),
+		Description: ctx.T().Commands.Services.Description.Str(),
 		Options:     []discord.ApplicationCommandOption{},
 		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
 
@@ -18,7 +18,7 @@ func init() {
 				{Name: "Website", Value: "https://mrtz.dev/"},
 			}
 
-			reply := data.Response.BuildDefaultEmbedMessage("Services", string(ctx.Translate().Commands.Services.Reply.Str()), fields)
+			reply := data.Response.BuildDefaultEmbedMessage("Services", string(ctx.T().Commands.Services.Reply.Str()), fields)
 			return &reply
 		},
 	})

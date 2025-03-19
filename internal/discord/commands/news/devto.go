@@ -14,7 +14,7 @@ func init() {
 	ctx.RegisterCommand("devto", ctx.Command{
 		Name:        "devto",
 		Aliases:     []string{"devto"},
-		Description: ctx.Translate().Commands.Devto.Description.Str(),
+		Description: ctx.T().Commands.Devto.Description.Str(),
 		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
 			articles, err := providers.News.Devto(5)
 
@@ -51,7 +51,7 @@ func init() {
 
 			wg.Wait()
 
-			reply := data.Response.BuildDefaultEmbedMessage("Devto", string(ctx.Translate().Commands.Devto.Reply.Str()), fields)
+			reply := data.Response.BuildDefaultEmbedMessage("Devto", string(ctx.T().Commands.Devto.Reply.Str()), fields)
 			return &reply
 		},
 	})

@@ -20,7 +20,7 @@ func init() {
 	ctx.RegisterCommand("tabnews", ctx.Command{
 		Name:        "tabnews",
 		Aliases:     []string{"tn", "tabnews"},
-		Description: ctx.Translate().Commands.Tabnews.Description.Str(),
+		Description: ctx.T().Commands.Tabnews.Description.Str(),
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionInt{
 				Name:        "page",
@@ -51,7 +51,7 @@ func init() {
 			messageBuilder := discord.NewMessageCreateBuilder()
 			embedBuilder := discord.NewEmbedBuilder().
 				SetTitle("Tabnews").
-				SetDescription(ctx.Translate().Commands.Tabnews.Reply.Str()).
+				SetDescription(ctx.T().Commands.Tabnews.Reply.Str()).
 				SetColor(0xffffff).
 				SetFields(fields...).
 				SetFooter(fmt.Sprintf("Page %d", page), "")
@@ -110,7 +110,7 @@ func init() {
 
 			embedBuilder := discord.NewEmbedBuilder().
 				SetTitle("Tabnews").
-				SetDescription(ctx.Translate().Commands.Tabnews.Reply.Str()).
+				SetDescription(ctx.T().Commands.Tabnews.Reply.Str()).
 				SetColor(0xffffff).
 				SetFooter(fmt.Sprintf("Page %d", nextPageState), "").
 				SetFields(fields...)

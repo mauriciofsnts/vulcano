@@ -14,7 +14,7 @@ func init() {
 	ctx.RegisterCommand("shorten", ctx.Command{
 		Name:        "shorten",
 		Aliases:     []string{"sht", "st"},
-		Description: ctx.Translate().Commands.Shorten.Description.Str(),
+		Description: ctx.T().Commands.Shorten.Description.Str(),
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionString{
 				Name:        "url",
@@ -31,7 +31,7 @@ func init() {
 			args := data.Args
 
 			if len(args) == 0 {
-				msg := ctx.Translate().Commands.Shorten.Error.Str()
+				msg := ctx.T().Commands.Shorten.Error.Str()
 				reply := data.Response.BuildDefaultErrorMessage(errors.New(msg))
 				return &reply
 			}

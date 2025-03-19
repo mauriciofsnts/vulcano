@@ -14,7 +14,7 @@ func init() {
 	ctx.RegisterCommand("newsapi", ctx.Command{
 		Name:        "newsapi",
 		Aliases:     []string{"news"},
-		Description: ctx.Translate().Commands.Newsapi.Description.Str(),
+		Description: ctx.T().Commands.Newsapi.Description.Str(),
 		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
 			articles, err := providers.News.NewsApi(5)
 
@@ -51,7 +51,7 @@ func init() {
 
 			wg.Wait()
 
-			reply := data.Response.BuildDefaultEmbedMessage("NewsAPI", ctx.Translate().Commands.Newsapi.Reply.Str(), fields)
+			reply := data.Response.BuildDefaultEmbedMessage("NewsAPI", ctx.T().Commands.Newsapi.Reply.Str(), fields)
 			return &reply
 		},
 	})

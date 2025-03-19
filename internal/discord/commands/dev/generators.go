@@ -17,11 +17,11 @@ func init() {
 	ctx.RegisterCommand("generate", ctx.Command{
 		Name:        "generate",
 		Aliases:     []string{"gen", "g"},
-		Description: ctx.Translate().Commands.Generate.Description.Str(),
+		Description: ctx.T().Commands.Generate.Description.Str(),
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionString{
 				Name:        "option",
-				Description: ctx.Translate().Commands.Generate.Options.Str(),
+				Description: ctx.T().Commands.Generate.Options.Str(),
 				Required:    true,
 				Choices: []discord.ApplicationCommandOptionChoiceString{
 					{Name: "CPF", Value: "cpf"},
@@ -34,26 +34,26 @@ func init() {
 			args := data.Args
 
 			if len(args) == 0 {
-				return buildErrorResponse(data, string(ctx.Translate().Commands.Generate.ParamError))
+				return buildErrorResponse(data, string(ctx.T().Commands.Generate.ParamError))
 			}
 
 			var generatedContent string
 
 			switch args[0] {
 			case "cnpj":
-				generatedContent = generateCNPJ(ctx.Translate())
+				generatedContent = generateCNPJ(ctx.T())
 			case "cpf":
-				generatedContent = generateCPF(ctx.Translate())
+				generatedContent = generateCPF(ctx.T())
 			case "uuid":
 				generatedContent = generateUUID()
 
 			default:
-				return buildErrorResponse(data, string(ctx.Translate().Commands.Generate.ParamError))
+				return buildErrorResponse(data, string(ctx.T().Commands.Generate.ParamError))
 			}
 
-			description := ctx.Translate().Commands.Generate.Warning.Str() + generatedContent
+			description := ctx.T().Commands.Generate.Warning.Str() + generatedContent
 
-			msg := i18n.Replace(strings.ToUpper(ctx.Translate().Commands.Generate.Reply.Str()), args[0])
+			msg := i18n.Replace(strings.ToUpper(ctx.T().Commands.Generate.Reply.Str()), args[0])
 			reply := data.Response.BuildDefaultEmbedMessage(msg, description, nil)
 
 			return &reply

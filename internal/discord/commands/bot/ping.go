@@ -16,7 +16,7 @@ func init() {
 	ctx.RegisterCommand("ping", ctx.Command{
 		Name:        "ping",
 		Aliases:     []string{"pong"},
-		Description: ctx.Translate().Commands.Ping.Description.Str(),
+		Description: ctx.T().Commands.Ping.Description.Str(),
 		Options:     []discord.ApplicationCommandOption{},
 		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
 			databaseType := data.Config.DB.Type
@@ -27,19 +27,19 @@ func init() {
 			}
 
 			latency := data.Client.Gateway().Latency()
-			latencyMsg := i18n.Replace(ctx.Translate().Commands.Ping.Reply.Str(), formatAPILatency(latency))
+			latencyMsg := i18n.Replace(ctx.T().Commands.Ping.Reply.Str(), formatAPILatency(latency))
 
 			uptime := time.Since(data.BotStartAt)
-			uptimeMsg := i18n.Replace(ctx.Translate().Commands.Uptime.Reply.Str(), durationAsText(uptime))
+			uptimeMsg := i18n.Replace(ctx.T().Commands.Uptime.Reply.Str(), durationAsText(uptime))
 
 			reply := data.Response.BuildDefaultEmbedMessage(
 				"🏓 Pong",
 				"",
 				[]discord.EmbedField{
-					{Name: ctx.Translate().Global.Latency.Str(), Value: latencyMsg, Inline: utils.PtrTo(false)},
-					{Name: ctx.Translate().Global.Uptime.Str(), Value: uptimeMsg, Inline: utils.PtrTo(false)},
-					{Name: ctx.Translate().Global.Database.Str(), Value: string(databaseType), Inline: utils.PtrTo(false)},
-					{Name: ctx.Translate().Global.Shortener.Str(), Value: string(shortner.Hostname()), Inline: utils.PtrTo(false)},
+					{Name: ctx.T().Global.Latency.Str(), Value: latencyMsg, Inline: utils.PtrTo(false)},
+					{Name: ctx.T().Global.Uptime.Str(), Value: uptimeMsg, Inline: utils.PtrTo(false)},
+					{Name: ctx.T().Global.Database.Str(), Value: string(databaseType), Inline: utils.PtrTo(false)},
+					{Name: ctx.T().Global.Shortener.Str(), Value: string(shortner.Hostname()), Inline: utils.PtrTo(false)},
 				},
 			)
 
@@ -64,7 +64,7 @@ func durationAsText(duration time.Duration) string {
 	seconds := int(duration.Seconds())
 
 	if seconds < 60 {
-		return strings.ToLower(ctx.Translate().Global.LessThatAMinute.Str())
+		return strings.ToLower(ctx.T().Global.LessThatAMinute.Str())
 	}
 
 	days := seconds / 86400
