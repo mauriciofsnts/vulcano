@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/google/uuid"
@@ -36,22 +37,24 @@ func init() {
 				return buildErrorResponse(data, string(ctx.Translate().Commands.Generate.ParamError))
 			}
 
-			var value string
+			var generatedContent string
 
 			switch args[0] {
 			case "cnpj":
-				value = generateCNPJ(ctx.Translate())
+				generatedContent = generateCNPJ(ctx.Translate())
 			case "cpf":
-				value = generateCPF(ctx.Translate())
+				generatedContent = generateCPF(ctx.Translate())
 			case "uuid":
-				value = generateUUID()
+				generatedContent = generateUUID()
 
 			default:
 				return buildErrorResponse(data, string(ctx.Translate().Commands.Generate.ParamError))
 			}
 
-			msg := i18n.Replace(ctx.Translate().Commands.Generate.Reply.Str(), args[0])
-			reply := data.Response.BuildDefaultEmbedMessage(msg, value, nil)
+			description := ctx.Translate().Commands.Generate.Warning.Str() + generatedContent
+
+			msg := i18n.Replace(strings.ToUpper(ctx.Translate().Commands.Generate.Reply.Str()), args[0])
+			reply := data.Response.BuildDefaultEmbedMessage(msg, description, nil)
 
 			return &reply
 		},
@@ -87,5 +90,5 @@ func generateCPF(t i18n.Language) string {
 
 func generateUUID() string {
 	uuid, _ := uuid.NewUUID()
-	return uuid.String()
+	return fmt.Sprintf("```%s```", uuid)
 }

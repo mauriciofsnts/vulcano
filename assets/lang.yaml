@@ -52,11 +52,12 @@ commands:
   generate:
     name: "generate"
     description: "Gera um item ou informação específica solicitada pelo usuário."
-    reply: "Aqui está o item solicitado: ${0}."
+    reply: "${0} gerado:"
     error: "Não consegui gerar o item solicitado. Verifique se você forneceu uma solicitação válida."
     paramError: "Você deve fornecer um tipo válido para gerar um item. Tipos permitidos: CPF, RG, UUID. Por exemplo, para gerar um RG aleatório, digite **.generate rg**."
+    warning: "⚠️ *Lembre-se: este dado é apenas para testes e desenvolvimento!* ⚠️\n\n"
     withMask: "Com máscara: ```${0}```\nSem Máscara: ```${1}```"
-    options: "Tipos disponíveis: `cpf`, `uuid`, `cnpj`"
+  options: "Tipos disponíveis: `cpf`, `uuid`, `cnpj`"
   brasileirao:
     name: "brasileirao"
     description: "Exibe os jogos da semana do Campeonato Brasileiro."

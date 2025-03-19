@@ -31,6 +31,7 @@ type GenerateCommand struct {
 	ParamError LanguageEntry `yaml:"paramError"`
 	WithMask   LanguageEntry `yaml:"withMask"`
 	Options    LanguageEntry `yaml:"options"`
+	Warning    LanguageEntry `yaml:"warning"`
 }
 
 type Commands struct {
