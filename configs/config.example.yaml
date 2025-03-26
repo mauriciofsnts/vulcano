@@ -1,6 +1,13 @@
 # Server Configuration
 server:
-  port: 8080  # Port the server will listen on (e.g., 8080, 3000)
+  port: 8080 # Port the server will listen on (e.g., 8080, 3000)
+
+# Valkey Configuration
+valkey:
+  # valkey address with port
+  address: "localhost:6379"
+  # valkey password
+  password: "password"
 
 # Database Configuration
 db:
@@ -18,20 +25,20 @@ db:
   sqlite:
     path: "./mydb.db"
 
-  migrate: true  # Run database migrations on startup (true/false)
+  migrate: true # Run database migrations on startup (true/false)
 
 # Logging Configuration
 log:
-  level: "INFO"       # Log level: "DEBUG", "INFO", "WARN", "ERROR"
-  type: "text"        # Log format: "text", "json", "colored"
-  showSource: true    # Show log source (file and line) (true/false)
+  level: "INFO" # Log level: "DEBUG", "INFO", "WARN", "ERROR"
+  type: "text" # Log format: "text", "json", "colored"
+  showSource: true # Show log source (file and line) (true/false)
 
 # Discord Configuration
 discord:
   token: "YOUR_DISCORD_BOT_TOKEN"
-  prefix: "!"           # Prefix for bot commands
+  prefix: "!" # Prefix for bot commands
   guildID: "YOUR_GUILD_ID"
-  syncCommands: true    # Sync bot commands with Discord on startup (true/false)
+  syncCommands: true # Sync bot commands with Discord on startup (true/false)
 
 # URL Shortener Configuration
 shortener:

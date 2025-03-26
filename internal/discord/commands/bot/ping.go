@@ -20,7 +20,7 @@ func init() {
 		Options:     []discord.ApplicationCommandOption{},
 		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
 			databaseType := data.Config.DB.Type
-			shortner, err := url.Parse(data.Config.Shortener.Endpoint)
+			shortner, err := url.Parse(data.Config.URLShortener.Endpoint)
 
 			if err != nil {
 				shortner = &url.URL{}

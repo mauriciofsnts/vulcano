@@ -113,7 +113,7 @@ type FootballDataProvider struct {
 func New(cfg config.Config) FootballDataProvider {
 	return FootballDataProvider{
 		GetMatches: func(dateFrom, dateTo string, competitions int) ([]Matches, error) {
-			return GetMatches(dateFrom, dateTo, competitions, cfg.FootballData.ApiKey)
+			return GetMatches(dateFrom, dateTo, competitions, cfg.FootballData.APIKey)
 		},
 	}
 }

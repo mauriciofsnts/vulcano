@@ -5,43 +5,44 @@ import (
 )
 
 type Config struct {
-	Server       Server
+	Server       ServerConfig
 	DB           DatabaseConfig
-	Log          LogConfig
-	Discord      Discord
-	Shortener    Shortener
-	News         News
-	FootballData FootballData
+	Logging      LoggingConfig
+	Discord      DiscordConfig
+	URLShortener URLShortenerConfig
+	NewsAPI      NewsAPIConfig
+	FootballData FootballAPIConfig
+	Valkey       ValkeyConfig
 }
 
-type LogType string
+type LogFormat string
 
 const (
-	LogTypeText    LogType = "text"
-	LogTypeJSON    LogType = "json"
-	LogTypeColored LogType = "colored"
+	LogFormatText    LogFormat = "text"
+	LogFormatJSON    LogFormat = "json"
+	LogFormatColored LogFormat = "colored"
 )
 
-type LogConfig struct {
+type LoggingConfig struct {
 	Level      slog.Level
-	Type       LogType
+	Type       LogFormat
 	ShowSource bool
 }
-type Server struct {
+type ServerConfig struct {
 	Port int16 `validate:"required"`
 }
 
-type DatabaseType string
+type DatabaseEngine string
 
 const (
-	Postgres DatabaseType = "postgres"
-	Sqlite   DatabaseType = "sqlite"
+	DatabasePostgres DatabaseEngine = "postgres"
+	DatabaseSQLite   DatabaseEngine = "sqlite"
 )
 
 type DatabaseConfig struct {
-	Type     DatabaseType
+	Type     DatabaseEngine
 	Postgres PostgresConfig `yaml:"postgres"`
-	Sqlite   SqliteConfig   `yaml:"sqlite"`
+	Sqlite   SQLiteConfig   `yaml:"sqlite"`
 	Migrate  bool
 }
 
@@ -53,28 +54,33 @@ type PostgresConfig struct {
 	Database string
 }
 
-type SqliteConfig struct {
+type SQLiteConfig struct {
 	Path string
 }
 
-type Shortener struct {
+type URLShortenerConfig struct {
 	Endpoint string `validate:"required"`
-	ApiKey   string `validate:"required"`
+	APIKey   string `validate:"required"`
 }
 
-type Discord struct {
+type DiscordConfig struct {
 	Token        string `validate:"required"`
 	Prefix       string `validate:"required"`
 	GuildID      string `validate:"required"`
 	SyncCommands bool
 }
 
-type News struct {
-	ApiKey string `validate:"required" mapstructure:"newsapi_apikey"`
+type NewsAPIConfig struct {
+	APIKey string `validate:"required" mapstructure:"newsapi_apikey"`
 }
 
-type FootballData struct {
-	ApiKey string `validate:"required"`
+type FootballAPIConfig struct {
+	APIKey string `validate:"required"`
+}
+
+type ValkeyConfig struct {
+	Address  string `validate:"required"`
+	Password string `validate:"required"`
 }
 
 var Envs Config

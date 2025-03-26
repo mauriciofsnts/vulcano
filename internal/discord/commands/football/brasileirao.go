@@ -13,7 +13,7 @@ import (
 func init() {
 	ctx.RegisterCommand("brasileirao", ctx.Command{
 		Name:        "brasileirao",
-		Aliases:     []string{"brasileirao", "br"},
+		Aliases:     []string{"br"},
 		Description: ctx.T().Commands.Brasileirao.Description.Str(),
 		Options:     []discord.ApplicationCommandOption{},
 		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {

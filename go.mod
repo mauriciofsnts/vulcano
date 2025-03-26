@@ -21,8 +21,10 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	golang.org/x/net v0.36.0 // indirect
-	golang.org/x/sync v0.11.0 // indirect
+	github.com/robfig/cron/v3 v3.0.1 // indirect
+	go.uber.org/atomic v1.9.0 // indirect
+	golang.org/x/net v0.37.0 // indirect
+	golang.org/x/sync v0.12.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
@@ -33,13 +35,15 @@ require (
 	github.com/disgoorg/snowflake/v2 v2.0.3
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-chi/chi v1.5.5
+	github.com/go-co-op/gocron v1.37.0
 	github.com/go-resty/resty/v2 v2.16.5
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/lmittmann/tint v1.0.5
 	github.com/sasha-s/go-csync v0.0.0-20240107134140-fcbab37b09ad // indirect
-	golang.org/x/crypto v0.35.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	github.com/valkey-io/valkey-go v1.0.56
+	golang.org/x/crypto v0.36.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/driver/sqlite v1.5.6
 )

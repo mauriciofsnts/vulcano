@@ -14,7 +14,7 @@ import (
 )
 
 func New(cfg config.Config) (*gorm.DB, error) {
-	if cfg.DB.Type == config.Postgres {
+	if cfg.DB.Type == config.DatabasePostgres {
 		return NewPostgresConnection(cfg.DB.Postgres.Host, cfg.DB.Postgres.Port, cfg.DB.Postgres.User, cfg.DB.Postgres.Password, cfg.DB.Postgres.Database)
 	}
 
