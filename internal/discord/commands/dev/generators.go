@@ -16,7 +16,7 @@ import (
 func init() {
 	ctx.RegisterCommand("generate", ctx.Command{
 		Name:        "generate",
-		Aliases:     []string{"gen", "g"},
+		Aliases:     []string{"gen", "g", "cpf", "uuid", "cnpj"},
 		Description: ctx.T().Commands.Generate.Description.Str(),
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionString{
@@ -31,15 +31,11 @@ func init() {
 			},
 		},
 		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
-			args := data.Args
-
-			if len(args) == 0 {
-				return buildErrorResponse(data, string(ctx.T().Commands.Generate.ParamError))
-			}
+			option := determineOption(data)
 
 			var generatedContent string
 
-			switch args[0] {
+			switch option {
 			case "cnpj":
 				generatedContent = generateCNPJ(ctx.T())
 			case "cpf":
@@ -53,12 +49,24 @@ func init() {
 
 			description := ctx.T().Commands.Generate.Warning.Str() + generatedContent
 
-			msg := i18n.Replace(strings.ToUpper(ctx.T().Commands.Generate.Reply.Str()), args[0])
+			msg := i18n.Replace(strings.ToUpper(ctx.T().Commands.Generate.Reply.Str()), option)
 			reply := data.Response.BuildDefaultEmbedMessage(msg, description, nil)
 
 			return &reply
 		},
 	})
+}
+
+func determineOption(data ctx.CommandExecutionContext) string {
+	if len(data.Args) > 0 {
+		return data.Args[0]
+	}
+
+	if data.TriggerEvent.TriggeredAlias != "" {
+		return data.TriggerEvent.TriggeredAlias
+	}
+
+	return ""
 }
 
 func buildErrorResponse(data ctx.CommandExecutionContext, message string) *discord.MessageCreate {

@@ -13,7 +13,7 @@ func OnComponentInteractionEvent(event *disgoEvents.ComponentInteractionCreate, 
 	found, componentState := ctx.LoadComponentStateFromDB(event.Message.ID.String())
 
 	if !found {
-		slog.Error("Button state not found: ", slog.String("message id", event.Message.ID.String()))
+		slog.Error("button state not found: ", slog.String("message id", event.Message.ID.String()))
 		return
 	}
 
@@ -34,7 +34,7 @@ func OnComponentInteractionEvent(event *disgoEvents.ComponentInteractionCreate, 
 	found, handler := ctx.GetComponentHandlerByName(componentState.Command)
 
 	if !found {
-		slog.Error("Component handler not found: ", slog.String("command", componentState.Command))
+		slog.Error("component handler not found: ", slog.String("command", componentState.Command))
 		return
 	}
 

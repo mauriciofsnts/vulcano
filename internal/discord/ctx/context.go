@@ -23,6 +23,7 @@ type TriggerEvent struct {
 	GuildId        snowflake.ID
 	MessageId      snowflake.ID
 	EventTimestamp time.Time
+	TriggeredAlias string
 }
 
 type CommandExecutionContext struct {

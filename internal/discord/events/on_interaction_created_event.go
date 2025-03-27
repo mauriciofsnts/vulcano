@@ -17,11 +17,11 @@ func OnInteractionCreatedEvent(event *disgoEvents.ApplicationCommandInteractionC
 	data := event.SlashCommandInteractionData()
 
 	commandName := data.CommandName()
-	found, cmd := ctx.GetCommandByAlias(commandName)
+	found, cmd, _ := ctx.GetCommandByNameOrAlias(commandName)
 
 	if !found {
-		slog.Error("Command not found: ", slog.String("command", commandName))
-		slog.Error("The user can't dispatch an unknown slash command. Check if the command is registered")
+		slog.Error("command not found: ", slog.String("command", commandName))
+		slog.Error("the user can't dispatch an unknown slash command. Check if the command is registered")
 		return
 	}
 
@@ -29,6 +29,7 @@ func OnInteractionCreatedEvent(event *disgoEvents.ApplicationCommandInteractionC
 		ChannelId:      event.Channel().ID(),
 		EventTimestamp: event.CreatedAt(),
 		AuthorId:       event.User().ID,
+		TriggeredAlias: "",
 	}
 
 	guildId := event.GuildID()
@@ -39,7 +40,7 @@ func OnInteractionCreatedEvent(event *disgoEvents.ApplicationCommandInteractionC
 		err := providers.Services.GuildMember.EnsureMemberValidity(guildId.String(), event.User().ID.String())
 
 		if err != nil {
-			slog.Error("Error ensuring member validity: ", slog.Any("error", err))
+			slog.Error("error ensuring member validity: ", slog.Any("error", err))
 		}
 	}
 

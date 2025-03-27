@@ -14,9 +14,9 @@ import (
 )
 
 func init() {
-	ctx.RegisterCommand("brasileirao", ctx.Command{
-		Name:        "brasileirao",
-		Aliases:     []string{"br"},
+	ctx.RegisterCommand("matches", ctx.Command{
+		Name:        "matches",
+		Aliases:     []string{"br", "champions"},
 		Description: ctx.T().Commands.Brasileirao.Description.Str(),
 		Options:     []discord.ApplicationCommandOption{},
 		Handler: func(data ctx.CommandExecutionContext) *discord.MessageCreate {
@@ -24,14 +24,13 @@ func init() {
 			lastSundayOfTheWeek := time.Now().AddDate(0, 0, +6).Format("2006-01-02")
 
 			matchesbytes, err := providers.Cache.Get(context.Background(), fmt.Sprintf("%d", providers.Football.Competitions[0].Id))
-
 			if err != nil {
 				return nil
 			}
 
 			var matches []footballdata.Matches = []footballdata.Matches{}
-			err = json.Unmarshal([]byte(matchesbytes), &matches)
 
+			err = json.Unmarshal([]byte(matchesbytes), &matches)
 			if err != nil {
 				return nil
 			}

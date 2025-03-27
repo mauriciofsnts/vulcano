@@ -27,7 +27,7 @@ func OnMessageCreatedEvent(event *disgoEvents.MessageCreate, client bot.Client, 
 
 		err := providers.Services.GuildMember.EnsureMemberValidity(guildID, authorID)
 		if err != nil {
-			slog.Error("Error ensuring member validity: ", slog.Any("error", err))
+			slog.Error("error ensuring member validity: ", "error", err)
 		}
 
 		if !strings.HasPrefix(message.Content, cfg.Discord.Prefix) {
@@ -47,9 +47,10 @@ func OnMessageCreatedEvent(event *disgoEvents.MessageCreate, client bot.Client, 
 
 func executeMessageCommand(event *disgoEvents.MessageCreate, client bot.Client, cfg config.Config, isGuild bool, BotStartedAt time.Time) {
 	message := event.Message
+
 	inputMessage := strings.Split(message.Content, " ")
 	commandName := strings.TrimPrefix(inputMessage[0], cfg.Discord.Prefix)
-	found, cmd := ctx.GetCommandByAlias(commandName)
+	found, cmd, alias := ctx.GetCommandByNameOrAlias(commandName)
 
 	if !found {
 		return
@@ -62,6 +63,7 @@ func executeMessageCommand(event *disgoEvents.MessageCreate, client bot.Client, 
 		ChannelId:      message.ChannelID,
 		MessageId:      message.ID,
 		EventTimestamp: message.CreatedAt,
+		TriggeredAlias: alias,
 	}
 
 	if isGuild {

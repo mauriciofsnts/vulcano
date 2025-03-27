@@ -23,18 +23,18 @@ func RegisterCommand(name string, cmd Command) {
 	commands[name] = cmd
 }
 
-func GetCommandByAlias(alias string) (bool, *Command) {
+func GetCommandByNameOrAlias(alias string) (bool, *Command, string) {
 	for _, command := range commands {
 		if command.Name == alias {
-			return true, &command
+			return true, &command, ""
 		}
 		for _, cmdalias := range command.Aliases {
 			if cmdalias == alias {
-				return true, &command
+				return true, &command, alias
 			}
 		}
 	}
-	return false, nil
+	return false, nil, ""
 }
 
 func ConvertToSlashCommands() []discord.ApplicationCommandCreate {
