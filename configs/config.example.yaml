@@ -49,6 +49,6 @@ shortener:
 news:
   apiKey: "YOUR_NEWSAPI_API_KEY"
 
-# Football Data API Configuration
+# Football Data API Configuration - https://www.football-data.org/
 footballData:
   apiKey: "YOUR_FOOTBALL_DATA_API_KEY"

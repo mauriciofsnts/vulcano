@@ -18,15 +18,18 @@ var (
 	Services service.IService
 	Football footballdata.FootballDataProvider
 	Cron     cron.Cron
-	Cache    cache.Cache
+	Cache    cache.Valkey
 )
 
 func New(cfg config.Config, db *gorm.DB) {
+	cache := cache.New(cfg.Valkey.Address)
+	cron := cron.New()
+
 	DB = db
+	Cache = cache
+	Cron = cron
 	Shorten = shorten.New(cfg)
 	News = news.New(cfg)
 	Services = service.New(db)
-	Football = footballdata.New(cfg)
-	Cron = cron.New()
-	Cache = cache.New(cfg.Valkey.Address)
+	Football = footballdata.New(cfg, cron, cache)
 }

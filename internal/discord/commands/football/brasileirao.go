@@ -1,6 +1,8 @@
 package bot
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"time"
@@ -8,6 +10,7 @@ import (
 	"github.com/disgoorg/disgo/discord"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 	"github.com/mauriciofsnts/bot/internal/providers"
+	footballdata "github.com/mauriciofsnts/bot/internal/providers/football_data"
 )
 
 func init() {
@@ -20,7 +23,14 @@ func init() {
 			today := time.Now().Format("2006-01-02")
 			lastSundayOfTheWeek := time.Now().AddDate(0, 0, +6).Format("2006-01-02")
 
-			matches, err := providers.Football.GetMatches(today, lastSundayOfTheWeek, 2013)
+			matchesbytes, err := providers.Cache.Get(context.Background(), fmt.Sprintf("%d", providers.Football.Competitions[0].Id))
+
+			if err != nil {
+				return nil
+			}
+
+			var matches []footballdata.Matches = []footballdata.Matches{}
+			err = json.Unmarshal([]byte(matchesbytes), &matches)
 
 			if err != nil {
 				return nil

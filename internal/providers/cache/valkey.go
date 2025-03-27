@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"log/slog"
 	"os"
@@ -10,8 +11,8 @@ import (
 	"github.com/valkey-io/valkey-go"
 )
 
-type Cache interface {
-	Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error
+type Valkey interface {
+	Set(ctx context.Context, key string, value any, expiration time.Duration) error
 	Get(ctx context.Context, key string) (string, error)
 	Delete(ctx context.Context, key string) error
 	Flush(ctx context.Context) error
@@ -22,10 +23,17 @@ type valkeyImpl struct {
 	client valkey.Client
 }
 
-func (c *valkeyImpl) Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error {
+func (c *valkeyImpl) Set(ctx context.Context, key string, value any, expiration time.Duration) error {
 	strValue, ok := value.(string)
+
 	if !ok {
-		return errors.New("value must be a string")
+		jsonValue, err := json.Marshal(value)
+
+		if err != nil {
+			return errors.New("value must be a string")
+		}
+
+		strValue = string(jsonValue)
 	}
 
 	if expiration == 0 {
@@ -63,7 +71,7 @@ func (c *valkeyImpl) Ping(ctx context.Context) error {
 	return c.client.Do(ctx, cmd).Error()
 }
 
-func New(address string) Cache {
+func New(address string) Valkey {
 	client, err := valkey.NewClient(valkey.ClientOption{
 		InitAddress: []string{address},
 	})
