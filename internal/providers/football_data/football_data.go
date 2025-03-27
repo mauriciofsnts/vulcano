@@ -143,9 +143,7 @@ func GetMatches(dateFrom, dateTo string, competitions int, apiKey string) ([]Mat
 	}
 
 	if resp.IsError() {
-		slog.Error("failed response",
-			"status", resp.Status(),
-			"body", string(resp.Body()))
+		slog.Error("failed response", "status", resp.Status(), "body", string(resp.Body()))
 		return nil, fmt.Errorf("%s", resp.Status())
 	}
 
@@ -184,6 +182,7 @@ func cacheMatchesForCompetitions(
 	cache cache.Valkey,
 	apiKey string,
 ) {
+	slog.Debug("Caching... ", "competitions", len(competitions))
 	competitionChunks := slices.Chunk(competitions, 5)
 
 	for chunk := range competitionChunks {
@@ -218,6 +217,10 @@ func configureCronJobs(
 		err := cron.AddJob(cronExpression, func() {
 			cacheMatchesForCompetitions([]LeagueInfo{competition}, cache, cfg.FootballData.APIKey)
 		})
+
+		if cfg.FootballData.Seed {
+			cacheMatchesForCompetitions([]LeagueInfo{competition}, cache, cfg.FootballData.APIKey)
+		}
 
 		if err != nil {
 			slog.Error("error on add cron job", "competitionId", competition.Id, "error", err.Error())

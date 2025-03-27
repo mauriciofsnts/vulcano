@@ -75,6 +75,7 @@ type NewsAPIConfig struct {
 }
 
 type FootballAPIConfig struct {
+	Seed   bool
 	APIKey string `validate:"required"`
 }
 

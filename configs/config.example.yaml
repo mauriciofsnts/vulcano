@@ -51,4 +51,5 @@ news:
 
 # Football Data API Configuration - https://www.football-data.org/
 footballData:
+  seed: true # When the bot starts it will make requests to fill the match cache
   apiKey: "YOUR_FOOTBALL_DATA_API_KEY"
