@@ -20,5 +20,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	internal.Bootstrap(*cfg)
+	internal.Bootstrap(cfg)
 }

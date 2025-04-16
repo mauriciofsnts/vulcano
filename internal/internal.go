@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 
@@ -16,6 +17,7 @@ func Bootstrap(cfg config.Config) {
 
 	slog.Info("Starting vulcano!")
 	slog.Debug("If you can see this, debug logging is enabled!", "cool", true)
+	fmt.Println("Configs: ", cfg)
 
 	db, err := database.New(cfg)
 
