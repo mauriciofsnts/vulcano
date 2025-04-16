@@ -10,10 +10,10 @@ import (
 
 func SetupLog(cfg Config) {
 	var handler slog.Handler
-	level := cfg.Logging.Level
-	showSource := cfg.Logging.ShowSource
+	level := cfg.Log.Level
+	showSource := cfg.Log.ShowSource
 
-	switch cfg.Logging.Type {
+	switch cfg.Log.Type {
 	case LogFormatJSON:
 		handler = slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 			Level:     level,

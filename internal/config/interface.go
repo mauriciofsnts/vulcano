@@ -7,10 +7,10 @@ import (
 type Config struct {
 	Server       ServerConfig
 	DB           DatabaseConfig
-	Logging      LoggingConfig
+	Log          LoggingConfig
 	Discord      DiscordConfig
-	URLShortener URLShortenerConfig
-	NewsAPI      NewsAPIConfig
+	Shortener    ShortenerConfig
+	News         NewsAPIConfig
 	FootballData FootballAPIConfig
 	Valkey       ValkeyConfig
 }
@@ -58,7 +58,7 @@ type SQLiteConfig struct {
 	Path string
 }
 
-type URLShortenerConfig struct {
+type ShortenerConfig struct {
 	Endpoint string `validate:"required"`
 	APIKey   string `validate:"required"`
 }

@@ -88,8 +88,8 @@ type URLShortener struct {
 }
 
 func New(cfg config.Config) URLShortener {
-	apiKey := cfg.URLShortener.APIKey
-	endpoint := cfg.URLShortener.Endpoint
+	apiKey := cfg.Shortener.APIKey
+	endpoint := cfg.Shortener.Endpoint
 
 	return URLShortener{
 		ShortenLink: func(url string, opts *ShurlOptions) (string, error) {
