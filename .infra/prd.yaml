@@ -26,32 +26,31 @@ vulcano:
             port: 8080
 
           db:
-            type: 'postgres'
+            type: postgres
             migrate: true
             postgres:
               host: {{ projectSecret "POSTGRES_HOST" }}
               user: {{ projectSecret "POSTGRES_USER" }}
               password: {{ projectSecret "POSTGRES_PASSWORD" }}
               port: 5432
-              database: 'vulcano'
+              database: vulcano
 
           valkey:
-            address: 'valkey-headless.{{ .Namespace }}.svc.cluster.local:6379'
-            password: ''
+            address: valkey-headless.{{ .Namespace }}.svc.cluster.local:6379
 
           log:
-            level: 'INFO'
-            type: 'colored'
+            level: INFO
+            type: colored
             showSource: true
 
           discord:
             token: {{ projectSecret "DISCORD_TOKEN" }}
             guildID: {{ projectSecret "DISCORD_GUILDID" }}
             syncCommands: true
-            prefix: '.'
+            prefix: .
 
           shortener:
-            endpoint: 'https://url.db.cafe/api/v1/links'
+            endpoint: https://url.db.cafe/api/v1/links
             apiKey: {{ projectSecret "SHORTENER_APIKEY" }}
 
           news:
