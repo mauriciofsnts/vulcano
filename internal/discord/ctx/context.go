@@ -34,6 +34,13 @@ type CommandExecutionContext struct {
 	Args         []string
 	Response     Response
 	Config       config.Config
+	Cache        Cache
+}
+
+type Cache struct {
+	CreateCommandState func(id string, data GuildState) bool
+	GetCommandState    func(id string) (GuildState, bool)
+	DeleteCommandState func(id string) bool
 }
 
 type Response struct {
@@ -58,7 +65,14 @@ func Execute(
 		BotStartAt:   botStartAt,
 		Client:       client,
 		Response:     Response{BuildDefaultEmbedMessage: BuildDefaultEmbedMessage, BuildDefaultErrorMessage: BuildDefaultErrorMessage},
-		Config:       cfg,
+		Cache: Cache{
+			GetCommandState:    GetCommandState,
+			DeleteCommandState: DeleteCommandState,
+			CreateCommandState: func(id string, data GuildState) bool {
+				return CreateCommandState(id, data, 24*time.Hour)
+			},
+		},
+		Config: cfg,
 	}
 
 	return command.Handler(ctx)

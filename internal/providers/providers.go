@@ -24,12 +24,13 @@ var (
 func New(cfg config.Config, db *gorm.DB) {
 	cache := cache.New(cfg.Valkey.Address)
 	cron := cron.New()
+	shorten := shorten.New(cfg)
 
 	DB = db
 	Cache = cache
 	Cron = cron
-	Shorten = shorten.New(cfg)
-	News = news.New(cfg)
+	Shorten = shorten
+	News = news.New(cfg, cache, shorten)
 	Services = service.New(db)
 	Football = footballdata.New(cfg, cron, cache)
 }

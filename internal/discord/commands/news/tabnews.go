@@ -9,7 +9,6 @@ import (
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
-	"github.com/mauriciofsnts/bot/internal/database/models"
 	"github.com/mauriciofsnts/bot/internal/discord/ctx"
 	"github.com/mauriciofsnts/bot/internal/providers"
 	"github.com/mauriciofsnts/bot/internal/providers/news"
@@ -79,7 +78,9 @@ func init() {
 				return nil
 			}
 
-			providers.Services.GuildState.CreateComponentState(&models.GuildState{
+			id := createdMessage.ID.String()
+
+			data.Cache.CreateCommandState(id, ctx.GuildState{
 				GuildID:        data.TriggerEvent.GuildId.String(),
 				ComponentID:    actionButtonId,
 				AuthorID:       data.TriggerEvent.AuthorId.String(),
@@ -117,7 +118,7 @@ func init() {
 			embed := embedBuilder.Build()
 			embeds := []discord.Embed{embed}
 
-			providers.Services.GuildState.UpdateComponentState(data.TriggerEvent.MessageId.String(), map[string]any{"page": nextPageState})
+			ctx.UpdateCommandState(data.TriggerEvent.MessageId.String(), ctx.GuildState{State: map[string]any{"page": nextPageState}})
 
 			newActionRow := discord.NewActionRow()
 			newActionRow.AddComponents(
@@ -165,9 +166,7 @@ func fetchNews(page int) ([]discord.EmbedField, error) {
 		go func(idx int, article news.TabnewsArticle) {
 			defer wg.Done()
 
-			url, _ := providers.Shorten.ShortenLink(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", article.Owner_username, article.Slug), nil)
-
-			value := fmt.Sprintf("⭐ %d · %s · %s", article.Tabcoins, article.Owner_username, url)
+			value := fmt.Sprintf("⭐ %d · %s · %s", article.Tabcoins, article.Owner_username, article.Slug)
 			fields[idx] = discord.EmbedField{
 				Name:  article.Title,
 				Value: value,

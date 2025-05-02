@@ -1,11 +1,15 @@
 package news
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/mauriciofsnts/bot/internal/config"
+	"github.com/mauriciofsnts/bot/internal/providers/cache"
+	"github.com/mauriciofsnts/bot/internal/providers/shorten"
 )
 
 type NewsApiSource struct {
@@ -107,6 +111,50 @@ func GetFromTabnews(page int, maxSize int) ([]TabnewsArticle, error) {
 	return articles, nil
 }
 
+func GetTabnewsCached(c cache.Valkey, shorten shorten.URLShortener, page, maxSize int) ([]TabnewsArticle, error) {
+	minPage := 1
+
+	if page < minPage {
+		page = minPage
+	}
+
+	shtUrl := func(articles []TabnewsArticle) []TabnewsArticle {
+		for i, v := range articles {
+			url, _ := shorten.ShortenLink(fmt.Sprintf("https://www.tabnews.com.br/%s/%s", v.Owner_username, v.Slug), nil)
+
+			articles[i].Slug = url
+		}
+
+		return articles
+	}
+
+	key := fmt.Sprintf("tn_%d_%s5", page, time.Now().Format("02-01-2006"))
+	data, err := c.Get(context.Background(), key)
+
+	if err != nil {
+		articles, err := GetFromTabnews(page, maxSize)
+		articlesShortned := shtUrl(articles)
+
+		if err == nil {
+			c.Set(context.Background(), key, articlesShortned, 1*time.Hour)
+		}
+
+		return articlesShortned, err
+	}
+
+	var response []TabnewsArticle
+	err = json.Unmarshal([]byte(data), &response)
+
+	if err != nil {
+		articles, err := GetFromTabnews(page, maxSize)
+		articlesShortned := shtUrl(articles)
+
+		return articlesShortned, err
+	}
+
+	return response, nil
+}
+
 const PER_PAGE = 10
 
 func GetFromDevto(page int) ([]DevtoArticle, error) {
@@ -124,12 +172,14 @@ type NewsProvider struct {
 	Devto   func(page int) ([]DevtoArticle, error)
 }
 
-func New(cfg config.Config) NewsProvider {
+func New(cfg config.Config, c cache.Valkey, st shorten.URLShortener) NewsProvider {
 	return NewsProvider{
 		NewsApi: func(page int) ([]NewsApiArticle, error) {
 			return GetFromNewsAPI(cfg.News.APIKey, page)
 		},
-		Tabnews: GetFromTabnews,
-		Devto:   GetFromDevto,
+		Tabnews: func(page, maxSize int) ([]TabnewsArticle, error) {
+			return GetTabnewsCached(c, st, page, maxSize)
+		},
+		Devto: GetFromDevto,
 	}
 }

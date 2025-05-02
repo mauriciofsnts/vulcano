@@ -11,5 +11,4 @@ type Guild struct {
 	GuildLang string `gorm:"not null" default:"fenix"`
 
 	Members []GuildMember `gorm:"foreignKey:GuildID;references:GuildID"`
-	States  []GuildState  `gorm:"foreignKey:GuildID;references:GuildID"`
 }
