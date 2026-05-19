@@ -10,4 +10,4 @@ resources:
 
 images:
   - name: ghcr.io/mauriciofsnts/vulcano
-    newTag: a0c842c
+    newTag: 450c33d
