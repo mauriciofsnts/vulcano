@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vulcano
+spec:
+  rules:
+    - host: vulcano.mrzt.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vulcano
+                port:
+                  number: 8080

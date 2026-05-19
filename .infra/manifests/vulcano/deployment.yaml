@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vulcano
+  labels:
+    app: vulcano
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vulcano
+  template:
+    metadata:
+      labels:
+        app: vulcano
+    spec:
+      containers:
+        - name: vulcano
+          image: ghcr.io/mauriciofsnts/vulcano:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /app/configs/config.yaml
+              subPath: config.yaml
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: config
+          secret:
+            secretName: vulcano-config-secret
+            defaultMode: 420

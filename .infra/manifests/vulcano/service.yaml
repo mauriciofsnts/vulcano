@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vulcano
+spec:
+  type: ClusterIP
+  selector:
+    app: vulcano
+  ports:
+    - port: 8080
+      targetPort: 8080
